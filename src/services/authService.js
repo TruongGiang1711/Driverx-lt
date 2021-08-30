@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 
 const apiEndpoint = "/auth";
 const tokenKey = "token";
+const tokenFake = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NTE4OTF9.UBSUmcIjuNv8p1tUfS-TEG92JpJvCMfneYSIFBDBy_4"
 
 http.setJwt(getJwt());
 
@@ -17,7 +18,8 @@ export function logout() {
   localStorage.removeItem(tokenKey);
 }
 export function getJwt() {
-  return localStorage.getItem(tokenKey);
+  // return localStorage.getItem(tokenKey);
+  return localStorage.getItem(tokenFake);
 }
 
 export function getCurrentUser() {

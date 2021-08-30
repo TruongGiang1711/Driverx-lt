@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, useEffect, useState } from 'react'
 import {
     CBadge,
     CButton,
@@ -15,6 +15,7 @@ import {
     CDataTable,
 } from '@coreui/react'
 import usersData from '../../users/UsersData'
+import { getCourses } from 'src/services/userService'
 
 const fields = [
     { key: 'name', _style: { width: '40%' } },
@@ -52,6 +53,9 @@ const Dashboard = () => {
         }
         setDetails(newDetails)
     }
+    useEffect(() => {
+        console.log(getCourses("/courses"))
+    }, [])
     return (
         <>
             <CRow>
@@ -71,6 +75,7 @@ const Dashboard = () => {
                                 hover
                                 sorter
                                 pagination={{ align: "center" }}
+                                border={true}
                                 scopedSlots={{
                                     'status':
                                         (item) => (

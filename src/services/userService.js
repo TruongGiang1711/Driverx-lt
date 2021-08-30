@@ -1,16 +1,5 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
-const apiEndpoint = apiUrl + "/users";
 
-export function register(user) {
-  return http.post(apiEndpoint, {
-    email: user.username,
-    password: user.password,
-    name: user.name,
-  });
-  //return http.delete(movieUrl("1111"));
-}
-
-function movieUrl(id) {
-  return `${apiEndpoint}/${id}`;
+export function getCourses(end){
+  return http.get(end)
 }
