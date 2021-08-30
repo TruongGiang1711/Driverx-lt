@@ -14,7 +14,7 @@ import {
     CCollapse,
     CDataTable,
 } from '@coreui/react'
-import usersData from '../../component/users/UsersData'
+import usersData from '../../users/UsersData'
 
 const fields = [
     { key: 'name', _style: { width: '40%' } },
