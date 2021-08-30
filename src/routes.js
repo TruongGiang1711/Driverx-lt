@@ -32,8 +32,8 @@ const Brands = React.lazy(() => import('./views/component/icons/brands/Brands'))
 const Alerts = React.lazy(() => import('./views/component/notifications/alerts/Alerts'));
 const Badges = React.lazy(() => import('./views/component/notifications/badges/Badges'));
 const Modals = React.lazy(() => import('./views/component/notifications/modals/Modals'));
-const Colors = React.lazy(() => import('./views/theme/colors/Colors'));
-const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
+const Colors = React.lazy(() => import('./views/component/theme/colors/Colors'));
+const Typography = React.lazy(() => import('./views/component/theme/typography/Typography'));
 const Widgets = React.lazy(() => import('./views/component/widgets/Widgets'));
 const Users = React.lazy(() => import('./views/users/Users'));
 const User = React.lazy(() => import('./views/users/User'));
