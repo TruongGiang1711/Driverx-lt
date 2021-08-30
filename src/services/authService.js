@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 
 const apiEndpoint = "/auth";
 const tokenKey = "token";
-const tokenFake = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NTE4OTF9.UBSUmcIjuNv8p1tUfS-TEG92JpJvCMfneYSIFBDBy_4"
+const tokenFake = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NjE1NDF9.d5y6UBnYDvpN0fHx-tIv7we0fSzoPRTzwr3nlSAad5s";
 
 http.setJwt(getJwt());
 

@@ -14,10 +14,10 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-import MainChartExample from '../component/charts/MainChartExample.js'
+import MainChartExample from '../charts/MainChartExample.js'
 
-const WidgetsDropdown = lazy(() => import('../component/widgets/WidgetsDropdown.js'))
-const WidgetsBrand = lazy(() => import('../component/widgets/WidgetsBrand.js'))
+const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
+const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 const Dashboard = () => {
   return (
