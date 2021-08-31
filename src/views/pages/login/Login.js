@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   CButton,
   CCard,
@@ -12,26 +12,27 @@ import {
   CInputGroup,
   CInputGroupPrepend,
   CInputGroupText,
-  CRow
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { postLogin } from 'src/services/userService'
-import { setUserSession } from 'src/utils/common'
+  CRow,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { postLogin } from "src/services/userService";
+import { setUserSession } from "src/utils/common";
+import authService from "src/services/authService";
 
-const useFormInput = initialValue => {
+const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setValue(e.target.value);
-  }
+  };
   return {
     value,
-    onChange: handleChange
-  }
-}
+    onChange: handleChange,
+  };
+};
 const Login = (props) => {
-  const username = useFormInput('');
-  const password = useFormInput('');
+  const username = useFormInput("");
+  const password = useFormInput("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,28 +40,25 @@ const Login = (props) => {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    postLogin("/login", {
-      email: username.value,
-      password: password.value
-    }).then(response => {
-      setLoading(false);
-      setUserSession(response.data.token, response.data.user);
-      props.history.push('/dashboard');
-    }).catch(error => {
-      setLoading(false);
-      if (error.response.status === 422) setError(error.response.detail.message);
-      else setError("Something went wrong. Please try again later.");
-    });
-    // axios.post('http://localhost:4000/users/signin', { username: username.value, password: password.value }).then(response => {
-    //   setLoading(false);
-    //   setUserSession(response.data.token, response.data.user);
-    //   props.history.push('/dashboard');
-    // }).catch(error => {
-    //   setLoading(false);
-    //   if (error.response.status === 401) setError(error.response.data.message);
-    //   else setError("Something went wrong. Please try again later.");
-    // });
-  }
+    // postLogin("/login", {
+    //   email: username.value,
+    //   password: password.value,
+    // })
+    authService
+      .login(username.value, password.value)
+      .then((response) => {
+        setLoading(false);
+        // setUserSession(response.data.token, response.data.user);
+        console.log("login success");
+        props.history.push("/dashboard");
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response.status === 422)
+          setError(error.response.detail.message);
+        else setError("Something went wrong. Please try again later.");
+      });
+  };
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -78,7 +76,12 @@ const Login = (props) => {
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="text" placeholder="Username" autoComplete="username" {...username} />
+                      <CInput
+                        type="text"
+                        placeholder="Username"
+                        autoComplete="username"
+                        {...username}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
@@ -86,28 +89,62 @@ const Login = (props) => {
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" placeholder="Password" autoComplete="current-password" {...password} />
+                      <CInput
+                        type="password"
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        {...password}
+                      />
                     </CInputGroup>
-                    {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+                    {error && (
+                      <>
+                        <small style={{ color: "red" }}>{error}</small>
+                        <br />
+                      </>
+                    )}
+                    <br />
                     <CRow>
                       <CCol xs="6">
-                        <CButton color="primary" className="px-4" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading}>Login</CButton>
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          value={loading ? "Loading..." : "Login"}
+                          onClick={handleLogin}
+                          disabled={loading}
+                        >
+                          Login
+                        </CButton>
                       </CCol>
                       <CCol xs="6" className="text-right">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
+                        <CButton color="link" className="px-0">
+                          Forgot password?
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
+              <CCard
+                className="text-white bg-primary py-5 d-md-down-none"
+                style={{ width: "44%" }}
+              >
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
                     <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>Register Now!</CButton>
+                      <CButton
+                        color="primary"
+                        className="mt-3"
+                        active
+                        tabIndex={-1}
+                      >
+                        Register Now!
+                      </CButton>
                     </Link>
                   </div>
                 </CCardBody>
@@ -117,7 +154,7 @@ const Login = (props) => {
         </CRow>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

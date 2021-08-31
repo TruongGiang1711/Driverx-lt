@@ -1,15 +1,16 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
 
-const apiEndpoint = "/auth";
+const apiEndpoint = "/login";
 const tokenKey = "token";
-const tokenFake = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NjE1NDF9.d5y6UBnYDvpN0fHx-tIv7we0fSzoPRTzwr3nlSAad5s";
+const tokenFake =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NjE1NDF9.d5y6UBnYDvpN0fHx-tIv7we0fSzoPRTzwr3nlSAad5s";
 
 http.setJwt(getJwt());
-
 export async function login(email, password) {
-  const { data: jwt } = await http.post(apiEndpoint, { email, password });
-  localStorage.setItem(tokenKey, jwt);
+  const { data } = await http.post(apiEndpoint, { email, password });
+  console.log(data.access_token);
+  localStorage.setItem(tokenKey, data.access_token);
 }
 export function loginWithJwt(jwt) {
   localStorage.setItem(tokenKey, jwt);
@@ -19,12 +20,16 @@ export function logout() {
 }
 export function getJwt() {
   // return localStorage.getItem(tokenKey);
-  return localStorage.getItem(tokenFake);
+  return localStorage.getItem(tokenKey);
+}
+export function getSessionJwt() {
+  return localStorage.getItem(tokenKey);
 }
 
 export function getCurrentUser() {
   try {
     const jwt = localStorage.getItem(tokenKey);
+    console.log(jwt);
     return jwtDecode(jwt);
   } catch (error) {
     return null;
