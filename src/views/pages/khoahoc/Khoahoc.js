@@ -1,5 +1,8 @@
 import React, { lazy, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import './Khoahoc.scss';
 import {
+  CAlert,
   CBadge,
   CButton,
   CButtonGroup,
@@ -13,36 +16,36 @@ import {
   CCallout,
   CCollapse,
   CDataTable,
+  CFormGroup,
+  CInput,
+  CLabel,
+  CSelect,
+  CPagination
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
-import usersData from "../../component/users/UsersData";
-import { getCourses } from "src/services/userService";
-import courseService from "src/services/courseService";
-import { useHistory } from "react-router-dom";
+import { treeData, usersDataFake } from "./KhoahocData";
+
+import { Input, TreeSelect } from 'antd';
+import { ImportOutlined } from '@ant-design/icons';
+
 import Moment from 'react-moment';
 
-const usersDataFake = [
-  { stt: 0, biometrics: { fingerprint: 20, fade_id: 30 }, data_synchronizing: 0, theory: { number: 7, start_theory: 20, end_theory: 40, sum: 90 }, practise: { start_practise: 500, end_practise: 1000, sum: 1200 } },
-  { stt: 1, biometrics: { fingerprint: 10, fade_id: 20 }, data_synchronizing: 1, theory: { number: 5, start_theory: 15, end_theory: 57, sum: 90 }, practise: { start_practise: 400, end_practise: 700, sum: 1200 } },
-  { stt: 2, biometrics: { fingerprint: 20, fade_id: 10 }, data_synchronizing: 2, theory: { number: 8, start_theory: 26, end_theory: 38, sum: 90 }, practise: { start_practise: 300, end_practise: 900, sum: 1200 } },
-  { stt: 3, biometrics: { fingerprint: 30, fade_id: 20 }, data_synchronizing: 1, theory: { number: 10, start_theory: 11, end_theory: 41, sum: 90 }, practise: { start_practise: 1000, end_practise: 2000, sum: 1200 } },
-]
+import courseService from "src/services/courseService";
+import { getCourses } from "src/services/userService";
+
+const { SHOW_PARENT } = TreeSelect;
+
 const fields = [
-  { key: "ten_khoa_hoc", label: "TÊN KHÓA" },
-  {
-    key: "hang_gplx", label: "HẠNG",
-    _style: { width: "1%" },
-  },
+  { key: "stt", label: "STT", _style: { width: "1%" }, },
+  { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" }, },
+  { key: "hang_gplx", label: "HẠNG", _style: { width: "1%" }, },
   { key: "ngay_khai_giang", label: "KHAI GIẢNG" },
-  { key: "status", label: "TRẠNG THÁI" },
-  { key: "card_status", label: "GÁN THẺ" },
+  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
+  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
   { key: "biometrics", label: "SINH TRẮC" },
   { key: "so_hoc_sinh", label: "SĨ SỐ" },
-  {
-    key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU",
-    _classes: "text-center",
-  },
-  { key: "theory", label: "LÝ THUYẾT" },
+  { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", _style: { width: "11%" }, },
+  { key: "theory", label: "LÝ THUYẾT", },
   { key: "practise", label: "THỰC HÀNH" },
   { key: "ngay_be_giang", label: "BẾ GIẢNG" },
   {
@@ -87,6 +90,7 @@ const getCard_status = (status) => {
     default: return
   }
 };
+
 const getData_synchronizing_status = (status) => {
   switch (status) {
     case 2: return 'secondary'
@@ -101,6 +105,22 @@ const Dashboard = () => {
   const history = useHistory()
   const [details, setDetails] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [state, setState] = useState({});
+  const onChange = value => {
+    // console.log('onChange ', value);
+    setState({ value });
+  };
+  const tProps = {
+    treeData,
+    value: state.value,
+    onChange: onChange,
+    treeCheckable: true,
+    showCheckedStrategy: SHOW_PARENT,
+    placeholder: 'Lọc theo ....',
+    style: {
+      width: '100%',
+    },
+  };
   const toggleDetails = (index) => {
     const position = details.indexOf(index);
     let newDetails = details.slice();
@@ -111,6 +131,10 @@ const Dashboard = () => {
     }
     setDetails(newDetails);
   };
+  const redirectUser = (item) => {
+    console.log(item)
+    history.push(`/users/${item.id}`)
+  }
   useEffect(() => {
     async function fetchCourses() {
       try {
@@ -128,27 +152,58 @@ const Dashboard = () => {
     <>
       <CRow>
         <CCol>
-          <CCard>
+          <CCard className="courses-card">
             <CCardHeader>Danh sách khóa học</CCardHeader>
             <CCardBody>
+              <CRow className="no-gutter">
+                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
+                  <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
+                  <Input placeholder="Tên khóa" />
+                </CCol>
+                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
+                  <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
+                  <TreeSelect {...tProps} />
+                </CCol>
+                <CCol col="6" sm="4" md="2" xl="2" className="mb-3 ml-auto">
+                  <CLabel htmlFor="ccadd" className="invisible">add</CLabel>
+                  <CButton block color="info" className="col-7 ml-auto align-middle">
+                    <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
+                    <span>Thêm Khóa</span>
+                  </CButton>
+                </CCol>
+                <CCol col="6" sm="4" md="2" xl="1" className="mb-3">
+                  <CLabel htmlFor="ccimport" className="invisible">import</CLabel>
+                  <CButton block color="primary align-middle"><ImportOutlined className='pr-2 d-inline-flex' />Import</CButton>
+                </CCol>
+              </CRow>
               <CDataTable
+                addTableClasses="courses-table"
                 items={courses}
                 fields={fields}
                 // columnFilter
-                tableFilter
-                itemsPerPageSelect
-                itemsPerPage={5}
+                // tableFilter
+                // itemsPerPageSelect
+                itemsPerPage={2}
                 hover
                 sorter
-                pagination={{ align: "center" }}
+                pagination={{ align: 'center', size: 'lg' }}
                 border={true}
                 // clickableRows
-                onRowClick={(item, index) => toggleDetails(index)}
+                // onRowClick={(item, index) => toggleDetails(index)}
                 scopedSlots={{
+                  stt: (item, index) => {
+                    return (
+                      <td onClick={() => toggleDetails(index)}>
+                        <span className="pr-2 courses-icon">
+                          <CIcon name={'cil-caret-' + (details.includes(index) ? 'top' : 'bottom')} />
+                        </span>{index}
+                      </td>
+                    )
+                  },
                   ten_khoa_hoc: (item) => {
                     return (
-                      <td>
-                        {item ? item.ten_khoa_hoc : ''}
+                      <td onClick={() => redirectUser(item)}>
+                        <span>{item ? item.ten_khoa_hoc : ''}</span>
                       </td>
                     )
                   },
@@ -168,19 +223,15 @@ const Dashboard = () => {
                   },
                   status: (item) => {
                     return (
-                      <td>
-                        <CBadge color={getColor(item.status)}>
-                          {getStatus(item.status)}
-                        </CBadge>
+                      <td className="courses-status">
+                        <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert>
                       </td>
                     )
                   },
                   card_status: (item, index) => {
                     return (
-                      <td>
-                        <CBadge color={getColorCard_status(item.card_status)}>
-                          {getCard_status(item.card_status)}
-                        </CBadge>
+                      <td className="courses-card_status">
+                        <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert>
                       </td>
                     )
                   },
@@ -189,10 +240,10 @@ const Dashboard = () => {
                       <td>
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fingerprint
-                        } <span className="pr-2"><CIcon name={'cil-fingerprint'} /></span>
+                        } <span className="pr-3 courses-icon"><CIcon name={'cil-fingerprint'} /></span>
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fade_id
-                        } <span className="pr-2"><CIcon name={'cil-face'} /></span>
+                        } <span className="courses-icon"><CIcon name={'cil-face'} /></span>
                       </td>
                     )
                   },
@@ -205,16 +256,16 @@ const Dashboard = () => {
                   },
                   data_synchronizing: (item, index) => {
                     return (
-                      <td>
+                      <td className="text-center">
                         <span className="pr-3">
-                          <CBadge className="p-2" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)}>
+                          <CAlert className="d-inline-flex p-2 mb-0" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)}>
                             <CIcon name={'cil-screen-smartphone'} />
-                          </CBadge>
+                          </CAlert>
                         </span>
                         <span className="pr-3">
-                          <CBadge className="p-2" color={"success"}>
+                          <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
                             <CIcon name={'cil-truck'} />
-                          </CBadge>
+                          </CAlert>
                         </span>
                       </td>
                     )
@@ -225,16 +276,18 @@ const Dashboard = () => {
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).theory.number
                         } buổi
-                        <br />(
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).theory.start_theory
-                        }h-
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).theory.end_theory
-                        }h/
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).theory.sum
-                        }h)
+                        <br />
+                        <span className="text-disable">
+                          ({
+                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.start_theory
+                          }h-
+                          {
+                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.end_theory
+                          }h/
+                          {
+                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.sum
+                          }h)
+                        </span>
                       </td>
                     )
                   },
@@ -247,10 +300,12 @@ const Dashboard = () => {
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).practise.end_practise
                         }
-                        <br />/
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).practise.sum
-                        }km
+                        <br />
+                        <span className="text-disable">
+                          /{
+                            usersDataFake.find((itemFake) => itemFake.stt === index).practise.sum
+                          }km
+                        </span>
                       </td>
                     )
                   },
@@ -263,7 +318,7 @@ const Dashboard = () => {
                   },
                   delete_row: (item, index) => {
                     return (
-                      <td className="py-2">
+                      <td className="align-middle py-2">
                         <CIcon name={'cil-trash'} />
                       </td>
                     );
