@@ -23,23 +23,28 @@ class Login extends Component {
   state = {
     data: {},
     error: {},
+    loading: false,
   };
+  setLoading(value) {
+    this.setState({ loading: value });
+  }
+
   handleLogin = () => {
     // setError(null);
-    // setLoading(true);
+    this.setLoading(true);
     const data = { ...this.state.data };
     console.log(data);
     authService
       .login(data.username, data.password)
       .then((response) => {
-        //setLoading(false);
+        this.setLoading(false);
         // setUserSession(response.data.token, response.data.user);
         console.log("login success");
         this.props.history.push("/dashboard");
       })
       .catch((error) => {
         console.log("login error: ", error);
-        // setLoading(false);
+        this.setLoading(false);
         // if (error.response.status === 422)
         //   setError(error.response.detail.message);
         // else setError("Something went wrong. Please try again later.");
@@ -61,7 +66,7 @@ class Login extends Component {
     const data = { ...this.state.data };
     const username = data.username;
     const error = "";
-    const loading = "";
+    const loading = this.state.loading;
     return (
       <div className="c-app c-default-layout flex-row align-items-center">
         <CContainer>
