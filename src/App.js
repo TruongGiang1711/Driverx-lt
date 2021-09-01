@@ -21,7 +21,7 @@ const Login = React.lazy(() => import("./views/pages/login/Login"));
 const Register = React.lazy(() => import("./views/pages/register/Register"));
 const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
 const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
-
+const NotFound = React.lazy(() => import("./views/pages/page404/NotFound.js"));
 const App = () => {
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -60,7 +60,7 @@ const App = () => {
             exact
             path="/404"
             name="Page 404"
-            render={(props) => <Page404 {...props} />}
+            render={(props) => <NotFound {...props} />}
           />
           <Route
             exact
