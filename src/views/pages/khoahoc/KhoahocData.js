@@ -5,9 +5,29 @@ export const treeData = [
         key: '0-0',
         children: [
             {
-                title: 'Child Node1',
+                title: 'Phân hiệu A',
                 value: '0-0-0',
                 key: '0-0-0',
+            },
+            {
+                title: 'Phân hiệu B',
+                value: '0-0-1',
+                key: '0-0-1',
+            },
+            {
+                title: 'Phân hiệu C',
+                value: '0-0-2',
+                key: '0-0-2',
+            },
+            {
+                title: 'Phân hiệu D',
+                value: '0-0-3',
+                key: '0-0-3',
+            },
+            {
+                title: 'Phân hiệu E',
+                value: '0-0-4',
+                key: '0-0-4',
             },
         ],
     },
@@ -17,14 +37,24 @@ export const treeData = [
         key: '0-1',
         children: [
             {
-                title: 'Child Node2',
+                title: 'Chưa diễn ra',
                 value: '0-1-0',
                 key: '0-1-0',
             },
             {
-                title: 'Child Node3',
+                title: 'Lý thuyết',
                 value: '0-1-1',
                 key: '0-1-1',
+            },
+            {
+                title: 'Thực hành',
+                value: '0-1-2',
+                key: '0-1-2',
+            },
+            {
+                title: 'Kết thúc',
+                value: '0-1-3',
+                key: '0-1-3',
             },
         ],
     },
@@ -34,19 +64,24 @@ export const treeData = [
         key: '0-2',
         children: [
             {
-                title: 'Child Node4',
+                title: 'B1',
                 value: '0-2-0',
                 key: '0-2-0',
             },
             {
-                title: 'Child Node5',
+                title: 'B2',
                 value: '0-2-1',
                 key: '0-2-1',
             },
             {
-                title: 'Child Node6',
+                title: 'A1',
                 value: '0-2-2',
                 key: '0-2-2',
+            },
+            {
+                title: 'A2',
+                value: '0-2-3',
+                key: '0-2-3',
             },
         ],
     },

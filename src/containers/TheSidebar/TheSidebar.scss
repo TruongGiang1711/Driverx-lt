@@ -1,0 +1,55 @@
+.sidebar-custom {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background: #000004e6;
+    &_brand,
+    .c-sidebar-brand {
+        border-top-right-radius: 30px;
+        border-bottom: 1px solid #ffffff;
+        padding: 2rem 0;
+        margin: auto 2rem 1rem;
+        background: none;
+        .c-sidebar-brand-full {
+            white-space: nowrap;
+        }
+    }
+    &_minimizer,
+    .c-sidebar-minimizer {
+        border-bottom-right-radius: 30px;
+        border-top: 1px solid #ffffff;
+        background: none;
+    }
+    &_nav {
+        li {
+            padding: 0.5rem 0;
+            a.c-sidebar-nav-link {
+                padding: 0.8445rem 1rem;
+                border-radius: 10px;
+                &:hover,
+                &:active,
+                &.c-active {
+                    background: grey;
+                }
+            }
+        }
+        &.ps {
+            li {
+                padding: 0.5rem 1rem;
+            }
+        }
+    }
+    &.c-sidebar-minimized {
+        .sidebar-custom_brand {
+            margin: auto auto 1rem;
+        }
+        .sidebar-custom_nav {
+            li {
+                &:hover {
+                    a.c-sidebar-nav-link{
+                        background: grey;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -9,12 +9,8 @@ export default [
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
   },
   {
-    _tag: 'CSidebarNavTitle',
-    _children: ['KHÓA HỌC']
-  },
-  {
     _tag: 'CSidebarNavItem',
-    name: 'Danh sách khóa học',
+    name: 'Khóa học',
     to: '/khoahoc',
     icon: 'cil-drop',
   },
