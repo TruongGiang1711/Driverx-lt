@@ -1,0 +1,86 @@
+.courses-card {
+    label {
+        font-weight: 500;
+        color: #3399ff;
+    }
+    .courses-icon {
+        display: inline-flex;
+        vertical-align: middle;
+        padding-bottom: 0.2rem;
+        svg{
+            margin: 0;
+        }
+    }
+    .courses-table {
+        thead {
+            tr {
+                box-shadow: 0px -15px 25px 0;
+                th {
+                    color: #b1b7c1;
+                    font-weight: normal;
+                    border-color: #ebedef;
+                    font-family: sans-serif;
+                }
+            }
+        }
+        tbody {
+            td {
+                padding: 0.25rem 0.75rem;
+                vertical-align: middle;
+                border-color: #ebedef;
+                &.courses-status,
+                &.courses-card_status {
+                    .alert {
+                        width: 102px;
+                    }
+                }
+                .text-disable {
+                    color: #b1b7c1;
+                }
+            }
+        }
+    }
+
+    .pagination {
+        .page-item {
+            padding: 0 0.5rem;
+            .page-link {
+                border: 0;
+                color: #b1b7c1;
+                padding: 0.25rem 0.75rem;
+                font-size: medium;
+                &:hover {
+                    border-radius: 5px;
+                    background-color: transparent;
+                    color: #3399ff;
+                }
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+            &.active {
+                .page-link {
+                    background-color: #2eb85c21;
+                    color: #3399ff;
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+
+    // multi select checkbox of ant design
+    .ant-select {
+        overflow: auto;
+        margin-bottom: -10px;
+        .ant-select-selector{
+            width: max-content;
+            min-width: 100%;
+        }
+        .ant-select-selection-item-remove {
+            vertical-align: middle;
+            span.anticon-close {
+                display: inline-flex;
+            }
+        }
+    }
+}

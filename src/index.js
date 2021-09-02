@@ -10,6 +10,7 @@ import { icons } from './assets/icons'
 
 import { Provider } from 'react-redux'
 import store from './store'
+import 'antd/dist/antd.css';
 
 React.icons = icons
 

@@ -131,7 +131,10 @@ import {
   cilFingerprint,
   cilFace,
   cilScreenSmartphone,
-  cilTruck
+  cilTruck,
+  cilPlus,
+  cilCaretTop,
+  cilCaretBottom
 } from '@coreui/icons'
 
 export const icons = Object.assign({}, {
@@ -233,7 +236,10 @@ export const icons = Object.assign({}, {
   cilFingerprint,
   cilFace,
   cilScreenSmartphone,
-  cilTruck
+  cilTruck,
+  cilPlus,
+  cilCaretTop,
+  cilCaretBottom,
 }, {
   cifUs,
   cifBr,
