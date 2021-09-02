@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import './TheSidebar.scss';
 import {
   CCreateElement,
   CSidebar,
@@ -15,7 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 
 // sidebar nav config
-import navigation from './_nav'
+import navigation from '../_nav'
 
 const TheSidebar = () => {
   const dispatch = useDispatch()
@@ -25,21 +26,22 @@ const TheSidebar = () => {
     <CSidebar
       show={show}
       onShowChange={(val) => dispatch({ type: 'set', sidebarShow: val })}
+      className="sidebar-custom"
     >
-      <CSidebarBrand className="d-md-down-none" to="/">
+      <CSidebarBrand className="d-md-down-none sidebar-custom_brand" to="/">
         {/* <CIcon
           className="c-sidebar-brand-full"
           name="logo-negative"
           height={35}
         /> */}
+        <div className="c-sidebar-brand-full" style={{height: 35}}>DRIVERX-LT</div>
         <CIcon
           className="c-sidebar-brand-minimized"
           name="sygnet"
           height={35}
         />
-        DRIVERX-LT
       </CSidebarBrand>
-      <CSidebarNav>
+      <CSidebarNav className="sidebar-custom_nav">
         <CCreateElement
           items={navigation}
           components={{
@@ -50,7 +52,7 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none" />
+      <CSidebarMinimizer className="c-d-md-down-none sidebar-custom_minimizer" />
     </CSidebar>
   )
 }

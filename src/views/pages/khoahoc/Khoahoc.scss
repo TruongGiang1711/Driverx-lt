@@ -7,7 +7,7 @@
         display: inline-flex;
         vertical-align: middle;
         padding-bottom: 0.2rem;
-        svg{
+        svg {
             margin: 0;
         }
     }
@@ -48,7 +48,6 @@
                 border: 0;
                 color: #b1b7c1;
                 padding: 0.25rem 0.75rem;
-                font-size: medium;
                 &:hover {
                     border-radius: 5px;
                     background-color: transparent;
@@ -69,18 +68,10 @@
     }
 
     // multi select checkbox of ant design
-    .ant-select {
-        overflow: auto;
-        margin-bottom: -10px;
-        .ant-select-selector{
-            width: max-content;
-            min-width: 100%;
-        }
-        .ant-select-selection-item-remove {
-            vertical-align: middle;
-            span.anticon-close {
-                display: inline-flex;
-            }
+    .ant-select-selection-item-remove {
+        vertical-align: middle;
+        span.anticon-close {
+            display: inline-flex;
         }
     }
 }
