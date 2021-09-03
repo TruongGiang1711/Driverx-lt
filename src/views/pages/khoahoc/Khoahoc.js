@@ -42,11 +42,11 @@ const fields = [
   { key: "stt", label: "STT", _style: { width: "1%" }, },
   { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" }, },
   { key: "hang_gplx", label: "HẠNG", _style: { width: "1%" }, },
-  { key: "ngay_khai_giang", label: "KHAI GIẢNG" },
-  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
-  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
-  { key: "biometrics", label: "SINH TRẮC" },
-  { key: "so_hoc_sinh", label: "SĨ SỐ" },
+  { key: "ngay_khai_giang", label: "KHAI GIẢNG", _style: { width: "8%" }, },
+  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", _style: { width: "10%" }, },
+  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", _style: { width: "10%" }, },
+  { key: "biometrics", label: "SINH TRẮC", _style: { width: "8%" }, },
+  { key: "so_hoc_sinh", label: "SĨ SỐ", _style: { width: "5%" }, },
   { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", _style: { width: "11%" }, },
   { key: "theory", label: "LÝ THUYẾT", },
   { key: "practise", label: "THỰC HÀNH" },
@@ -216,26 +216,27 @@ const Dashboard = () => {
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
               <CRow className="no-gutter">
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
+                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                   <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
                   <Select {...selectProps} />
                 </CCol>
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
+                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                   <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
                   <TreeSelect {...tProps} />
                 </CCol>
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3 ml-auto">
+                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3 ml-auto">
                   <CLabel htmlFor="ccadd" className="invisible">add</CLabel>
-                  <CButton block color="info" className="col-7 ml-auto align-middle">
+                  <CButton block color="info" className="col-xl-7 ml-auto align-middle">
                     <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
                     <span>Thêm Khóa</span>
                   </CButton>
                 </CCol>
-                <CCol col="6" sm="4" md="2" xl="1" className="mb-3">
+                <CCol col="6" sm="4" md="2" lg="3" xl="1" className="mb-3">
                   <CLabel htmlFor="ccimport" className="invisible">import</CLabel>
                   <CButton block color="primary align-middle"><ImportOutlined className='pr-2 d-inline-flex' />Import</CButton>
                 </CCol>
               </CRow>
+
               <CDataTable
                 addTableClasses="courses-table"
                 // innerRef={(item, index) => innerRefAdd(item)}
