@@ -39,22 +39,20 @@ import { getCourses } from "src/services/userService";
 const { SHOW_PARENT } = TreeSelect;
 
 const fields = [
-  { key: "stt", label: "STT", _style: { width: "1%" }, },
-  { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" }, },
-  { key: "hang_gplx", label: "HẠNG", _style: { width: "1%" }, },
-  { key: "ngay_khai_giang", label: "KHAI GIẢNG", _style: { width: "8%" }, },
-  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", _style: { width: "10%" }, },
-  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", _style: { width: "10%" }, },
-  { key: "biometrics", label: "SINH TRẮC", _style: { width: "8%" }, },
-  { key: "so_hoc_sinh", label: "SĨ SỐ", _style: { width: "5%" }, },
-  { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", _style: { width: "11%" }, },
+  { key: "ten_khoa_hoc", label: "TÊN KHÓA", },
+  { key: "hang_gplx", label: "HẠNG", },
+  { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
+  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
+  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
+  { key: "biometrics", label: "SINH TRẮC", },
+  { key: "so_hoc_sinh", label: "SĨ SỐ", },
+  { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", },
   { key: "theory", label: "LÝ THUYẾT", },
   { key: "practise", label: "THỰC HÀNH" },
   { key: "ngay_be_giang", label: "BẾ GIẢNG" },
   {
     key: "delete_row",
     label: "",
-    _style: { width: "1%" },
     sorter: false,
     filter: false,
   },
@@ -161,6 +159,7 @@ const Dashboard = () => {
     },
     placeholder: 'Tên khóa ....',
     maxTagCount: 'responsive',
+    showArrow: true,
   };
   const handleFilter = (value) => {
     console.log(value)
@@ -178,7 +177,9 @@ const Dashboard = () => {
     style: {
       width: '100%',
     },
-    maxTagCount: 'responsive'
+    maxTagCount: 'responsive',
+    showArrow: true,
+    showSearch: false,
   };
   // toogleDetails
   const toggleDetails = (index) => {
@@ -215,7 +216,7 @@ const Dashboard = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              <CRow className="no-gutter">
+              <CRow>
                 <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                   <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
                   <Select {...selectProps} />
@@ -254,15 +255,6 @@ const Dashboard = () => {
                 // clickableRows
                 // onRowClick={(item, index) => toggleDetails(index)}
                 scopedSlots={{
-                  stt: (item, index) => {
-                    return (
-                      <td onClick={() => toggleDetails(index)}>
-                        <span className="pr-2 courses-icon">
-                          <CIcon name={'cil-caret-' + (details.includes(index) ? 'top' : 'bottom')} />
-                        </span>{index}
-                      </td>
-                    )
-                  },
                   ten_khoa_hoc: (item) => {
                     return (
                       <td onClick={() => redirectUser(item)}>
@@ -382,7 +374,12 @@ const Dashboard = () => {
                   delete_row: (item, index) => {
                     return (
                       <td className="align-middle py-2">
-                        <CIcon name={'cil-trash'} />
+                        <span className="pr-2 courses-icon">
+                          <CIcon name={'cil-trash'} />
+                        </span>
+                        <span onClick={() => toggleDetails(index)}>
+                          <CIcon name={'cil-caret-' + (details.includes(index) ? 'top' : 'bottom')} />
+                        </span>
                       </td>
                     );
                   },
