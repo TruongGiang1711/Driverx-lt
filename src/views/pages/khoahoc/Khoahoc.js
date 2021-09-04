@@ -26,180 +26,57 @@ import {
   CPagination
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
-import { treeData, usersDataFake } from "./KhoahocData";
-
-import { TreeSelect, Select } from 'antd';
-import { ImportOutlined } from '@ant-design/icons';
-
 import Moment from 'react-moment';
+import { usersDataFake } from "./KhoahocData";
+import { ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
+import { FilterKhoahoc } from "./KhoahocFilter";
+import { ScopeSlotsTable } from "./KhoahocScopeSlots";
 
-import courseService from "src/services/courseService";
-import { getCourses } from "src/services/userService";
-
-const { SHOW_PARENT } = TreeSelect;
-
-const fields = [
-  { key: "stt", label: "STT", _style: { width: "1%" }, },
-  { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" }, },
-  { key: "hang_gplx", label: "HẠNG", _style: { width: "1%" }, },
-  { key: "ngay_khai_giang", label: "KHAI GIẢNG" },
-  { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
-  { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
-  { key: "biometrics", label: "SINH TRẮC" },
-  { key: "so_hoc_sinh", label: "SĨ SỐ" },
-  { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", _style: { width: "11%" }, },
-  { key: "theory", label: "LÝ THUYẾT", },
-  { key: "practise", label: "THỰC HÀNH" },
-  { key: "ngay_be_giang", label: "BẾ GIẢNG" },
-  {
-    key: "delete_row",
-    label: "",
-    _style: { width: "1%" },
-    sorter: false,
-    filter: false,
-  },
-];
-
-const getColor = (status) => {
-  switch (status) {
-    case 3: return 'success'
-    case 2: return 'primary'
-    case 1: return 'warning'
-    case 0: return 'danger'
-    default: return
-  }
-};
-const getStatus = (status) => {
-  switch (status) {
-    case 3: return 'Kết thúc'
-    case 2: return 'Thực hành'
-    case 1: return 'Lý thuyết'
-    case 0: return 'Chưa diễn ra'
-    default: return
-  }
-};
-
-const getColorCard_status = (status) => {
-  switch (status) {
-    case 1: return 'success'
-    case 0: return 'danger'
-    default: return
-  }
-};
-const getCard_status = (status) => {
-  switch (status) {
-    case 1: return 'Đã gán thẻ'
-    case 0: return 'Chưa gán thẻ'
-    default: return
-  }
-};
-
-const getData_synchronizing_status = (status) => {
-  switch (status) {
-    case 2: return 'secondary'
-    case 1: return 'success'
-    case 0: return 'danger'
-    default: return
-  }
-};
+import { getCourses, getBranches } from "src/services/userService";
+import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 
 // console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
 const Dashboard = () => {
   const history = useHistory()
-  const [details, setDetails] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [state, setState] = useState({});
-  const [value, setValue] = useState([])
-  // const createMarkup = () => {
-  //   return {
-  //     __html: <CRow className="no-gutter">
-  //       {/* <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-  //   <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
-  //   <Select {...selectProps} />
-  // </CCol> */}
-  //       <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-  //         <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
-  //         <TreeSelect {...tProps} />
-  //       </CCol>
-  //       <CCol col="6" sm="4" md="2" xl="2" className="mb-3 ml-auto">
-  //         <CLabel htmlFor="ccadd" className="invisible">add</CLabel>
-  //         <CButton block color="info" className="col-7 ml-auto align-middle">
-  //           <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
-  //           <span>Thêm Khóa</span>
-  //         </CButton>
-  //       </CCol>
-  //       <CCol col="6" sm="4" md="2" xl="1" className="mb-3">
-  //         <CLabel htmlFor="ccimport" className="invisible">import</CLabel>
-  //         <CButton block color="primary align-middle"><ImportOutlined className='pr-2 d-inline-flex' />Import</CButton>
-  //       </CCol>
-  //     </CRow>
-  //   }
-  // }
-  // const innerRefAdd = (item) => {
-  //   console.log(item)
-  //   // document.getElementsByClassName('.c-datatable-filter')
-  // }
-
-  // tìm kiếm
-  const options = [];
-  courses.map((item, index) => {
-    options.push({
-      label: item.ten_khoa_hoc,
-      value: item.ma_khoa_hoc
-    });
+  const [branches, setBranches] = useState([]);
+  const [deleteRow, setDeleteRow] = useState(false)
+  const [syncRow, setSyncRow] = useState(false)
+  const [filterSearch, setFilterSearch] = useState('')
+  const [filter, setFilter] = useState({
+    branch_id: '',
+    statsu: -1,
+    hang_gplx: ''
   })
-  const selectProps = {
-    mode: 'multiple',
-    style: {
-      width: '100%',
+  const fields = [
+    { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" } },
+    { key: "branch_id", label: "PHÂN HIỆU", _style: { display: filter.branch_id === "" ? "table-cell" : "none" } },
+    { key: "hang_gplx", label: "HẠNG", },
+    { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
+    { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
+    { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
+    { key: "biometrics", label: "SINH TRẮC", },
+    { key: "so_hoc_sinh", label: "SĨ SỐ", },
+    { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", },
+    { key: "theory", label: "LÝ THUYẾT", },
+    { key: "practise", label: "THỰC HÀNH" },
+    { key: "ngay_be_giang", label: "BẾ GIẢNG" },
+    {
+      key: "delete_row",
+      label: "",
+      sorter: false,
+      filter: false,
     },
-    value,
-    options,
-    onChange: (newValue) => {
-      setValue(newValue);
-      handleFilter(newValue)
-    },
-    placeholder: 'Tên khóa ....',
-    maxTagCount: 'responsive',
-  };
-  const handleFilter = (value) => {
-    console.log(value)
-  }
-  // lọc
-  const tProps = {
-    treeData,
-    value: state.value,
-    onChange: (value) => {
-      setState(value);
-    },
-    treeCheckable: true,
-    showCheckedStrategy: SHOW_PARENT,
-    placeholder: 'Lọc theo ....',
-    style: {
-      width: '100%',
-    },
-    maxTagCount: 'responsive'
-  };
-  // toogleDetails
-  const toggleDetails = (index) => {
-    const position = details.indexOf(index);
-    let newDetails = details.slice();
-    if (position !== -1) {
-      newDetails.splice(position, 1);
-    } else {
-      newDetails = [...details, index];
-    }
-    setDetails(newDetails);
-  };
+  ];
   const redirectUser = (item) => {
-    // console.log(item)
     history.push(`/users/${item.id}`)
   }
+  
   useEffect(() => {
     async function fetchCourses() {
       try {
         // console.log(courseService.getHeader());
-        const courses = await courseService.getCourses();
+        const courses = await getCourses();
         // console.log(courses.data.items);
         setCourses(courses.data.items);
       } catch (error) {
@@ -207,6 +84,19 @@ const Dashboard = () => {
       }
     }
     fetchCourses();
+    async function fetchBranches() {
+      const ob = {
+        name: '',
+        customer_id: 0,
+        province_id: 0
+      }
+      try {
+        const branches = await getBranches(ob);
+        setBranches(branches.data);
+      } catch (error) {
+      }
+    }
+    fetchBranches();
   }, []);
   return (
     <>
@@ -215,57 +105,30 @@ const Dashboard = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              <CRow className="no-gutter">
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-                  <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
-                  <Select {...selectProps} />
-                </CCol>
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-                  <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
-                  <TreeSelect {...tProps} />
-                </CCol>
-                <CCol col="6" sm="4" md="2" xl="2" className="mb-3 ml-auto">
-                  <CLabel htmlFor="ccadd" className="invisible">add</CLabel>
-                  <CButton block color="info" className="col-7 ml-auto align-middle">
-                    <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
-                    <span>Thêm Khóa</span>
-                  </CButton>
-                </CCol>
-                <CCol col="6" sm="4" md="2" xl="1" className="mb-3">
-                  <CLabel htmlFor="ccimport" className="invisible">import</CLabel>
-                  <CButton block color="primary align-middle"><ImportOutlined className='pr-2 d-inline-flex' />Import</CButton>
-                </CCol>
-              </CRow>
+              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, branches, courses, getStatus })}
               <CDataTable
                 addTableClasses="courses-table"
-                // innerRef={(item, index) => innerRefAdd(item)}
                 items={courses}
                 fields={fields}
-                // columnFilter
-                // tableFilter
-                // onTableFilterChange={handleFilter}
-                // itemsPerPageSelect
+                columnFilterValue={{ ...filter }}
+                tableFilterValue={filterSearch}
                 itemsPerPage={2}
                 hover
                 sorter
                 pagination={{ align: 'center', size: 'lg' }}
                 border={true}
-                // clickableRows
-                // onRowClick={(item, index) => toggleDetails(index)}
                 scopedSlots={{
-                  stt: (item, index) => {
-                    return (
-                      <td onClick={() => toggleDetails(index)}>
-                        <span className="pr-2 courses-icon">
-                          <CIcon name={'cil-caret-' + (details.includes(index) ? 'top' : 'bottom')} />
-                        </span>{index}
-                      </td>
-                    )
-                  },
                   ten_khoa_hoc: (item) => {
                     return (
                       <td onClick={() => redirectUser(item)}>
                         <CNavLink>{item ? item.ten_khoa_hoc : ''}</CNavLink>
+                      </td>
+                    )
+                  },
+                  branch_id: (item) => {
+                    return (
+                      <td className={filter.branch_id === "" ? "d-table-cell" : "d-none"}>
+                        {item.branch_name}
                       </td>
                     )
                   },
@@ -320,7 +183,7 @@ const Dashboard = () => {
                     return (
                       <td className="text-center">
                         <span className="pr-3">
-                          <CAlert className="d-inline-flex p-2 mb-0" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)}>
+                          <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
                           </CAlert>
                         </span>
@@ -381,26 +244,10 @@ const Dashboard = () => {
                   delete_row: (item, index) => {
                     return (
                       <td className="align-middle py-2">
-                        <CIcon name={'cil-trash'} />
+                        <span role="button">
+                          <CIcon name={'cil-trash'} onClick={() => setDeleteRow(!deleteRow)} />
+                        </span>
                       </td>
-                    );
-                  },
-                  details: (item, index) => {
-                    return (
-                      <CCollapse show={details.includes(index)}>
-                        <CCardBody>
-                          <h4>{item.username}</h4>
-                          <p className="text-muted">
-                            User since: {item.registered}
-                          </p>
-                          <CButton size="sm" color="info">
-                            User Settings
-                          </CButton>
-                          <CButton size="sm" color="danger" className="ml-1">
-                            Delete
-                          </CButton>
-                        </CCardBody>
-                      </CCollapse>
                     );
                   },
                 }}
@@ -409,6 +256,8 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      {ModalDeleteRow({ deleteRow, setDeleteRow, })}
+      {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
     </>
   );
 };

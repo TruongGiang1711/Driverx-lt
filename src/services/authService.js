@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 const apiEndpoint = "/login";
 const tokenKey = "token";
 const tokenFake =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA1NjE1NDF9.d5y6UBnYDvpN0fHx-tIv7we0fSzoPRTzwr3nlSAad5s";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzLCJleHAiOjE2MzA4NTg3NTN9.gaw76CjjokcktsqKKyLwnNk4uTgzhH5iKQGNLbX3vOQ";
 
 http.setJwt(getJwt());
 export async function login(email, password) {

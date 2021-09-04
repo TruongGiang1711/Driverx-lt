@@ -20,6 +20,7 @@
                     font-weight: normal;
                     border-color: #ebedef;
                     font-family: sans-serif;
+                    white-space: nowrap;
                 }
             }
         }
@@ -31,11 +32,15 @@
                 &.courses-status,
                 &.courses-card_status {
                     .alert {
-                        width: 102px;
+                        width: 120px;
+                        white-space: nowrap;
                     }
                 }
                 .text-disable {
                     color: #b1b7c1;
+                }
+                button {
+                    box-shadow: none;
                 }
             }
         }
