@@ -9,14 +9,14 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { removeUserSession } from 'src/utils/common';
+import { logout } from './../services/authService';
 import { useHistory } from 'react-router-dom';
 
 const TheHeaderDropdown = (props) => {
   let history = useHistory();
   // handle click event of logout button
   const handleLogout = () => {
-    removeUserSession();
+    logout();
     history.push('/login');
   }
   return (

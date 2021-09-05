@@ -40,16 +40,11 @@ const Login = (props) => {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    // postLogin("/login", {
-    //   email: username.value,
-    //   password: password.value,
-    // })
     authService
       .login(username.value, password.value)
       .then((response) => {
         setLoading(false);
-        // setUserSession(response.data.token, response.data.user);
-        console.log("login success");
+        // console.log("login success");
         props.history.push("/dashboard");
       })
       .catch((error) => {
