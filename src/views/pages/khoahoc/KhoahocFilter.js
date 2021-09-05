@@ -5,7 +5,6 @@ import {
     CLabel,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
-import { ImportOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 const { Option } = Select;
 const { Search } = Input;
@@ -47,20 +46,18 @@ export const FilterKhoahoc = (props) => {
     }
 
     return (
-        <CRow>
-            <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
-                <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tìm kiếm và nhấn Enter" onPressEnter={(item) => handleChange(item, 'name')} />
-            </CCol>
-            <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
-                <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
-                    <Option key={0} value={0}>Tất cả</Option>
-                    {props.branches.map((item, index) => {
-                        return <Option key={item.id} value={item.id}>{item.name}</Option>
-                    })}
-                </Select>
-            </CCol>
+        <CRow className="d-flex flex-wrap-reverse">
+            {(props.branches && props.branches.length > 1) ?
+                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
+                    <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
+                    <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                        <Option key={0} value={0}>Tất cả</Option>
+                        {props.branches.map((item, index) => {
+                            return <Option key={item.id} value={item.id}>{item.name}</Option>
+                        })}
+                    </Select>
+                </CCol> : undefined
+            }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái</CLabel><br />
                 <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
@@ -74,8 +71,12 @@ export const FilterKhoahoc = (props) => {
                 <CLabel htmlFor="ccfilter">Hạng</CLabel><br />
                 <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'hang')}>
                     <Option key={''} value={''}>Tất cả</Option>
-                    {props.hangs.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
+                    {props.hangs && props.hangs.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
                 </Select>
+            </CCol>
+            <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
+                <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
+                <Search placeholder="Tên khóa" onPressEnter={(item) => handleChange(item, 'name')} />
             </CCol>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
@@ -84,12 +85,12 @@ export const FilterKhoahoc = (props) => {
                     <span>Thêm Khóa</span>
                 </CButton>
             </div>
-            <div className="mb-3 pr-3">
+            {/* <div className="mb-3 pr-3">
                 <CLabel htmlFor="ccimport" className="invisible">import</CLabel><br />
                 <CButton block color="primary align-middle">
                     <ImportOutlined className='pr-2 d-inline-flex' />Import
                 </CButton>
-            </div>
+            </div> */}
         </CRow>
     )
 }

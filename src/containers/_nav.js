@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 
-export default [
+const nav = [
   {
     _tag: 'CSidebarNavItem',
     name: 'Trang chủ',
@@ -321,3 +321,4 @@ export default [
   // }
 ]
 
+export default nav

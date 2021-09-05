@@ -1,28 +1,29 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
 
-const apiEndpoint = "/login";
 const tokenKey = "token";
 
-// http.setJwt(getJwt());
-export async function login(email, password) {
-  const { data } = await http.post(apiEndpoint, { email, password });
-  localStorage.setItem(tokenKey, data.access_token);
-}
-export function loginWithJwt(jwt) {
-  localStorage.setItem(tokenKey, jwt);
-}
-export function logout() {
-  localStorage.removeItem(tokenKey);
-}
-export function getJwt() {
+export const getJwt = () => {
   return localStorage.getItem(tokenKey) || null;
 }
-export function getSessionJwt() {
-  return localStorage.getItem(tokenKey);
+export const removeJwt = () => {
+  localStorage.removeItem(tokenKey);
+}
+export const setJwt = (data) => {
+  localStorage.setItem(tokenKey, data.access_token);
+  http.setAuthorizationBearer(getJwt());
 }
 
-export function getCurrentUser() {
+
+
+
+export const getSessionJwt = () => {
+  return localStorage.getItem(tokenKey);
+}
+export const loginWithJwt = (jwt) => {
+  localStorage.setItem(tokenKey, jwt);
+}
+export const getCurrentUser = () => {
   try {
     const jwt = localStorage.getItem(tokenKey);
     return jwtDecode(jwt);
@@ -31,10 +32,10 @@ export function getCurrentUser() {
   }
 }
 
-export default {
-  login,
-  logout,
-  getCurrentUser,
-  loginWithJwt,
-  getJwt,
-};
+// export default {
+//   getJwt,
+//   removeJwt,
+//   setJwt,
+//   getCurrentUser,
+//   loginWithJwt,
+// };

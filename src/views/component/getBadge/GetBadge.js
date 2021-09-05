@@ -1,5 +1,3 @@
-
-
 export const getColor = (status) => {
     switch (status) {
         case 3: return 'success'
@@ -18,7 +16,6 @@ export const getStatus = (status) => {
         default: return
     }
 };
-
 export const getColorCard_status = (status) => {
     switch (status) {
         case 1: return 'success'
@@ -33,7 +30,6 @@ export const getCard_status = (status) => {
         default: return
     }
 };
-
 export const getData_synchronizing_status = (status) => {
     switch (status) {
         case 2: return 'secondary'
