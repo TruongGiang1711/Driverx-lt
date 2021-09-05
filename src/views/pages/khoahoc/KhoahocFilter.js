@@ -8,13 +8,14 @@ import CIcon from '@coreui/icons-react'
 import { ImportOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 const { Option } = Select;
+const { Search } = Input;
 export const FilterKhoahoc = (props) => {
     // console.log(props)
-    const handleSearch = (value) => {
-        props.setFilterSearch(value.target.value)
-    }
     const handleChange = (value, key) => {
         switch (key) {
+            case 'name':
+                props.setFilter({ ...props.filter, name: value.target.value })
+                break;
             case 'branch':
                 props.setFilter({ ...props.filter, branch_id: value })
                 break;
@@ -22,20 +23,20 @@ export const FilterKhoahoc = (props) => {
                 props.setFilter({ ...props.filter, status: value })
                 break;
             case 'hang':
-                props.setFilter({ ...props.filter, hang_gplx: value })
+                props.setFilter({ ...props.filter, hang: value })
                 break;
 
             default:
                 break;
         }
     }
-    
-    let myArrayHangWithNoDuplicates = props.courses.reduce((prev, cur) => {
-        if (prev.indexOf(cur.hang_gplx) === -1) {
-            prev.push(cur.hang_gplx)
-        }
-        return prev.map((item, index) => item)
-    }, [])
+
+    // let myArrayHangWithNoDuplicates = props.courses.reduce((prev, cur) => {
+    //     if (prev.indexOf(cur.hang_gplx) === -1) {
+    //         prev.push(cur.hang_gplx)
+    //     }
+    //     return prev.map((item, index) => item)
+    // }, [])
 
     const arrStatus = []
     let listStatus = () => {
@@ -49,12 +50,12 @@ export const FilterKhoahoc = (props) => {
         <CRow>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Input placeholder="Basic usage" onChange={handleSearch} />
+                <Search placeholder="Tìm kiếm và nhấn Enter" onPressEnter={(item) => handleChange(item, 'name')} />
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
-                    <Option key={''} value={''}>Tất cả</Option>
+                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Option key={0} value={0}>Tất cả</Option>
                     {props.branches.map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
                     })}
@@ -62,8 +63,8 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái</CLabel><br />
-                <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
-                    <Option key={''} value={''}>Tất cả</Option>
+                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
+                    <Option key={'-1'} value={'-1'}>Tất cả</Option>
                     {listStatus().map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
                     })}
@@ -73,7 +74,7 @@ export const FilterKhoahoc = (props) => {
                 <CLabel htmlFor="ccfilter">Hạng</CLabel><br />
                 <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'hang')}>
                     <Option key={''} value={''}>Tất cả</Option>
-                    {myArrayHangWithNoDuplicates.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
+                    {props.hangs.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
                 </Select>
             </CCol>
             <div className="mb-3 pr-3 ml-auto">

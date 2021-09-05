@@ -32,7 +32,7 @@ import { ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
 import { ScopeSlotsTable } from "./KhoahocScopeSlots";
 
-import { getCourses, getBranches } from "src/services/userService";
+import userService, { getCourses, getBranches, getHangs } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 
 // console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
@@ -40,17 +40,22 @@ const Dashboard = () => {
   const history = useHistory()
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
+  const [hangs, setHangs] = useState([]);
   const [deleteRow, setDeleteRow] = useState(false)
   const [syncRow, setSyncRow] = useState(false)
   const [filterSearch, setFilterSearch] = useState('')
   const [filter, setFilter] = useState({
-    branch_id: '',
-    statsu: -1,
-    hang_gplx: ''
+    province_id: 0,
+    customer_id: 0,
+    branch_id: 0,
+    name: '',
+    hang: '',
+    status: -1,
+    page: 1
   })
   const fields = [
     { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" } },
-    { key: "branch_id", label: "PHÂN HIỆU", _style: { display: filter.branch_id === "" ? "table-cell" : "none" } },
+    { key: "branch_id", label: "PHÂN HIỆU", _style: { display: filter.branch_id === 0 ? "table-cell" : "none" } },
     { key: "hang_gplx", label: "HẠNG", },
     { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
     { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
@@ -71,12 +76,12 @@ const Dashboard = () => {
   const redirectUser = (item) => {
     history.push(`/users/${item.id}`)
   }
-  
+
   useEffect(() => {
+    // console.log(filter)
     async function fetchCourses() {
       try {
-        // console.log(courseService.getHeader());
-        const courses = await getCourses();
+        const courses = await getCourses(filter);
         // console.log(courses.data.items);
         setCourses(courses.data.items);
       } catch (error) {
@@ -84,6 +89,8 @@ const Dashboard = () => {
       }
     }
     fetchCourses();
+  }, [filter]);
+  useEffect(() => {
     async function fetchBranches() {
       const ob = {
         name: '',
@@ -97,6 +104,14 @@ const Dashboard = () => {
       }
     }
     fetchBranches();
+    async function fetchHangs() {
+      try {
+        const hangs = await getHangs();
+        setHangs(hangs.data);
+      } catch (error) {
+      }
+    }
+    fetchHangs();
   }, []);
   return (
     <>
@@ -105,14 +120,13 @@ const Dashboard = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, branches, courses, getStatus })}
+              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, branches, courses, hangs, getStatus })}
               <CDataTable
                 addTableClasses="courses-table"
                 items={courses}
                 fields={fields}
-                columnFilterValue={{ ...filter }}
+                // columnFilterValue={{ ...filter }}
                 tableFilterValue={filterSearch}
-                itemsPerPage={2}
                 hover
                 sorter
                 pagination={{ align: 'center', size: 'lg' }}
@@ -127,7 +141,7 @@ const Dashboard = () => {
                   },
                   branch_id: (item) => {
                     return (
-                      <td className={filter.branch_id === "" ? "d-table-cell" : "d-none"}>
+                      <td className={filter.branch_id === 0 ? "d-table-cell" : "d-none"}>
                         {item.branch_name}
                       </td>
                     )
