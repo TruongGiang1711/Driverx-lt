@@ -1,38 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import ReactDOM from "react-dom";
 import './Khoahoc.scss';
 import {
-  CAlert,
   CBadge,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
-  CCreateElement,
-  CProgress,
   CRow,
-  CCallout,
-  CCollapse,
   CDataTable,
-  CFormGroup,
-  CInput,
-  CLabel,
   CNavLink,
-  CSelect,
-  CPagination
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
 import { usersDataFake } from "./KhoahocData";
 import { ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
-import { ScopeSlotsTable } from "./KhoahocScopeSlots";
 
-import userService, { getCourses, getBranches, getHangs } from "src/services/userService";
+import { getCourses, getBranches, getHangs } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 
 // console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
@@ -54,17 +39,18 @@ const Dashboard = () => {
     page: 1
   })
   const fields = [
-    { key: "ten_khoa_hoc", label: "TÊN KHÓA", _style: { width: "10%" } },
+    { key: "stt", label: "STT", },
+    { key: "ten_khoa_hoc", label: "TÊN KHÓA", },
     { key: "branch_id", label: "PHÂN HIỆU", _style: { display: filter.branch_id === 0 ? "table-cell" : "none" } },
     { key: "hang_gplx", label: "HẠNG", },
     { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
-    { key: "status", label: "TRẠNG THÁI", _classes: "text-center", },
-    { key: "card_status", label: "GÁN THẺ", _classes: "text-center", },
+    { key: "status", label: "TRẠNG THÁI", },
+    { key: "card_status", label: "GÁN THẺ", },
     { key: "biometrics", label: "SINH TRẮC", },
     { key: "so_hoc_sinh", label: "SĨ SỐ", },
-    { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", _classes: "text-center", },
-    { key: "theory", label: "LÝ THUYẾT", },
-    { key: "practise", label: "THỰC HÀNH" },
+    { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", },
+    // { key: "theory", label: "LÝ THUYẾT", },
+    // { key: "practise", label: "THỰC HÀNH" },
     { key: "ngay_be_giang", label: "BẾ GIẢNG" },
     {
       key: "delete_row",
@@ -125,13 +111,19 @@ const Dashboard = () => {
                 addTableClasses="courses-table"
                 items={courses}
                 fields={fields}
-                // columnFilterValue={{ ...filter }}
                 tableFilterValue={filterSearch}
                 hover
                 sorter
                 pagination={{ align: 'center', size: 'lg' }}
                 border={true}
                 scopedSlots={{
+                  stt: (item, index) => {
+                    return (
+                      <td>
+                        {index}
+                      </td>
+                    )
+                  },
                   ten_khoa_hoc: (item) => {
                     return (
                       <td onClick={() => redirectUser(item)}>
@@ -162,15 +154,21 @@ const Dashboard = () => {
                   },
                   status: (item) => {
                     return (
-                      <td className="courses-status">
-                        <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert>
+                      <td className="text-center courses-status">
+                        <CBadge className="p-2" color={getColor(item.status)}>
+                          {getStatus(item.status)}
+                        </CBadge>
+                        {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert> */}
                       </td>
                     )
                   },
                   card_status: (item, index) => {
                     return (
-                      <td className="courses-card_status">
-                        <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert>
+                      <td className="text-center courses-card_status">
+                        <CBadge className="p-2" color={getColorCard_status(item.card_status)}>
+                          {getCard_status(item.card_status)}
+                        </CBadge>
+                        {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert> */}
                       </td>
                     )
                   },
@@ -197,57 +195,63 @@ const Dashboard = () => {
                     return (
                       <td className="text-center">
                         <span className="pr-3">
-                          <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
+                          <CBadge className="p-2 mb-0" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
-                          </CAlert>
+                          </CBadge>
+                          {/* <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
+                            <CIcon name={'cil-screen-smartphone'} />
+                          </CAlert> */}
                         </span>
                         <span className="pr-3">
-                          <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
+                          <CBadge className="p-2 mb-0" color={"success"}>
                             <CIcon name={'cil-truck'} />
-                          </CAlert>
+                          </CBadge>
+                          {/* <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
+                            <CIcon name={'cil-truck'} />
+                          </CAlert> */}
                         </span>
                       </td>
                     )
                   },
-                  theory: (item, index) => {
-                    return (
-                      <td>
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).theory.number
-                        } buổi
-                        <br />
-                        <span className="text-disable">
-                          ({
-                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.start_theory
-                          }h-
-                          {
-                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.end_theory
-                          }h/
-                          {
-                            usersDataFake.find((itemFake) => itemFake.stt === index).theory.sum
-                          }h)
-                        </span>
-                      </td>
-                    )
-                  },
-                  practise: (item, index) => {
-                    return (
-                      <td>
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).practise.start_practise
-                        }-
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).practise.end_practise
-                        }
-                        <br />
-                        <span className="text-disable">
-                          /{
-                            usersDataFake.find((itemFake) => itemFake.stt === index).practise.sum
-                          }km
-                        </span>
-                      </td>
-                    )
-                  },
+                  // theory: (item, index) => {
+                  //   return (
+                  //     <td>
+                  //       {
+                  //         usersDataFake.find((itemFake) => itemFake.stt === index).theory.number
+                  //       } buổi
+                  //       <br />
+                  //       <span className="text-disable">
+                  //         ({
+                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.start_theory
+                  //         }h-
+                  //         {
+                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.end_theory
+                  //         }h/
+                  //         {
+                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.sum
+                  //         }h)
+                  //       </span>
+                  //     </td>
+                  //   )
+                  // },
+                  // practise: (item, index) => {
+                  //   return (
+                  //     <td>
+                  //       {
+                  //         usersDataFake.find((itemFake) => itemFake.stt === index).practise.start_practise
+                  //       }-
+                  //       {
+                  //         usersDataFake.find((itemFake) => itemFake.stt === index).practise.end_practise
+                  //       }
+                  //       <br />
+                  //       <span className="text-disable">
+                  //         /{
+                  //           usersDataFake.find((itemFake) => itemFake.stt === index).practise.sum
+                  //         }km
+                  //       </span>
+                  //     </td>
+                  //   )
+                  // },
                   ngay_be_giang: (item) => {
                     return (
                       <td>

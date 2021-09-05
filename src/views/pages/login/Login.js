@@ -16,9 +16,6 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { postLogin } from "src/services/userService";
-import { setUserSession } from "src/utils/common";
-import authService from "src/services/authService";
-
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
 
@@ -40,8 +37,7 @@ const Login = (props) => {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    authService
-      .login(username.value, password.value)
+    postLogin(username.value, password.value)
       .then((response) => {
         setLoading(false);
         // console.log("login success");

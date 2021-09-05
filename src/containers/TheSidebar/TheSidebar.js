@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import './TheSidebar.scss';
 import {
   CCreateElement,
   CSidebar,
@@ -34,7 +33,7 @@ const TheSidebar = () => {
           name="logo-negative"
           height={35}
         /> */}
-        <div className="c-sidebar-brand-full" style={{height: 35}}>DRIVERX-LT</div>
+        <div className="c-sidebar-brand-full">DRIVERX-LT</div>
         <CIcon
           className="c-sidebar-brand-minimized"
           name="sygnet"
