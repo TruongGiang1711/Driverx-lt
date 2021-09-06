@@ -29,7 +29,7 @@ export function getSessionJwt() {
 export function getCurrentUser() {
   try {
     const jwt = localStorage.getItem(tokenKey);
-    console.log(jwt);
+
     return jwtDecode(jwt);
   } catch (error) {
     return null;

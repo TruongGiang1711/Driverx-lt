@@ -1,41 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import ReactDOM from "react-dom";
-import "./Khoahoc.scss";
+import Moment from "react-moment";
 import {
   CAlert,
-  CBadge,
   CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
-  CCreateElement,
-  CProgress,
   CRow,
-  CCallout,
   CCollapse,
   CDataTable,
-  CFormGroup,
-  CInput,
   CLabel,
-  CNavLink,
-  CSelect,
-  CPagination,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { treeData, usersDataFake } from "./KhoahocData";
 
-import { TreeSelect, Select } from "antd";
+import { Input, TreeSelect } from "antd";
 import { ImportOutlined } from "@ant-design/icons";
-
-import Moment from "react-moment";
 
 import courseService from "src/services/courseService";
 import { getCourses } from "src/services/userService";
 
+import "./Khoahoc.scss";
+import { treeData, usersDataFake } from "./KhoahocData";
 const { SHOW_PARENT } = TreeSelect;
 
 const fields = [
@@ -129,83 +116,26 @@ const getData_synchronizing_status = (status) => {
 };
 
 // console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
-const Dashboard = () => {
+const Dashboard = (props) => {
   const history = useHistory();
   const [details, setDetails] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [state, setState] = useState({});
-  const [value, setValue] = useState([]);
-  // const createMarkup = () => {
-  //   return {
-  //     __html: <CRow className="no-gutter">
-  //       {/* <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-  //   <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
-  //   <Select {...selectProps} />
-  // </CCol> */}
-  //       <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
-  //         <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
-  //         <TreeSelect {...tProps} />
-  //       </CCol>
-  //       <CCol col="6" sm="4" md="2" xl="2" className="mb-3 ml-auto">
-  //         <CLabel htmlFor="ccadd" className="invisible">add</CLabel>
-  //         <CButton block color="info" className="col-7 ml-auto align-middle">
-  //           <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
-  //           <span>Thêm Khóa</span>
-  //         </CButton>
-  //       </CCol>
-  //       <CCol col="6" sm="4" md="2" xl="1" className="mb-3">
-  //         <CLabel htmlFor="ccimport" className="invisible">import</CLabel>
-  //         <CButton block color="primary align-middle"><ImportOutlined className='pr-2 d-inline-flex' />Import</CButton>
-  //       </CCol>
-  //     </CRow>
-  //   }
-  // }
-  // const innerRefAdd = (item) => {
-  //   console.log(item)
-  //   // document.getElementsByClassName('.c-datatable-filter')
-  // }
-
-  // tìm kiếm
-  const options = [];
-  courses.map((item, index) => {
-    options.push({
-      label: item.ten_khoa_hoc,
-      value: item.ma_khoa_hoc,
-    });
-  });
-  const selectProps = {
-    mode: "multiple",
-    style: {
-      width: "100%",
-    },
-    value,
-    options,
-    onChange: (newValue) => {
-      setValue(newValue);
-      handleFilter(newValue);
-    },
-    placeholder: "Tên khóa ....",
-    maxTagCount: "responsive",
+  const { courses } = { ...props };
+  const onChange = (value) => {
+    // console.log('onChange ', value);
+    setState({ value });
   };
-  const handleFilter = (value) => {
-    console.log(value);
-  };
-  // lọc
   const tProps = {
     treeData,
     value: state.value,
-    onChange: (value) => {
-      setState(value);
-    },
+    onChange: onChange,
     treeCheckable: true,
     showCheckedStrategy: SHOW_PARENT,
     placeholder: "Lọc theo ....",
     style: {
       width: "100%",
     },
-    maxTagCount: "responsive",
   };
-  // toogleDetails
   const toggleDetails = (index) => {
     const position = details.indexOf(index);
     let newDetails = details.slice();
@@ -217,35 +147,21 @@ const Dashboard = () => {
     setDetails(newDetails);
   };
   const redirectUser = (item) => {
-    // console.log(item)
+    console.log(item);
     history.push(`/users/${item.id}`);
   };
-  useEffect(() => {
-    async function fetchCourses() {
-      try {
-        // console.log(courseService.getHeader());
-        const courses = await courseService.getCourses();
-        // console.log(courses.data.items);
-        setCourses(courses.data.items);
-      } catch (error) {
-        // console.log(error.response);
-      }
-    }
-    fetchCourses();
-  }, []);
+
   return (
     <>
       <CRow>
         <CCol>
           <CCard className="courses-card">
-            <CCardHeader>
-              <h4 className="mb-0">Danh sách khóa học</h4>
-            </CCardHeader>
+            <CCardHeader>Danh sách khóa học</CCardHeader>
             <CCardBody>
               <CRow className="no-gutter">
                 <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
                   <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel>
-                  <Select {...selectProps} />
+                  <Input placeholder="Tên khóa" />
                 </CCol>
                 <CCol col="6" sm="4" md="2" xl="2" className="mb-3">
                   <CLabel htmlFor="ccfilter">Bộ lọc</CLabel>
@@ -278,12 +194,10 @@ const Dashboard = () => {
               </CRow>
               <CDataTable
                 addTableClasses="courses-table"
-                // innerRef={(item, index) => innerRefAdd(item)}
                 items={courses}
                 fields={fields}
                 // columnFilter
-                tableFilter
-                // onTableFilterChange={handleFilter}
+                // tableFilter
                 // itemsPerPageSelect
                 itemsPerPage={2}
                 hover
@@ -311,7 +225,7 @@ const Dashboard = () => {
                   ten_khoa_hoc: (item) => {
                     return (
                       <td onClick={() => redirectUser(item)}>
-                        <CNavLink>{item ? item.ten_khoa_hoc : ""}</CNavLink>
+                        <span>{item ? item.ten_khoa_hoc : ""}</span>
                       </td>
                     );
                   },

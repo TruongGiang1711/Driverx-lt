@@ -20,11 +20,9 @@ axios.interceptors.response.use(null, async (error) => {
   return Promise.reject(error);
 });
 export function setJwt(jwt) {
-  console.log("set jwt: ", jwt);
   axios.defaults.headers.common["Authorization"] = `bearer ${jwt}`;
 }
 export function getHeaderToken() {
-  console.log(axios.defaults.headers.common["Authorization"]);
   return axios.defaults.headers.common["Authorization"];
 }
 

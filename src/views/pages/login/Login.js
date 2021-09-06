@@ -8,29 +8,36 @@ import {
   CCol,
   CContainer,
   CForm,
-  CInput,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
   CRow,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { postLogin } from "src/services/userService";
-import { setUserSession } from "src/utils/common";
 import authService from "src/services/authService";
+import Joi from "joi-browser";
+import Form from "src/views/component/common/form";
 
-class Login extends Component {
+class Login extends Form {
   state = {
-    data: {},
-    error: {},
+    data: { username: "", password: "" },
+    errors: {},
     loading: false,
   };
+
+  schema = {
+    username: Joi.string().email().required().label("Username"),
+    password: Joi.string().required().label("Password"),
+  };
+
   setLoading(value) {
     this.setState({ loading: value });
   }
+  setStateWithName(name, value) {
+    const state = { ...this.state };
+    state[name] = value;
+
+    this.setState(state);
+  }
 
   handleLogin = () => {
-    // setError(null);
+    this.setStateWithName("error", "some error");
     this.setLoading(true);
     const data = { ...this.state.data };
     console.log(data);
@@ -40,7 +47,7 @@ class Login extends Component {
         this.setLoading(false);
         // setUserSession(response.data.token, response.data.user);
         console.log("login success");
-        this.props.history.push("/dashboard");
+        //this.props.history.push("/dashboard");
       })
       .catch((error) => {
         console.log("login error: ", error);
@@ -61,12 +68,18 @@ class Login extends Component {
     console.log(name);
   };
 
+  testError = () => {
+    const error = { ...this.state };
+    return error && <div className="alert alert-danger">{error}</div>;
+  };
+
   render() {
     if (authService.getCurrentUser()) return <Redirect to="/"></Redirect>;
     const data = { ...this.state.data };
     const username = data.username;
-    const error = "";
+    const error = this.state.error;
     const loading = this.state.loading;
+    console.log(this.testError());
     return (
       <div className="c-app c-default-layout flex-row align-items-center">
         <CContainer>
@@ -78,42 +91,8 @@ class Login extends Component {
                     <CForm>
                       <h1>Login</h1>
                       <p className="text-muted">Sign In to your account</p>
-                      <CInputGroup className="mb-3">
-                        <CInputGroupPrepend>
-                          <CInputGroupText>
-                            <CIcon name="cil-user" />
-                          </CInputGroupText>
-                        </CInputGroupPrepend>
-                        <CInput
-                          type="text"
-                          placeholder="Username"
-                          autoComplete="username"
-                          name="username"
-                          onChange={this.handleInputChange}
-                          {...username}
-                        />
-                      </CInputGroup>
-                      <CInputGroup className="mb-4">
-                        <CInputGroupPrepend>
-                          <CInputGroupText>
-                            <CIcon name="cil-lock-locked" />
-                          </CInputGroupText>
-                        </CInputGroupPrepend>
-                        <CInput
-                          type="password"
-                          placeholder="Password"
-                          autoComplete="current-password"
-                          name="password"
-                          onChange={this.handleInputChange}
-                        />
-                      </CInputGroup>
-                      {error && (
-                        <>
-                          <small style={{ color: "red" }}>{error}</small>
-                          <br />
-                        </>
-                      )}
-                      <br />
+                      {this.renderInput("username", "Username")}
+                      {this.renderInput("password", "Password", "password")}
                       <CRow>
                         <CCol xs="6">
                           <CButton
