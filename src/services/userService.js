@@ -8,6 +8,10 @@ export async function postLogin(email, password) {
 }
 
 http.setAuthorizationBearer(getJwt());
+const apiEndPointMe = "/me";
+export async function getMe() {
+  return http.get(apiEndPointMe);
+}
 const apiEndPointBranches = "/branches";
 export async function getBranches(params) {
   return http.get(apiEndPointBranches, { params });

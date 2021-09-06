@@ -1,9 +1,9 @@
 export const getColor = (status) => {
     switch (status) {
-        case 3: return 'success'
-        case 2: return 'primary'
+        case 3: return 'error'
+        case 2: return 'success'
         case 1: return 'warning'
-        case 0: return 'danger'
+        case 0: return 'secondary'
         default: return
     }
 };
@@ -18,8 +18,8 @@ export const getStatus = (status) => {
 };
 export const getColorCard_status = (status) => {
     switch (status) {
-        case 1: return 'success'
-        case 0: return 'danger'
+        case 1: return 'info'
+        case 0: return 'secondary'
         default: return
     }
 };

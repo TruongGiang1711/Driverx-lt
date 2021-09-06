@@ -14,7 +14,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
 import { usersDataFake } from "./KhoahocData";
-import { ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
+import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
 
 import { getCourses, getBranches, getHangs } from "src/services/userService";
@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
+  const [addRow, setAddRow] = useState(false)
   const [deleteRow, setDeleteRow] = useState(false)
   const [syncRow, setSyncRow] = useState(false)
   const [filterSearch, setFilterSearch] = useState('')
@@ -41,7 +42,7 @@ const Dashboard = () => {
   const fields = [
     { key: "stt", label: "STT", },
     { key: "ten_khoa_hoc", label: "TÊN KHÓA", },
-    { key: "branch_id", label: "PHÂN HIỆU", _style: { display: filter.branch_id === 0 ? "table-cell" : "none" } },
+    { key: "branch_id", label: "PHÂN HIỆU", _classes: filter.branch_id === 0 ? "d-table-cell" : "d-none" },
     { key: "hang_gplx", label: "HẠNG", },
     { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
     { key: "status", label: "TRẠNG THÁI", },
@@ -60,7 +61,7 @@ const Dashboard = () => {
     },
   ];
   const redirectUser = (item) => {
-    history.push(`/users/${item.id}`)
+    history.push(`/hocvien`)
   }
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const Dashboard = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, branches, courses, hangs, getStatus })}
+              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus })}
               <CDataTable
                 addTableClasses="courses-table"
                 items={courses}
@@ -115,7 +116,7 @@ const Dashboard = () => {
                 hover
                 sorter
                 pagination={{ align: 'center', size: 'lg' }}
-                border={true}
+                // border={true}
                 scopedSlots={{
                   stt: (item, index) => {
                     return (
@@ -127,7 +128,7 @@ const Dashboard = () => {
                   ten_khoa_hoc: (item) => {
                     return (
                       <td onClick={() => redirectUser(item)}>
-                        <CNavLink>{item ? item.ten_khoa_hoc : ''}</CNavLink>
+                        <CNavLink className="p-0">{item ? item.ten_khoa_hoc : ''}</CNavLink>
                       </td>
                     )
                   },
@@ -155,7 +156,7 @@ const Dashboard = () => {
                   status: (item) => {
                     return (
                       <td className="text-center courses-status">
-                        <CBadge className="p-2" color={getColor(item.status)}>
+                        <CBadge color={getColor(item.status)}>
                           {getStatus(item.status)}
                         </CBadge>
                         {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert> */}
@@ -165,7 +166,7 @@ const Dashboard = () => {
                   card_status: (item, index) => {
                     return (
                       <td className="text-center courses-card_status">
-                        <CBadge className="p-2" color={getColorCard_status(item.card_status)}>
+                        <CBadge color={getColorCard_status(item.card_status)}>
                           {getCard_status(item.card_status)}
                         </CBadge>
                         {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert> */}
@@ -194,16 +195,16 @@ const Dashboard = () => {
                   data_synchronizing: (item, index) => {
                     return (
                       <td className="text-center">
-                        <span className="pr-3">
-                          <CBadge className="p-2 mb-0" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
+                        <span className="pr-3" role="button">
+                          <CBadge color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
                           </CBadge>
                           {/* <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
                           </CAlert> */}
                         </span>
-                        <span className="pr-3">
-                          <CBadge className="p-2 mb-0" color={"success"}>
+                        <span className="pr-3" role="button">
+                          <CBadge color={"success"}>
                             <CIcon name={'cil-truck'} />
                           </CBadge>
                           {/* <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
@@ -261,7 +262,7 @@ const Dashboard = () => {
                   },
                   delete_row: (item, index) => {
                     return (
-                      <td className="align-middle py-2">
+                      <td className="text-center">
                         <span role="button">
                           <CIcon name={'cil-trash'} onClick={() => setDeleteRow(!deleteRow)} />
                         </span>
@@ -274,6 +275,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      {ModalAddRow({ addRow, setAddRow, })}
       {ModalDeleteRow({ deleteRow, setDeleteRow, })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
     </>

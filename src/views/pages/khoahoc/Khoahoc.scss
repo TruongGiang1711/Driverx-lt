@@ -11,26 +11,19 @@
         }
     }
     .courses-table {
-        thead {
-            tr {
-                th {
-                    white-space: nowrap;
-                }
-            }
+        th,
+        td {
+            white-space: nowrap;
         }
         tbody {
             td {
-                white-space: nowrap;
                 vertical-align: middle;
                 &.courses-status,
                 &.courses-card_status {
-                    .alert {
-                        width: 120px;
-                        white-space: nowrap;
+                    .alert,
+                    .badge {
+                        width: 80px;
                     }
-                }
-                button {
-                    box-shadow: none;
                 }
             }
         }

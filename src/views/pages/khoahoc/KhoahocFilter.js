@@ -80,7 +80,7 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
-                <CButton block color="info" className="ml-auto align-middle">
+                <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
                     <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
                     <span>Thêm Khóa</span>
                 </CButton>
