@@ -1,29 +1,28 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import './TheHeader.scss';
 import {
   CHeader,
   CToggler,
-  CHeaderBrand,
   CHeaderNav,
-  CHeaderNavItem,
-  CHeaderNavLink,
-  CSubheader,
-  CBreadcrumbRouter,
-  CLink
+  // CHeaderBrand,
+  // CHeaderNavItem,
+  // CHeaderNavLink,
+  // CSubheader,
+  // CBreadcrumbRouter,
+  // CLink
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+// import CIcon from '@coreui/icons-react'
 
 // routes config
-import routes from '../../routes'
+// import routes from '../../routes'
 
 import {
   TheHeaderDropdown,
-  TheHeaderDropdownMssg,
-  TheHeaderDropdownNotif,
-  TheHeaderDropdownTasks
+  // TheHeaderDropdownMssg,
+  // TheHeaderDropdownNotif,
+  // TheHeaderDropdownTasks
 } from '../index'
-import { getUser } from 'src/utils/common';
+// import { getUser } from 'src/utils/common';
 
 const TheHeader = () => {
   // const user = getUser();

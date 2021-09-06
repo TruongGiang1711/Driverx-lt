@@ -1,9 +1,29 @@
+import { setJwt, getJwt } from "./authService";
 import http from "./httpService";
 
-export function postLogin(end, object) {
-  return http.post(end, object);
+const apiEndpointLogin = "/login";
+export async function postLogin(email, password) {
+  const { data } = await http.post(apiEndpointLogin, { email, password });
+  return setJwt(data)
 }
 
-export async function getCourses(end) {
-  return http.get(end);
+http.setAuthorizationBearer(getJwt());
+const apiEndPointBranches = "/branches";
+export async function getBranches(params) {
+  return http.get(apiEndPointBranches, { params });
+}
+const apiEndPointCourses = "/courses";
+export async function getCourses(params) {
+  return http.get(apiEndPointCourses, { params });
+}
+const apiEndPointHang = "/data/hang";
+export async function getHangs() {
+  return http.get(apiEndPointHang);
+}
+
+
+
+
+export function getHeader() {
+  return http.getHeaderToken();
 }

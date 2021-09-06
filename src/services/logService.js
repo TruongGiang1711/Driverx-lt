@@ -1,6 +1,6 @@
 // import Raven from "raven-js";
 
-function init() {
+export const init = () => {
   // Raven.config(
   //   "https://ad390042c1b14e9c9d8a3ed40644b538@o948621.ingest.sentry.io/5898099",
   //   {
@@ -10,12 +10,12 @@ function init() {
   // ).install();
 }
 
-function log(error) {
+export const log = (error) => {
   // Raven.captureException(error);
-  console.log(error);
+  // console.log(error);
 }
 
-export default {
-  init,
-  log,
-};
+// export default {
+//   init,
+//   log,
+// };

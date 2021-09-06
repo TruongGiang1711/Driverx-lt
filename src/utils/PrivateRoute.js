@@ -1,14 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { getToken } from "./common";
-import authService from "src/services/authService";
+import { getJwt } from "src/services/authService";
 // handle the private routes
-function PrivateRoute({ component: Component, ...rest }) {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) =>
-        authService.getCurrentUser() ? (
+        getJwt() ? (
           <Component {...props} />
         ) : (
           <Redirect
