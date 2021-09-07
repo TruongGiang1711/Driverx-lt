@@ -23,7 +23,7 @@ class Login extends Form {
 
   schema = {
     username: Joi.string().email().required().label("Username"),
-    password: Joi.string().required().label("Password"),
+    password: Joi.string().required().min(5).label("Password"),
   };
 
   setLoading(value) {
@@ -37,7 +37,7 @@ class Login extends Form {
   }
 
   handleLogin = () => {
-    this.setStateWithName("error", "some error");
+    this.setStateWithName("error", null);
     this.setLoading(true);
     const data = { ...this.state.data };
     console.log(data);
@@ -45,6 +45,7 @@ class Login extends Form {
       .login(data.username, data.password)
       .then((response) => {
         this.setLoading(false);
+        this.setStateWithName("error", null);
         // setUserSession(response.data.token, response.data.user);
         console.log("login success");
         //this.props.history.push("/dashboard");
@@ -52,6 +53,10 @@ class Login extends Form {
       .catch((error) => {
         console.log("login error: ", error);
         this.setLoading(false);
+        if (error.response.status === 403) {
+          console.log(error.response.data);
+          this.setStateWithName("error", "Username or password incorrect");
+        }
         // if (error.response.status === 422)
         //   setError(error.response.detail.message);
         // else setError("Something went wrong. Please try again later.");
@@ -69,8 +74,17 @@ class Login extends Form {
   };
 
   testError = () => {
-    const error = { ...this.state };
-    return error && <div className="alert alert-danger">{error}</div>;
+    const error = this.state.error;
+    console.log("error:", error);
+    if (error == null) {
+      return (
+        <div className="alert alert-danger" style={{ display: "none" }}>
+          ak
+        </div>
+      );
+    } else {
+      return <div className="alert alert-danger">{error}</div>;
+    }
   };
 
   render() {
@@ -79,7 +93,7 @@ class Login extends Form {
     const username = data.username;
     const error = this.state.error;
     const loading = this.state.loading;
-    console.log(this.testError());
+
     return (
       <div className="c-app c-default-layout flex-row align-items-center">
         <CContainer>
@@ -93,6 +107,9 @@ class Login extends Form {
                       <p className="text-muted">Sign In to your account</p>
                       {this.renderInput("username", "Username")}
                       {this.renderInput("password", "Password", "password")}
+
+                      {this.testError()}
+
                       <CRow>
                         <CCol xs="6">
                           <CButton

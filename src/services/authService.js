@@ -1,11 +1,17 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
-
+const apiEndpoint = "/login";
 const tokenKey = "token";
 
+export async function login(email, password) {
+  const { data } = await http.post(apiEndpoint, { email, password });
+  console.log(data.access_token);
+  localStorage.setItem(tokenKey, data.access_token);
+}
 export const getJwt = () => {
   return localStorage.getItem(tokenKey) || null;
 };
+http.setAuthorizationBearer(getJwt());
 export const removeJwt = () => {
   localStorage.removeItem(tokenKey);
 };
@@ -35,4 +41,5 @@ export default {
   setJwt,
   getCurrentUser,
   loginWithJwt,
+  login,
 };
