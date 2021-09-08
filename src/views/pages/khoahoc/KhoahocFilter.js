@@ -1,3 +1,4 @@
+// import { useLocation } from "react-router-dom";
 import {
     CButton,
     CCol,
@@ -29,13 +30,6 @@ export const FilterKhoahoc = (props) => {
                 break;
         }
     }
-
-    // let myArrayHangWithNoDuplicates = props.courses.reduce((prev, cur) => {
-    //     if (prev.indexOf(cur.hang_gplx) === -1) {
-    //         prev.push(cur.hang_gplx)
-    //     }
-    //     return prev.map((item, index) => item)
-    // }, [])
 
     const arrStatus = []
     let listStatus = () => {
@@ -81,8 +75,7 @@ export const FilterKhoahoc = (props) => {
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
                 <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
-                    <span className="pr-2 courses-icon"><CIcon name={'cil-plus'} /></span>
-                    <span>Thêm Khóa</span>
+                    <span className="pr-2 coreui-icon_inline"><CIcon name={'cil-plus'} /></span>Thêm Khóa
                 </CButton>
             </div>
             {/* <div className="mb-3 pr-3">

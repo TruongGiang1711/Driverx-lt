@@ -1,83 +1,132 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import './Hocvien.scss';
 import {
-  CBadge,
+  CButton,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
   CRow,
   CDataTable,
-  CNavLink,
+  CImg,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
 import { usersDataFake } from "./HocvienData";
 import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./HocvienModal";
 import { FilterKhoahoc } from "./HocvienFilter";
+import { Pagination } from 'antd';
+import { EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getBranches, getHangs } from "src/services/userService";
+import { getCourses, getCoursesID, getBranches, getHangs, getTrainees } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../component/getBadge/GetBadge";
 
-// console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
-const Dashboard = () => {
+const Hocvien = ({ match }) => {
+
+  const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
+  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
+  const [page, setPage] = useState(currentPage)
+  // console.log(currentPage);
   const history = useHistory()
   const [courses, setCourses] = useState([]);
+  const [coursesID, setCoursesID] = useState({});
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
+  const [trainees, setTrainees] = useState([]);
+  const [totalpages, setTotalpages] = useState(1);
+  const [pages, setPages] = useState(1);
   const [addRow, setAddRow] = useState(false)
   const [deleteRow, setDeleteRow] = useState(false)
   const [syncRow, setSyncRow] = useState(false)
   const [filterSearch, setFilterSearch] = useState('')
   const [filter, setFilter] = useState({
+    name: '',
+    id_card: '',
+    rf_card: '',
+    rf_card_name: '',
+    course_id: 0,
     province_id: 0,
     customer_id: 0,
     branch_id: 0,
-    name: '',
-    hang: '',
-    status: -1,
     page: 1
   })
   const fields = [
-    { key: "stt", label: "STT", },
-    { key: "ten_khoa_hoc", label: "TÊN KHÓA", },
-    { key: "branch_id", label: "PHÂN HIỆU", _classes: filter.branch_id === 0 ? "d-table-cell" : "d-none" },
-    { key: "hang_gplx", label: "HẠNG", },
-    { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
-    { key: "status", label: "TRẠNG THÁI", },
-    { key: "card_status", label: "GÁN THẺ", },
-    { key: "biometrics", label: "SINH TRẮC", },
-    { key: "so_hoc_sinh", label: "SĨ SỐ", },
-    { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", },
-    // { key: "theory", label: "LÝ THUYẾT", },
-    // { key: "practise", label: "THỰC HÀNH" },
-    { key: "ngay_be_giang", label: "BẾ GIẢNG" },
+    { key: "so_tt", label: "#", },
+    { key: "anh_chan_dung", label: "ẢNH", },
+    { key: "id", label: "MÃ", },
+    { key: "ho_va_ten", label: "HỌ VÀ TÊN", },
+    { key: "ngay_sinh", label: "NGÀY SINH", },
+    { key: "gioi_tinh", label: "GIỚI TÍNH", },
+    { key: "so_cmt", label: "CMND", },
+    { key: "rfid_card", label: "SỐ THẺ RFID", },
+    { key: "fingerprint_and_face_count", label: "TRẠNG THÁI ĐỊNH DANH", },
+    { key: "hours_indoor", label: "SỐ GIỜ HỌC LÝ THUYẾT", },
+    { key: "info_outdoor", label: "THÔNG TIN HỌC THỰC HÀNH", },
     {
-      key: "delete_row",
+      key: "delete_edit_row",
       label: "",
       sorter: false,
       filter: false,
     },
   ];
-  const redirectUser = (item) => {
-    history.push(`/hocvien`)
-  }
+  const getSex = (sex) => {
+    switch (sex) {
+      case 'M': return 'Nam'
+      case 'F': return 'Nữ'
+      default: return
+    }
+  };
+  // console.log(courses, "++++++++++++", match);
+  // const user = courses && courses.find(user => user.id.toString() === match.params.id)
+  // const userDetails = user ? Object.entries(user) :
+  //   [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
+  // console.log(userDetails);
+
+  // const redirectUser = (item) => {
+  // }
 
   useEffect(() => {
-    // console.log(filter)
-    async function fetchCourses() {
+    currentPage !== page && setPage(currentPage)
+    const ob = {
+      ...filter,
+      page: pages,
+    }
+    async function fetchTrainees() {
       try {
-        const courses = await getCourses(filter);
-        // console.log(courses.data.items);
-        setCourses(courses.data.items);
+        const trainees = await getTrainees(ob);
+        setTotalpages(trainees.data.total)
+        setTrainees(trainees.data.items);
       } catch (error) {
-        // console.log(error.response);
       }
     }
-    fetchCourses();
+    fetchTrainees();
+  }, [currentPage, page, pages])
+  useEffect(() => {
+    const ob = {
+      ...filter,
+      course_id: currentPage,
+    }
+    async function fetchTrainees() {
+      try {
+        const trainees = await getTrainees(ob);
+        setTotalpages(trainees.data.total)
+        setTrainees(trainees.data.items);
+      } catch (error) {
+      }
+    }
+    fetchTrainees();
   }, [filter]);
   useEffect(() => {
+    async function fetchCoursesID() {
+      try {
+        const coursesID = await getCoursesID(currentPage);
+        // console.log(coursesID.data);
+        setCoursesID(coursesID.data);
+      } catch (error) {
+      }
+    }
+    fetchCoursesID();
     async function fetchBranches() {
       const ob = {
         name: '',
@@ -100,171 +149,120 @@ const Dashboard = () => {
     }
     fetchHangs();
   }, []);
+  const changePage = (page) => {
+    setPages(page)
+  }
   return (
     <>
       <CRow>
         <CCol>
-          <CCard className="courses-card">
+          <CCard className="trainess-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus })}
+              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, addRow, setAddRow, branches, courses, coursesID, hangs, getStatus, currentPage })}
               <CDataTable
-                addTableClasses="courses-table"
-                items={courses}
+                addTableClasses="trainess-table"
+                items={trainees}
                 fields={fields}
                 tableFilterValue={filterSearch}
+                // itemsPerPage={50}
+                size={'sm'}
                 hover
                 sorter
-                pagination={{ align: 'center', size: 'lg' }}
-                // border={true}
+                border
                 scopedSlots={{
-                  stt: (item, index) => {
+                  so_tt: (item, index) => {
                     return (
                       <td>
-                        {index}
+                        {index + 1}
                       </td>
                     )
                   },
-                  ten_khoa_hoc: (item) => {
-                    return (
-                      <td onClick={() => redirectUser(item)}>
-                        <CNavLink className="p-0">{item ? item.ten_khoa_hoc : ''}</CNavLink>
-                      </td>
-                    )
-                  },
-                  branch_id: (item) => {
-                    return (
-                      <td className={filter.branch_id === 0 ? "d-table-cell" : "d-none"}>
-                        {item.branch_name}
-                      </td>
-                    )
-                  },
-                  hang_gplx: (item) => {
+                  anh_chan_dung: (item) => {
                     return (
                       <td>
-                        {item ? item.hang_gplx : ''}
+                        <CImg
+                          src={item.anh_chan_dung}
+                          alt={item.anh_chan_dung}
+                          width={50}
+                          height={50}
+                          shape={"rounded-circle"}
+                        />
                       </td>
                     )
                   },
-                  ngay_khai_giang: (item) => {
+                  id: (item) => {
                     return (
                       <td>
-                        <Moment format="DD/MM/YYYY">{item.ngay_khai_giang}</Moment>
+                        {item.id}
                       </td>
                     )
                   },
-                  status: (item) => {
-                    return (
-                      <td className="text-center courses-status">
-                        <CBadge color={getColor(item.status)}>
-                          {getStatus(item.status)}
-                        </CBadge>
-                        {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert> */}
-                      </td>
-                    )
-                  },
-                  card_status: (item, index) => {
-                    return (
-                      <td className="text-center courses-card_status">
-                        <CBadge color={getColorCard_status(item.card_status)}>
-                          {getCard_status(item.card_status)}
-                        </CBadge>
-                        {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert> */}
-                      </td>
-                    )
-                  },
-                  biometrics: (item, index) => {
+                  ho_va_ten: (item) => {
                     return (
                       <td>
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fingerprint
-                        } <span className="pr-3 courses-icon"><CIcon name={'cil-fingerprint'} /></span>
-                        {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fade_id
-                        } <span className="courses-icon"><CIcon name={'cil-face'} /></span>
+                        {item.ho_va_ten}
                       </td>
                     )
                   },
-                  so_hoc_sinh: (item) => {
+                  ngay_sinh: (item) => {
                     return (
                       <td>
-                        {item ? item.so_hoc_sinh : ''}
+                        {item.ngay_sinh}
                       </td>
                     )
                   },
-                  data_synchronizing: (item, index) => {
+                  gioi_tinh: (item, index) => {
+                    return (
+                      <td>
+                        {getSex(item.gioi_tinh)}
+                      </td>
+                    )
+                  },
+                  so_cmt: (item) => {
+                    return (
+                      <td>
+                        {item.so_cmt}
+                      </td>
+                    )
+                  },
+                  rfid_card: (item, index) => {
+                    return (
+                      <td>
+                        {item.rfid_card}
+                      </td>
+                    )
+                  },
+                  fingerprint_and_face_count: (item, index) => {
+                    return (
+                      <td>
+                        {item.fingerprint_count} <span className="pr-3 coreui-icon_inline"><CIcon name={'cil-fingerprint'} /></span>
+                        {item.face_count} <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span>
+                      </td>
+                    )
+                  },
+                  hours_indoor: (item) => {
+                    return (
+                      <td>
+                        {item.indoor_hour}h
+                      </td>
+                    )
+                  },
+                  info_outdoor: (item) => {
+                    return (
+                      <td>
+                        {item.outdoor_hour}h/1200km
+                      </td>
+                    )
+                  },
+                  delete_edit_row: (item, index) => {
                     return (
                       <td className="text-center">
-                        <span className="pr-3" role="button">
-                          <CBadge color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
-                            <CIcon name={'cil-screen-smartphone'} />
-                          </CBadge>
-                          {/* <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
-                            <CIcon name={'cil-screen-smartphone'} />
-                          </CAlert> */}
+                        <span className="pr-3">
+                          <EditTwoTone role="button" twoToneColor="#3399ff" />
                         </span>
-                        <span className="pr-3" role="button">
-                          <CBadge color={"success"}>
-                            <CIcon name={'cil-truck'} />
-                          </CBadge>
-                          {/* <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
-                            <CIcon name={'cil-truck'} />
-                          </CAlert> */}
-                        </span>
-                      </td>
-                    )
-                  },
-                  // theory: (item, index) => {
-                  //   return (
-                  //     <td>
-                  //       {
-                  //         usersDataFake.find((itemFake) => itemFake.stt === index).theory.number
-                  //       } buổi
-                  //       <br />
-                  //       <span className="text-disable">
-                  //         ({
-                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.start_theory
-                  //         }h-
-                  //         {
-                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.end_theory
-                  //         }h/
-                  //         {
-                  //           usersDataFake.find((itemFake) => itemFake.stt === index).theory.sum
-                  //         }h)
-                  //       </span>
-                  //     </td>
-                  //   )
-                  // },
-                  // practise: (item, index) => {
-                  //   return (
-                  //     <td>
-                  //       {
-                  //         usersDataFake.find((itemFake) => itemFake.stt === index).practise.start_practise
-                  //       }-
-                  //       {
-                  //         usersDataFake.find((itemFake) => itemFake.stt === index).practise.end_practise
-                  //       }
-                  //       <br />
-                  //       <span className="text-disable">
-                  //         /{
-                  //           usersDataFake.find((itemFake) => itemFake.stt === index).practise.sum
-                  //         }km
-                  //       </span>
-                  //     </td>
-                  //   )
-                  // },
-                  ngay_be_giang: (item) => {
-                    return (
-                      <td>
-                        <Moment format="DD/MM/YYYY">{item.ngay_be_giang}</Moment>
-                      </td>
-                    )
-                  },
-                  delete_row: (item, index) => {
-                    return (
-                      <td className="text-center">
                         <span role="button">
-                          <CIcon name={'cil-trash'} onClick={() => setDeleteRow(!deleteRow)} />
+                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow(!deleteRow)} />
                         </span>
                       </td>
                     );
@@ -272,6 +270,7 @@ const Dashboard = () => {
                 }}
               />
             </CCardBody>
+            <Pagination total={totalpages} pageSize={50} showSizeChanger={false} onChange={(page) => changePage(page)} />
           </CCard>
         </CCol>
       </CRow>
@@ -282,4 +281,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default React.memo(Hocvien);

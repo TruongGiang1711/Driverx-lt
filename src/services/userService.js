@@ -8,20 +8,28 @@ export async function postLogin(email, password) {
 }
 
 http.setAuthorizationBearer(getJwt());
-const apiEndPointMe = "/me";
-export async function getMe() {
+export async function getMe() {                         // thông tin admin
+  const apiEndPointMe = "/me";
   return http.get(apiEndPointMe);
 }
-const apiEndPointBranches = "/branches";
-export async function getBranches(params) {
+export async function getBranches(params) {             // danh sách phân hiệu theo quyền
+  const apiEndPointBranches = "/branches";
   return http.get(apiEndPointBranches, { params });
 }
-const apiEndPointCourses = "/courses";
-export async function getCourses(params) {
+export async function getCourses(params) {              // danh sách khóa theo filter
+  const apiEndPointCourses = "/courses";
   return http.get(apiEndPointCourses, { params });
 }
-const apiEndPointHang = "/data/hang";
-export async function getHangs() {
+export async function getCoursesID(course_id) {         // danh sách khóa theo filter
+  const apiEndPointCoursesID = `/courses/${course_id}`;
+  return http.get(apiEndPointCoursesID, { course_id });
+}
+export async function getTrainees(params) {             // danh sách học viên theo filter
+  const apiEndPointTrainees = "/trainees/";
+  return http.get(apiEndPointTrainees, { params });
+}
+export async function getHangs() {                      // danh sách hạng
+  const apiEndPointHang = "/data/hang";
   return http.get(apiEndPointHang);
 }
 

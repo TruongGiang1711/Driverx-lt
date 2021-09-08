@@ -9,15 +9,18 @@ import * as serviceWorker from './serviceWorker';
 
 import { icons } from './assets/icons'
 
+import { createStore } from "redux";
 import { Provider } from 'react-redux'
-import store from './store'
+import { allReducers } from "./js/reducers";
+
+const store = createStore(allReducers);
 
 React.icons = icons
 
 ReactDOM.render(
   <Provider store={store}>
-    <App/>
-  </Provider>, 
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
 

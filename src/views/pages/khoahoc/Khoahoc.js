@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import './Khoahoc.scss';
 import {
   CBadge,
@@ -16,12 +17,15 @@ import Moment from 'react-moment';
 import { usersDataFake } from "./KhoahocData";
 import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
+import { Pagination } from 'antd';
+import { DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getBranches, getHangs } from "src/services/userService";
+import { getCourses, getCoursesID, getBranches, getHangs } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
+// import { Khoahoc_Info } from "src/js/actions";
 
-// console.log(usersDataFake.find((itemFake) => itemFake.stt === 3).data_synchronizing)
-const Dashboard = () => {
+const Khoahoc = () => {
+  // const dispatch = useDispatch();
   const history = useHistory()
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -40,7 +44,7 @@ const Dashboard = () => {
     page: 1
   })
   const fields = [
-    { key: "stt", label: "STT", },
+    { key: "stt", label: "#", },
     { key: "ten_khoa_hoc", label: "TÊN KHÓA", },
     { key: "branch_id", label: "PHÂN HIỆU", _classes: filter.branch_id === 0 ? "d-table-cell" : "d-none" },
     { key: "hang_gplx", label: "HẠNG", },
@@ -60,19 +64,19 @@ const Dashboard = () => {
       filter: false,
     },
   ];
-  const redirectUser = (item) => {
-    history.push(`/hocvien`)
+  async function redirectUser(item) {
+    // const coursesid = dispatch(Khoahoc_Info(item))
+    // console.log(coursesid && coursesid.id != 0 ? coursesid : '');
+    // history.push(`/hocvien?courseid=${coursesid && coursesid.id !== 0 ? coursesid.id : ''}`)
+    history.push(`/hocvien?course_id=${item.id}`);
   }
 
   useEffect(() => {
-    // console.log(filter)
     async function fetchCourses() {
       try {
         const courses = await getCourses(filter);
-        // console.log(courses.data.items);
         setCourses(courses.data.items);
       } catch (error) {
-        // console.log(error.response);
       }
     }
     fetchCourses();
@@ -113,15 +117,15 @@ const Dashboard = () => {
                 items={courses}
                 fields={fields}
                 tableFilterValue={filterSearch}
+                // itemsPerPage={50}
                 hover
                 sorter
-                pagination={{ align: 'center', size: 'lg' }}
-                // border={true}
+                // pagination={{ align: 'center', size: 'lg' }}
                 scopedSlots={{
                   stt: (item, index) => {
                     return (
                       <td>
-                        {index}
+                        {index + 1}
                       </td>
                     )
                   },
@@ -178,10 +182,10 @@ const Dashboard = () => {
                       <td>
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fingerprint
-                        } <span className="pr-3 courses-icon"><CIcon name={'cil-fingerprint'} /></span>
+                        } <span className="pr-3 coreui-icon_inline"><CIcon name={'cil-fingerprint'} /></span>
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fade_id
-                        } <span className="courses-icon"><CIcon name={'cil-face'} /></span>
+                        } <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span>
                       </td>
                     )
                   },
@@ -264,7 +268,7 @@ const Dashboard = () => {
                     return (
                       <td className="text-center">
                         <span role="button">
-                          <CIcon name={'cil-trash'} onClick={() => setDeleteRow(!deleteRow)} />
+                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow(!deleteRow)} />
                         </span>
                       </td>
                     );
@@ -272,6 +276,7 @@ const Dashboard = () => {
                 }}
               />
             </CCardBody>
+            {/* <Pagination defaultCurrent={1} total={50} /> */}
           </CCard>
         </CCol>
       </CRow>
@@ -282,4 +287,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Khoahoc;
