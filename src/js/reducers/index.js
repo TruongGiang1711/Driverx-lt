@@ -1,9 +1,8 @@
-const initialState = {
-    articles: []
-};
+import { combineReducers } from "redux";
 
-function rootReducer(state = initialState, action) {
-    return state;
-};
+import { KhoahocInfo_Reducer } from "./counter";
 
-export default rootReducer;
+export const allReducers = combineReducers({
+    KhoahocInfo_Reducer,
+    // add more reducers here
+});

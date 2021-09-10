@@ -1,16 +1,8 @@
-.courses-card {
+.trainess-card {
     label {
         color: #3399ff;
     }
-    .courses-icon {
-        display: inline-flex;
-        vertical-align: middle;
-        padding-bottom: 0.2rem;
-        svg {
-            margin: 0;
-        }
-    }
-    .courses-table {
+    .trainess-table {
         th,
         td {
             white-space: nowrap;
@@ -18,40 +10,7 @@
         tbody {
             td {
                 vertical-align: middle;
-                &.courses-status,
-                &.courses-card_status {
-                    .alert,
-                    .badge {
-                        width: 80px;
-                    }
-                }
             }
         }
     }
-
-    // .pagination {
-    //     .page-item {
-    //         padding: 0 0.5rem;
-    //         .page-link {
-    //             border: 0;
-    //             color: #b1b7c1;
-    //             padding: 0.25rem 0.75rem;
-    //             &:hover {
-    //                 border-radius: 5px;
-    //                 background-color: transparent;
-    //                 color: #3399ff;
-    //             }
-    //             &:focus {
-    //                 box-shadow: none;
-    //             }
-    //         }
-    //         &.active {
-    //             .page-link {
-    //                 background-color: #2eb85c21;
-    //                 color: #3399ff;
-    //                 border-radius: 5px;
-    //             }
-    //         }
-    //     }
-    // }
 }

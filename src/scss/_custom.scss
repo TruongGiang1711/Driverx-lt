@@ -13,11 +13,20 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #ced2d8 ;
+    background: #ced2d8;
     border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: grey;
+}
+
+.coreui-icon_inline {
+    display: inline-flex;
+    vertical-align: middle;
+    padding-bottom: 0.2rem;
+    svg {
+        margin: 0;
+    }
 }

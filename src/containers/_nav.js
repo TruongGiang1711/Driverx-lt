@@ -5,7 +5,7 @@ const nav = [
   {
     _tag: 'CSidebarNavItem',
     name: 'Trang chủ',
-    to: '/dashboard',
+    to: '/',
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
   },
   {

@@ -1,6 +1,6 @@
 import { createStore } from "redux";
-import rootReducer from "../reducers/index";
+import KhoahocInfo_Reducer from "../reducers";
 
-const store = createStore(rootReducer);
+const store = createStore(KhoahocInfo_Reducer);
 
 export default store;
