@@ -13,7 +13,6 @@ const nav = [
     name: 'Khóa học',
     to: '/khoahoc',
     icon: 'cil-drop',
-    onclick: () => {console.log(1); }
   },
   {
     _tag: 'CSidebarNavItem',

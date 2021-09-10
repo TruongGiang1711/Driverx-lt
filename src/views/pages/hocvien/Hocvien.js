@@ -85,48 +85,67 @@ const Hocvien = ({ match }) => {
 
   // const redirectUser = (item) => {
   // }
+  useEffect(() => {
+    async function fetchTrainees() {
+      const ob = {
+        ...filter,
+        course_id: currentPage,
+        branch_id: coursesID.branch && coursesID.branch.id ? coursesID.branch.id : 0,
+        page: pages,
+      }
+      try {
+        const trainees = await getTrainees(ob);
+        setTotalpages(trainees.data.total)
+        setTrainees(trainees.data.items);
+      } catch (error) {
+      }
+    }
+    fetchTrainees()
+  }, [coursesID])
+
 
   useEffect(() => {
-    currentPage !== page && setPage(currentPage)
-    const ob = {
-      ...filter,
-      page: pages,
-    }
-    async function fetchTrainees() {
-      try {
-        const trainees = await getTrainees(ob);
-        setTotalpages(trainees.data.total)
-        setTrainees(trainees.data.items);
-      } catch (error) {
-      }
-    }
-    fetchTrainees();
-  }, [currentPage, page, pages])
-  useEffect(() => {
-    const ob = {
-      ...filter,
-      course_id: currentPage,
-    }
-    async function fetchTrainees() {
-      try {
-        const trainees = await getTrainees(ob);
-        setTotalpages(trainees.data.total)
-        setTrainees(trainees.data.items);
-      } catch (error) {
-      }
-    }
-    fetchTrainees();
-  }, [filter]);
-  useEffect(() => {
+    let localCoursesID = {};
+    // currentPage !== page && setPage(currentPage)
+    setCoursesID({})
     async function fetchCoursesID() {
       try {
-        const coursesID = await getCoursesID(currentPage);
-        // console.log(coursesID.data);
-        setCoursesID(coursesID.data);
+        if (currentPage == 0) {
+          return
+        }
+        const response = await getCoursesID(currentPage);
+        localCoursesID = response.data;
+        setCoursesID(localCoursesID)
       } catch (error) {
       }
     }
-    fetchCoursesID();
+    async function fetchData() {
+      try {
+        if (currentPage != 0) {
+        }
+        await fetchCoursesID()
+      }
+      catch (error) {
+      }
+    }
+    fetchData();
+  }, [currentPage, pages, filter])
+  // useEffect(() => {
+  //   const ob = {
+  //     ...filter,
+  //     page: pages,
+  //   }
+  //   async function fetchTrainees() {
+  //     try {
+  //       const trainees = await getTrainees(ob);
+  //       setTotalpages(trainees.data.total)
+  //       setTrainees(trainees.data.items);
+  //     } catch (error) {
+  //     }
+  //   }
+  //   fetchTrainees();
+  // }, [filter, pages]);
+  useEffect(() => {
     async function fetchBranches() {
       const ob = {
         name: '',
@@ -174,7 +193,7 @@ const Hocvien = ({ match }) => {
                   so_tt: (item, index) => {
                     return (
                       <td>
-                        {index + 1}
+                        {index + 1 + (pages - 1) * 50}
                       </td>
                     )
                   },

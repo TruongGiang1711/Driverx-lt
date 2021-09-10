@@ -12,8 +12,9 @@ import { icons } from './assets/icons'
 import { createStore } from "redux";
 import { Provider } from 'react-redux'
 import { allReducers } from "./js/reducers";
+import store from "./store";
 
-const store = createStore(allReducers);
+// const store = createStore(allReducers);
 
 React.icons = icons
 
