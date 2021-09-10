@@ -33,7 +33,6 @@ const Khoahoc = () => {
   const [addRow, setAddRow] = useState(false)
   const [deleteRow, setDeleteRow] = useState(false)
   const [syncRow, setSyncRow] = useState(false)
-  const [filterSearch, setFilterSearch] = useState('')
   const [filter, setFilter] = useState({
     province_id: 0,
     customer_id: 0,
@@ -111,12 +110,11 @@ const Khoahoc = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus })}
+              {FilterKhoahoc({ filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus })}
               <CDataTable
                 addTableClasses="courses-table"
                 items={courses}
                 fields={fields}
-                tableFilterValue={filterSearch}
                 // itemsPerPage={50}
                 hover
                 sorter

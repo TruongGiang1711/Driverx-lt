@@ -24,33 +24,14 @@ export const FilterKhoahoc = (props) => {
     let timeout;
     let currentValue;
     const [courses, setCourses] = useState([])
-    const [dataSearch, setDataSearch] = useState({
+    const [dataFilter, setDataFilter] = useState({
         branch_id: 0,
         status: -1
     });
     const [search, setSearch] = useState({
         data: [],
-        value: undefined,
+        value: 0,
     })
-    const handleChangeFilter = (value, key) => {
-        switch (key) {
-            case 'name':
-                props.setFilter({ ...props.filter, name: value.target.value })
-                break;
-            case 'branch':
-                props.setFilter({ ...props.filter, branch_id: value })
-                break;
-            case 'status':
-                props.setFilter({ ...props.filter, status: value })
-                break;
-            case 'hang':
-                props.setFilter({ ...props.filter, hang: value })
-                break;
-
-            default:
-                break;
-        }
-    }
 
     const arrStatus = []
     let listStatus = () => {
@@ -61,7 +42,7 @@ export const FilterKhoahoc = (props) => {
     }
 
 
-    function fetch(value, callback) {
+    function fetchCourse(value, callback) {
         if (timeout) {
             clearTimeout(timeout);
             timeout = null;
@@ -69,24 +50,31 @@ export const FilterKhoahoc = (props) => {
         currentValue = value;
 
         function fake() {
-            getCourses({ name: value })
-                .then(response => { console.log(response); return response.data.items })
+            const ob = {
+                name: value,
+                branch_id: props.filter.branch_id,
+            }
+            getCourses(ob)
+                .then(response => response.data.items)
                 .then(d => {
                     if (currentValue === value) {
                         const data = [];
                         d.map(r => {
                             data.push({
-                                key: r.id,
-                                text: r.ten_khoa_hoc,
+                                id: r.id,
+                                name: r.ten_khoa_hoc,
                             });
                         });
                         callback(data);
                     }
                 });
         }
-
         timeout = setTimeout(fake, 300);
     }
+    useEffect(() => {
+        console.log(props.filter.branch_id);
+        handleSearch()
+    }, [props.filter.branch_id])
     // const ob = {
     //     branch_id: props.coursesID && props.coursesID.branch && props.coursesID.branch.id,
     //     status: dataSearch.status
@@ -101,39 +89,44 @@ export const FilterKhoahoc = (props) => {
     // }
     // fetchCourses()
     const handleSearch = value => {
-        console.log(value);
         if (value) {
-            fetch(value, data => setSearch({ data }));
+            fetchCourse(value, data => setSearch({ data }));
         } else {
-            setSearch({ data: [] });
+            setSearch({ data: [], value: 0 });
         }
     };
-
-    const handleChange = value => {
+    const handleChange = (value, key) => {
         console.log(value);
-        switch (value) {
+        switch (key) {
+            case 'name':
+                props.setFilter({ ...props.filter, name: value.target.value })
+                break;
             case 'branch':
-                setDataSearch({ ...dataSearch, branch_id: value })
+                props.setFilter({ ...props.filter, branch_id: value, course_id: 0 })
+                setSearch({ ...search, value: 0 })
                 break;
             case 'status':
-                setDataSearch({ ...dataSearch, status: value })
+                props.setFilter({ ...props.filter, status: value })
+                break;
+            case 'course':
+                setSearch({ ...search, value: value })
+                props.setFilter({ ...props.filter, course_id: value })
                 break;
 
             default:
                 break;
         }
-        setSearch({ value });
     };
-    const options = search.data.map(d => <Option key={d.key}>{d.text}</Option>);
+    const options = search.data.map(d => <Option key={d.id}>{d.name} - {d.id}</Option>);
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(props.branches && props.branches.length > 1) ?
                 <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select value={props.coursesID && props.coursesID.branch && props.coursesID.branch.id ? props.coursesID.branch.id : "Tất cả"} style={{ width: '100%' }} onSelect={(item) => handleChangeFilter(item, 'branch')}>
+                    <Select defaultValue={"Tất cả"} value={props.coursesID && props.coursesID.branch && props.coursesID.branch.id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
                         {props.branches.map((item, index) => {
-                            return <Option key={item.id} value={item.id}>{item.name}</Option>
+                            return <Option key={item.id} value={item.id}>{item.name} - {item.id}</Option>
                         })}
                     </Select>
                 </CCol> : undefined
@@ -158,32 +151,29 @@ export const FilterKhoahoc = (props) => {
                     showArrow={false}
                     filterOption={false}
                     onSearch={handleSearch}
-                    onChange={(item) => handleChange(item, 'branch')}
+                    onChange={(item) => handleChange(item, 'course')}
                     notFoundContent={null}
                 >
+                    <Option key={0} value={0}>Tất cả</Option>
                     {options}
                 </Select>
-                {/* <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'hang')}>
-                    <Option key={''} value={''}>Tất cả</Option>
-                    {props.hangs && props.hangs.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
-                </Select> */}
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tên khóa" onPressEnter={(item) => handleChangeFilter(item, 'name')} />
+                <Search placeholder="Tên khóa" onPressEnter={(item) => handleChange(item, 'name')} />
             </CCol>
+            <div className="mb-3 pr-3">
+                <CLabel htmlFor="ccadd" className="invisible">Tìm</CLabel><br />
+                <CButton block color="info" className={`ml-auto align-middle`} onClick={() => props.setAddRow(!props.addRow)}>
+                    Tìm
+                </CButton>
+            </div>
             <div className="mb-3 pr-3 ml-auto">
-                <CLabel htmlFor="ccadd" className="invisible"></CLabel><br />
+                <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
                 <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>
-            {/* <div className="mb-3 pr-3">
-                <CLabel htmlFor="ccimport" className="invisible">import</CLabel><br />
-                <CButton block color="primary align-middle">
-                    <ImportOutlined className='pr-2 d-inline-flex' />Import
-                </CButton>
-            </div> */}
         </CRow >
     )
 }
