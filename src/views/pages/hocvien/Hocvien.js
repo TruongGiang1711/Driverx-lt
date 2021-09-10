@@ -22,12 +22,11 @@ import { EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 import { getCourses, getCoursesID, getBranches, getHangs, getTrainees } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../component/getBadge/GetBadge";
 
-const Hocvien = ({ match }) => {
-
+const Hocvien = () => {
   const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
-  const [page, setPage] = useState(currentPage)
-  // console.log(currentPage);
+  const idCourseURL = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
+  const [page, setPage] = useState(idCourseURL)
+  // console.log(idCourseURL);
   const history = useHistory()
   const [courses, setCourses] = useState([]);
   const [coursesID, setCoursesID] = useState({});
@@ -85,51 +84,52 @@ const Hocvien = ({ match }) => {
 
   // const redirectUser = (item) => {
   // }
-  useEffect(() => {
-    async function fetchTrainees() {
-      const ob = {
-        ...filter,
-        course_id: currentPage,
-        branch_id: coursesID.branch && coursesID.branch.id ? coursesID.branch.id : 0,
-        page: pages,
-      }
-      try {
-        const trainees = await getTrainees(ob);
-        setTotalpages(trainees.data.total)
-        setTrainees(trainees.data.items);
-      } catch (error) {
-      }
-    }
-    fetchTrainees()
-  }, [coursesID])
+  // useEffect(() => {
+  //   async function fetchTrainees() {
+  //     const ob = {
+  //       ...filter,
+  //       course_id: idCourseURL,
+  //       branch_id: coursesID.branch && coursesID.branch.id ? coursesID.branch.id : 0,
+  //       page: pages,
+  //     }
+  //     try {
+  //       const trainees = await getTrainees(ob);
+  //       setTotalpages(trainees.data.total)
+  //       setTrainees(trainees.data.items);
+  //     } catch (error) {
+  //     }
+  //   }
+  //   fetchTrainees()
+  // }, [coursesID])
 
 
-  useEffect(() => {
-    let localCoursesID = {};
-    // currentPage !== page && setPage(currentPage)
-    setCoursesID({})
-    async function fetchCoursesID() {
-      try {
-        if (currentPage == 0) {
-          return
-        }
-        const response = await getCoursesID(currentPage);
-        localCoursesID = response.data;
-        setCoursesID(localCoursesID)
-      } catch (error) {
-      }
-    }
-    async function fetchData() {
-      try {
-        if (currentPage != 0) {
-        }
-        await fetchCoursesID()
-      }
-      catch (error) {
-      }
-    }
-    fetchData();
-  }, [currentPage, pages, filter])
+  // useEffect(() => {
+  //   console.log(filter);
+  //   let localCoursesID = {};
+  //   // idCourseURL !== page && setPage(idCourseURL)
+  //   setCoursesID({})
+  //   async function fetchCoursesID() {
+  //     try {
+  //       if (idCourseURL == 0) {
+  //         return
+  //       }
+  //       const response = await getCoursesID(idCourseURL);
+  //       localCoursesID = response.data;
+  //       setCoursesID(localCoursesID)
+  //     } catch (error) {
+  //     }
+  //   }
+  //   async function fetchData() {
+  //     try {
+  //       if (idCourseURL != 0) {
+  //       }
+  //       await fetchCoursesID()
+  //     }
+  //     catch (error) {
+  //     }
+  //   }
+  //   fetchData();
+  // }, [idCourseURL, pages, filter])
   // useEffect(() => {
   //   const ob = {
   //     ...filter,
@@ -146,6 +146,23 @@ const Hocvien = ({ match }) => {
   //   fetchTrainees();
   // }, [filter, pages]);
   useEffect(() => {
+    async function fetchTrainees() {
+      // const ob = {
+      //   ...filter,
+      //   course_id: idCourseURL,
+      //   branch_id: coursesID.branch && coursesID.branch.id ? coursesID.branch.id : 0,
+      //   page: pages,
+      // }
+      try {
+        const trainees = await getTrainees(filter);
+        setTrainees(trainees.data.items);
+        setTotalpages(trainees.data.total)
+      } catch (error) {
+      }
+    }
+    fetchTrainees()
+  }, [filter])
+  useEffect(() => {
     async function fetchBranches() {
       const ob = {
         name: '',
@@ -159,14 +176,6 @@ const Hocvien = ({ match }) => {
       }
     }
     fetchBranches();
-    async function fetchHangs() {
-      try {
-        const hangs = await getHangs();
-        setHangs(hangs.data);
-      } catch (error) {
-      }
-    }
-    fetchHangs();
   }, []);
   const changePage = (page) => {
     setPages(page)
@@ -178,12 +187,12 @@ const Hocvien = ({ match }) => {
           <CCard className="trainess-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filterSearch, setFilterSearch, filter, setFilter, addRow, setAddRow, branches, courses, coursesID, hangs, getStatus, currentPage })}
+              {FilterKhoahoc({ filter, setFilter, addRow, setAddRow, branches, courses, coursesID, hangs, getStatus })}
               <CDataTable
                 addTableClasses="trainess-table"
                 items={trainees}
                 fields={fields}
-                tableFilterValue={filterSearch}
+                // tableFilterValue={filterSearch}
                 // itemsPerPage={50}
                 size={'sm'}
                 hover
