@@ -63,35 +63,30 @@ export const FilterKhoahoc = (props) => {
 
     function fetch(value, callback) {
         if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
+            clearTimeout(timeout);
+            timeout = null;
         }
         currentValue = value;
-      
+
         function fake() {
-          const str = querystring.encode({
-            code: 'utf-8',
-            q: value,
-          });
-          getCourses(str)
-            .then(response => response.json())
-            .then(d => {
-              if (currentValue === value) {
-                const { result } = d;
-                const data = [];
-                result.forEach(r => {
-                  data.push({
-                    value: r[0],
-                    text: r[0],
-                  });
+            getCourses({ name: value })
+                .then(response => { console.log(response); return response.data.items })
+                .then(d => {
+                    if (currentValue === value) {
+                        const data = [];
+                        d.map(r => {
+                            data.push({
+                                key: r.id,
+                                text: r.ten_khoa_hoc,
+                            });
+                        });
+                        callback(data);
+                    }
                 });
-                callback(data);
-              }
-            });
         }
-      
+
         timeout = setTimeout(fake, 300);
-      }
+    }
     // const ob = {
     //     branch_id: props.coursesID && props.coursesID.branch && props.coursesID.branch.id,
     //     status: dataSearch.status
@@ -127,9 +122,9 @@ export const FilterKhoahoc = (props) => {
             default:
                 break;
         }
-        // setDataSearch({ value });
+        setSearch({ value });
     };
-    const options = search.data.map(d => <Option key={d.id}>{d.ten_khoa_hoc}</Option>);
+    const options = search.data.map(d => <Option key={d.key}>{d.text}</Option>);
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(props.branches && props.branches.length > 1) ?
