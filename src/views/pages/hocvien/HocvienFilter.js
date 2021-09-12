@@ -1,5 +1,5 @@
 // import { useSelector } from "react-redux";
-// import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
     CButton,
     CCol,
@@ -9,40 +9,50 @@ import {
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
 import { useEffect, useMemo, useState } from "react";
-import { getCourses } from "src/services/userService";
-import querystring from 'querystring';
+import { getCourses, getCoursesID, getBranches, getTrainees } from "src/services/userService";
+import { getStatus } from "../../component/getBadge/GetBadge";
+
 const { Option } = Select;
 const { Search } = Input;
 export const FilterKhoahoc = (props) => {
     // console.log(props)
-    // const KhoahocInfo_Reducer = useSelector((state) => state.KhoahocInfo_Reducer);
-    // console.log(KhoahocInfo_Reducer);
-    // const [initFilter, setInitFilter] = useState({})
-    // const initFilter = {
-    //     defaultPhanhieu: 0,
-    // }
+    const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
+    const idCourseURL = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
     let timeout;
     let currentValue;
-    const [courses, setCourses] = useState([])
-    const [dataFilter, setDataFilter] = useState({
-        branch_id: 0,
-        status: -1
-    });
+    const [idCourseUrl, setIdCourseUrl] = useState(idCourseURL)
+    const [branches, setBranches] = useState([]);
     const [search, setSearch] = useState({
         data: [],
-        value: 0,
+        course_id: 0,
+        status: -1,
+        branch_id: 0,
+        name: '',
     })
-
+    const [filter, setFilter] = useState({
+        name: '',
+        id_card: '',
+        rf_card: '',
+        rf_card_name: '',
+        course_id: 0,
+        province_id: 0,
+        customer_id: 0,
+        branch_id: 0,
+        page: 1
+    })
     const arrStatus = []
     let listStatus = () => {
         for (let i = 0; i < 4; i++) {
-            arrStatus.push({ id: i, name: props.getStatus(i) })
+            arrStatus.push({ id: i, name: getStatus(i) })
         }
         return arrStatus
     }
+    const options = search.data.map(d => <Option key={d.id}>{d.name} - {d.id}</Option>);
 
 
-    function fetchCourse(value, callback) {
+
+
+    function fetchCourse(value, callback, status) {
         if (timeout) {
             clearTimeout(timeout);
             timeout = null;
@@ -52,7 +62,8 @@ export const FilterKhoahoc = (props) => {
         function fake() {
             const ob = {
                 name: value,
-                branch_id: props.filter.branch_id,
+                status: status,
+                branch_id: search.branch_id
             }
             getCourses(ob)
                 .then(response => response.data.items)
@@ -71,61 +82,123 @@ export const FilterKhoahoc = (props) => {
         }
         timeout = setTimeout(fake, 300);
     }
-    useEffect(() => {
-        console.log(props.filter.branch_id);
-        handleSearch()
-    }, [props.filter.branch_id])
-    // const ob = {
-    //     branch_id: props.coursesID && props.coursesID.branch && props.coursesID.branch.id,
-    //     status: dataSearch.status
-    // }
-    // async function fetchCourses() {
-    //     try {
-    //         const courses = await getCourses(ob);
-    //         console.log(courses.data.items);
-    //         setCourses(courses.data.items);
-    //     } catch (error) {
-    //     }
-    // }
-    // fetchCourses()
     const handleSearch = value => {
         if (value) {
-            fetchCourse(value, data => setSearch({ data }));
+            fetchCourse(value, data => setSearch({ ...search, data }), search.status);
         } else {
-            setSearch({ data: [], value: 0 });
+            setSearch({
+                ...search,
+                data: [],
+                course_id: 0,
+            });
         }
     };
     const handleChange = (value, key) => {
-        console.log(value);
         switch (key) {
             case 'name':
-                props.setFilter({ ...props.filter, name: value.target.value })
+                setSearch({ ...search, name: value.target.value })
                 break;
             case 'branch':
-                props.setFilter({ ...props.filter, branch_id: value, course_id: 0 })
-                setSearch({ ...search, value: 0 })
+                setSearch({
+                    data: [],
+                    course_id: 0,
+                    status: -1,
+                    name: '',
+                    branch_id: value,
+                })
+                setIdCourseUrl(0)
                 break;
             case 'status':
-                props.setFilter({ ...props.filter, status: value })
+                setSearch({
+                    ...search,
+                    data: [],
+                    course_id: 0,
+                    name: '',
+                    status: value
+                })
                 break;
             case 'course':
-                setSearch({ ...search, value: value })
-                props.setFilter({ ...props.filter, course_id: value })
+                idCourseURL !== value && setIdCourseUrl(value)
+                setSearch({ ...search, course_id: value, })
                 break;
 
             default:
                 break;
         }
     };
-    const options = search.data.map(d => <Option key={d.id}>{d.name} - {d.id}</Option>);
+    const searchTrainess = () => {
+        setFilter({
+            ...filter,
+            course_id: search.course_id,
+            branch_id: search.branch_id,
+            name: search.name,
+        })
+        props.setPage(1)
+    }
+
+    useEffect(() => {
+        async function fetchTrainees() {
+            const ob = {
+                ...filter,
+                course_id: idCourseUrl, // chỗ này có 2 hướng vào
+                page: props.page,
+            }
+            try {
+                const trainees = await getTrainees(ob);
+                props.setTrainees(trainees.data.items);
+                props.setTotalpages(trainees.data.total)
+            } catch (error) {
+            }
+        }
+        fetchTrainees()
+    }, [idCourseUrl, props.page, filter])
+    useEffect(() => {
+        async function fetchBranches() {
+            const ob = {
+                name: '',
+                customer_id: 0,
+                province_id: 0
+            }
+            try {
+                const branches = await getBranches(ob);
+                setBranches(branches.data);
+            } catch (error) {
+            }
+        }
+        fetchBranches();
+        async function fetchCoursesID() {
+            try {
+                if (idCourseURL == 0) {
+                    return
+                }
+                const response = await getCoursesID(idCourseURL);
+                setSearch({ ...search, course_id: idCourseURL, branch_id: response.data.branch.id })
+            } catch (error) {
+            }
+        }
+        fetchCoursesID()
+    }, []);
+    useEffect(() => {
+        idCourseURL !== idCourseUrl && setIdCourseUrl(idCourseURL)
+        if (idCourseURL === 0) {
+            setSearch({
+                data: [],
+                course_id: 0,
+                status: -1,
+                branch_id: 0,
+                name: '',
+            })
+            props.setPage(1)
+        }
+    }, [idCourseURL])
     return (
         <CRow className="d-flex flex-wrap-reverse">
-            {(props.branches && props.branches.length > 1) ?
+            {(branches && branches.length > 1) ?
                 <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select defaultValue={"Tất cả"} value={props.coursesID && props.coursesID.branch && props.coursesID.branch.id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select defaultValue={"Tất cả"} value={search.branch_id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
-                        {props.branches.map((item, index) => {
+                        {branches.map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name} - {item.id}</Option>
                         })}
                     </Select>
@@ -133,7 +206,7 @@ export const FilterKhoahoc = (props) => {
             }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái khóa học</CLabel><br />
-                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
+                <Select value={`${search.status === -1 ? "Tất cả" : search.status}`} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
                     <Option key={'-1'} value={'-1'}>Tất cả</Option>
                     {listStatus().map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -145,7 +218,8 @@ export const FilterKhoahoc = (props) => {
                 <Select
                     style={{ width: '100%' }}
                     showSearch
-                    value={search.value}
+                    defaultValue={"Tất cả"}
+                    value={search.course_id}
                     placeholder="input search text"
                     defaultActiveFirstOption={false}
                     showArrow={false}
@@ -160,17 +234,17 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tên khóa" onPressEnter={(item) => handleChange(item, 'name')} />
+                <Search placeholder="Tên khóa" value={search.name} onChange={(item) => handleChange(item, 'name')} />
             </CCol>
             <div className="mb-3 pr-3">
                 <CLabel htmlFor="ccadd" className="invisible">Tìm</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle`} onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle`} onClick={() => searchTrainess()}>
                     Tìm
                 </CButton>
             </div>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle`} disabled={filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>
