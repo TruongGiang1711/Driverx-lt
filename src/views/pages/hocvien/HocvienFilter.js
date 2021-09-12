@@ -118,7 +118,7 @@ export const FilterKhoahoc = (props) => {
                 })
                 break;
             case 'course':
-                idCourseURL !== value && setIdCourseUrl(value)
+                // idCourseURL !== value && setIdCourseUrl(value)
                 setSearch({ ...search, course_id: value, })
                 break;
 
@@ -140,7 +140,7 @@ export const FilterKhoahoc = (props) => {
         async function fetchTrainees() {
             const ob = {
                 ...filter,
-                course_id: idCourseUrl, // chỗ này có 2 hướng vào
+                course_id: idCourseURL, // chỗ này có 2 hướng vào
                 page: props.page,
             }
             try {
@@ -151,7 +151,7 @@ export const FilterKhoahoc = (props) => {
             }
         }
         fetchTrainees()
-    }, [idCourseUrl, props.page, filter])
+    }, [idCourseURL, props.page, filter])
     useEffect(() => {
         async function fetchBranches() {
             const ob = {
