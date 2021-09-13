@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import './Khoahoc.scss';
 import {
   CBadge,
@@ -17,10 +16,9 @@ import Moment from 'react-moment';
 import { usersDataFake } from "./KhoahocData";
 import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
-import { Pagination } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getCoursesID, getBranches, getHangs } from "src/services/userService";
+import { getCourses, getBranches, getHangs } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 // import { Khoahoc_Info } from "src/js/actions";
 

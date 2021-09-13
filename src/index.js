@@ -9,9 +9,9 @@ import * as serviceWorker from './serviceWorker';
 
 import { icons } from './assets/icons'
 
-import { createStore } from "redux";
+// import { createStore } from "redux";
 import { Provider } from 'react-redux'
-import { allReducers } from "./js/reducers";
+// import { allReducers } from "./js/reducers";
 import store from "./store";
 
 // const store = createStore(allReducers);
