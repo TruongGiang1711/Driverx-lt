@@ -16,6 +16,7 @@ import Moment from 'react-moment';
 import { usersDataFake } from "./KhoahocData";
 import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
+import { Pagination } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
 import { getCourses, getBranches, getHangs } from "src/services/userService";
@@ -28,9 +29,11 @@ const Khoahoc = () => {
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
-  const [addRow, setAddRow] = useState(false)
-  const [deleteRow, setDeleteRow] = useState(false)
-  const [syncRow, setSyncRow] = useState(false)
+  const [addRow, setAddRow] = useState(false);
+  const [deleteRow, setDeleteRow] = useState(false);
+  const [syncRow, setSyncRow] = useState(false);
+  const [totalpages, setTotalpages] = useState(1);
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState({
     province_id: 0,
     customer_id: 0,
@@ -101,6 +104,21 @@ const Khoahoc = () => {
     }
     fetchHangs();
   }, []);
+  const changePage = (page) => {
+    setPage(page)
+    async function fetchCourses() {
+      const ob = {
+        ...filter,
+        page: page
+      }
+      try {
+        const courses = await getCourses(ob);
+        setCourses(courses.data.items);
+      } catch (error) {
+      }
+    }
+    fetchCourses()
+  }
   return (
     <>
       <CRow>
@@ -121,7 +139,7 @@ const Khoahoc = () => {
                   stt: (item, index) => {
                     return (
                       <td>
-                        {index + 1}
+                        {index + 1 + (page - 1) * 50}
                       </td>
                     )
                   },
@@ -272,6 +290,7 @@ const Khoahoc = () => {
                 }}
               />
             </CCardBody>
+            <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
             {/* <Pagination defaultCurrent={1} total={50} /> */}
           </CCard>
         </CCol>

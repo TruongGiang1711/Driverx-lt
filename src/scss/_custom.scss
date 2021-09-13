@@ -22,11 +22,39 @@
     background: grey;
 }
 
+// cutom bottom
+button.button-coreui {
+    height: 32px;
+    display: flex;
+    align-items: center;
+}
+
+// custom icon
 .coreui-icon_inline {
     display: inline-flex;
     vertical-align: middle;
     padding-bottom: 0.2rem;
     svg {
         margin: 0;
+    }
+}
+
+// pagination antdesign
+ul.core-pagination {
+    li {
+        margin-right: 0;
+        &.ant-pagination-item {
+            color: #321fdb;
+        }
+        &.ant-pagination-item-active {
+            background-color: #321fdb;
+            color: #ffffff;
+        }
+        .anticon-left,
+        .anticon-right {
+            display: inline-flex;
+            vertical-align: middle;
+            padding-bottom: 0.2rem;
+        }
     }
 }

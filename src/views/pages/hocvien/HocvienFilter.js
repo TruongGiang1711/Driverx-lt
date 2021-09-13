@@ -78,6 +78,16 @@ export const FilterKhoahoc = (props) => {
             case 'name':
                 props.setFilter({ ...props.filter, name: value.target.value })
                 break;
+            case 'iconsearch':
+                console.log(value, key);
+                props.setFilter({ ...props.filter, name: value })
+                searchTrainess()
+                break;
+            case 'enter':
+                console.log(value.target.value, key);
+                props.setFilter({ ...props.filter, name: value.target.value })
+                searchTrainess()
+                break;
             case 'branch':
                 setSearch({
                     data: [],
@@ -99,6 +109,13 @@ export const FilterKhoahoc = (props) => {
                 break;
         }
     };
+    const onSearchEnter = (value, key) => {
+        switch (key) {
+
+            default:
+                break;
+        }
+    }
     const searchTrainess = () => {
         async function fetchTrainees() {
             try {
@@ -214,17 +231,22 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tên học viên" value={props.filter.name} onChange={(item) => handleChange(item, 'name')} />
+                <Search placeholder="Tên học viên"
+                    enterButton="Tìm"
+                    value={props.filter.name}
+                    onChange={(item) => handleChange(item, 'name')}
+                    onSearch={(item, event) => searchTrainess(item, 'iconsearch')}
+                    onPressEnter={(item) => searchTrainess(item, 'enter')} />
             </CCol>
-            <div className="mb-3 pr-3">
+            {/* <div className="mb-3 pr-3">
                 <CLabel htmlFor="ccadd" className="invisible">Tìm</CLabel><br />
                 <CButton block color="info" className={`ml-auto align-middle`} onClick={() => searchTrainess()}>
                     Tìm
                 </CButton>
-            </div>
+            </div> */}
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>

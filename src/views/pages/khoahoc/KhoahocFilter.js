@@ -14,6 +14,9 @@ export const FilterKhoahoc = (props) => {
     const handleChange = (value, key) => {
         switch (key) {
             case 'name':
+                props.setFilter({ ...props.filter, name: value })
+                break;
+            case 'enter':
                 props.setFilter({ ...props.filter, name: value.target.value })
                 break;
             case 'branch':
@@ -30,7 +33,6 @@ export const FilterKhoahoc = (props) => {
                 break;
         }
     }
-
     const arrStatus = []
     let listStatus = () => {
         for (let i = 0; i < 4; i++) {
@@ -70,12 +72,12 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tên khóa" onPressEnter={(item) => handleChange(item, 'name')} />
+                <Search placeholder="Tên khóa" onSearch={(item, event) => handleChange(item, 'name')} onPressEnter={(item) => handleChange(item, 'enter')} />
             </CCol>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
-                    <span className="pr-2 coreui-icon_inline"><CIcon name={'cil-plus'} /></span>Thêm Khóa
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
+                    <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Khóa
                 </CButton>
             </div>
             {/* <div className="mb-3 pr-3">

@@ -199,7 +199,7 @@ const Hocvien = () => {
                 }}
               />
             </CCardBody>
-            <Pagination total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
+            <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
           </CCard>
         </CCol>
       </CRow>
