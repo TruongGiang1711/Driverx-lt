@@ -6,9 +6,8 @@ import {
     CRow,
     CLabel,
 } from "@coreui/react";
-import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCourses, getCoursesID, getBranches, getTrainees } from "src/services/userService";
 import { getStatus } from "../../component/getBadge/GetBadge";
 
@@ -17,28 +16,13 @@ const { Search } = Input;
 export const FilterKhoahoc = (props) => {
     // console.log(props)
     const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
-    const idCourseURL = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
+    const courseID = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
     let timeout;
     let currentValue;
-    const [idCourseUrl, setIdCourseUrl] = useState(idCourseURL)
+    const [idCourseUrl, setIdCourseUrl] = useState(courseID)
     const [branches, setBranches] = useState([]);
     const [search, setSearch] = useState({
         data: [],
-        course_id: 0,
-        status: -1,
-        branch_id: 0,
-        name: '',
-    })
-    const [filter, setFilter] = useState({
-        name: '',
-        id_card: '',
-        rf_card: '',
-        rf_card_name: '',
-        course_id: 0,
-        province_id: 0,
-        customer_id: 0,
-        branch_id: 0,
-        page: 1
     })
     const arrStatus = []
     let listStatus = () => {
@@ -47,10 +31,7 @@ export const FilterKhoahoc = (props) => {
         }
         return arrStatus
     }
-    const options = search.data.map(d => <Option key={d.id}>{d.name} - {d.id}</Option>);
-
-
-
+    const options = search.data.map(d => <Option key={d.id} value={d.id}>{d.name}</Option>);
 
     function fetchCourse(value, callback, status) {
         if (timeout) {
@@ -63,7 +44,7 @@ export const FilterKhoahoc = (props) => {
             const ob = {
                 name: value,
                 status: status,
-                branch_id: search.branch_id
+                branch_id: props.filter.branch_id
             }
             getCourses(ob)
                 .then(response => response.data.items)
@@ -71,7 +52,7 @@ export const FilterKhoahoc = (props) => {
                     if (currentValue === value) {
                         const data = [];
                         d.map(r => {
-                            data.push({
+                            return data.push({
                                 id: r.id,
                                 name: r.ten_khoa_hoc,
                             });
@@ -84,42 +65,34 @@ export const FilterKhoahoc = (props) => {
     }
     const handleSearch = value => {
         if (value) {
-            fetchCourse(value, data => setSearch({ ...search, data }), search.status);
+            fetchCourse(value, data => setSearch({ ...search, data }), props.filter.status);
         } else {
             setSearch({
                 ...search,
                 data: [],
-                course_id: 0,
             });
         }
     };
     const handleChange = (value, key) => {
         switch (key) {
             case 'name':
-                setSearch({ ...search, name: value.target.value })
+                props.setFilter({ ...props.filter, name: value.target.value })
                 break;
             case 'branch':
                 setSearch({
                     data: [],
-                    course_id: 0,
-                    status: -1,
-                    name: '',
-                    branch_id: value,
                 })
-                setIdCourseUrl(0)
+                props.setFilter({ ...props.filter, branch_id: value, course_id: 0, status: -1 })
                 break;
             case 'status':
                 setSearch({
                     ...search,
                     data: [],
-                    course_id: 0,
-                    name: '',
-                    status: value
                 })
+                props.setFilter({ ...props.filter, status: value, course_id: 0, })
                 break;
             case 'course':
-                // idCourseURL !== value && setIdCourseUrl(value)
-                setSearch({ ...search, course_id: value, })
+                props.setFilter({ ...props.filter, course_id: value, })
                 break;
 
             default:
@@ -127,21 +100,23 @@ export const FilterKhoahoc = (props) => {
         }
     };
     const searchTrainess = () => {
-        setFilter({
-            ...filter,
-            course_id: search.course_id,
-            branch_id: search.branch_id,
-            name: search.name,
-        })
+        async function fetchTrainees() {
+            try {
+                const trainees = await getTrainees(props.filter);
+                props.setTrainees(trainees.data.items);
+                props.setTotalpages(trainees.data.total)
+            } catch (error) {
+            }
+        }
+        fetchTrainees()
         props.setPage(1)
     }
 
     useEffect(() => {
         async function fetchTrainees() {
             const ob = {
-                ...filter,
-                course_id: idCourseURL, // chỗ này có 2 hướng vào
-                page: props.page,
+                ...props.filter,
+                course_id: idCourseUrl,
             }
             try {
                 const trainees = await getTrainees(ob);
@@ -151,7 +126,7 @@ export const FilterKhoahoc = (props) => {
             }
         }
         fetchTrainees()
-    }, [idCourseURL, props.page, filter])
+    }, [idCourseUrl])
     useEffect(() => {
         async function fetchBranches() {
             const ob = {
@@ -168,45 +143,52 @@ export const FilterKhoahoc = (props) => {
         fetchBranches();
         async function fetchCoursesID() {
             try {
-                if (idCourseURL == 0) {
+                if (courseID === 0) {
                     return
                 }
-                const response = await getCoursesID(idCourseURL);
-                setSearch({ ...search, course_id: idCourseURL, branch_id: response.data.branch.id })
+                const response = await getCoursesID(courseID);
+                props.setFilter({
+                    ...props.filter,
+                    course_id: response.data.ten_khoa_hoc,
+                    branch_id: response.data.branch.id,
+                    status: response.data.status,
+                })
             } catch (error) {
             }
         }
         fetchCoursesID()
     }, []);
     useEffect(() => {
-        idCourseURL !== idCourseUrl && setIdCourseUrl(idCourseURL)
-        if (idCourseURL === 0) {
+        if (courseID === 0) {
             setSearch({
                 data: [],
+            })
+            props.setFilter({
+                ...props.filter,
+                branch_id: 0,
                 course_id: 0,
                 status: -1,
-                branch_id: 0,
-                name: '',
             })
             props.setPage(1)
         }
-    }, [idCourseURL])
+        setIdCourseUrl(courseID)
+    }, [courseID])
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(branches && branches.length > 1) ?
-                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
+                <div className="mb-3 px-3" style={{ width: '310px' }}>
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select defaultValue={"Tất cả"} value={search.branch_id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select value={props.filter.branch === 0 ? "Tất cả" : props.filter.branch_id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
                         {branches.map((item, index) => {
-                            return <Option key={item.id} value={item.id}>{item.name} - {item.id}</Option>
+                            return <Option key={item.id} value={item.id}>{item.name}</Option>
                         })}
                     </Select>
-                </CCol> : undefined
+                </div> : undefined
             }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái khóa học</CLabel><br />
-                <Select value={`${search.status === -1 ? "Tất cả" : search.status}`} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
+                <Select value={props.filter.status === -1 ? "Tất cả" : props.filter.status} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
                     <Option key={'-1'} value={'-1'}>Tất cả</Option>
                     {listStatus().map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -218,10 +200,8 @@ export const FilterKhoahoc = (props) => {
                 <Select
                     style={{ width: '100%' }}
                     showSearch
-                    defaultValue={"Tất cả"}
-                    value={search.course_id}
-                    placeholder="input search text"
-                    defaultActiveFirstOption={false}
+                    value={props.filter.course_id === 0 ? "Tất cả" : props.filter.course_id}
+                    placeholder="Khóa học"
                     showArrow={false}
                     filterOption={false}
                     onSearch={handleSearch}
@@ -234,7 +214,7 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
-                <Search placeholder="Tên khóa" value={search.name} onChange={(item) => handleChange(item, 'name')} />
+                <Search placeholder="Tên học viên" value={props.filter.name} onChange={(item) => handleChange(item, 'name')} />
             </CCol>
             <div className="mb-3 pr-3">
                 <CLabel htmlFor="ccadd" className="invisible">Tìm</CLabel><br />
@@ -244,7 +224,7 @@ export const FilterKhoahoc = (props) => {
             </div>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle`} disabled={filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>

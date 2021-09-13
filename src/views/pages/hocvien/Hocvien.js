@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import './Hocvien.scss';
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -12,27 +10,35 @@ import {
   CImg,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
-import Moment from 'react-moment';
-import { usersDataFake } from "./HocvienData";
 import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./HocvienModal";
 import { FilterKhoahoc } from "./HocvienFilter";
 import { Pagination } from 'antd';
 import { EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getCoursesID, getBranches, getHangs, getTrainees } from "src/services/userService";
-import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../component/getBadge/GetBadge";
+import { getTrainees } from "src/services/userService";
 
 const Hocvien = () => {
-  const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
-  const idCourseURL = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
-  const history = useHistory()
+  // const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
+  // const idCourseURL = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
+  // const history = useHistory()
   const [trainees, setTrainees] = useState([]);
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
   const [addRow, setAddRow] = useState(false)
   const [deleteRow, setDeleteRow] = useState(false)
   const [syncRow, setSyncRow] = useState(false)
-
+  const [filter, setFilter] = useState({
+    name: '',
+    id_card: '',
+    rf_card: '',
+    rf_card_name: '',
+    course_id: 0,
+    province_id: 0,
+    customer_id: 0,
+    branch_id: 0,
+    page: 1,
+    status: -1,
+  })
   const fields = [
     { key: "so_tt", label: "#", },
     { key: "anh_chan_dung", label: "ẢNH", },
@@ -61,15 +67,28 @@ const Hocvien = () => {
   };
   const changePage = (page) => {
     setPage(page)
+    async function fetchTrainees() {
+      const ob = {
+        ...filter,
+        page: page
+      }
+      try {
+        const trainees = await getTrainees(ob);
+        setTrainees(trainees.data.items);
+        setTotalpages(trainees.data.total)
+      } catch (error) {
+      }
+    }
+    fetchTrainees()
   }
   return (
     <>
       <CRow>
         <CCol>
           <CCard className="trainess-card">
-            <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
+            <CCardHeader><h4 className="mb-0">Danh sách học viên</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ addRow, setAddRow, trainees, setTrainees, totalpages, setTotalpages, page, setPage })}
+              {FilterKhoahoc({ addRow, setAddRow, trainees, setTrainees, totalpages, setTotalpages, page, setPage, filter, setFilter })}
               <CDataTable
                 addTableClasses="trainess-table"
                 items={trainees}
