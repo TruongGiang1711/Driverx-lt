@@ -47,8 +47,8 @@ const Hocvien = () => {
     { key: "ngay_sinh", label: "NGÀY SINH", },
     { key: "gioi_tinh", label: "GIỚI TÍNH", },
     { key: "so_cmt", label: "CMND", },
-    { key: "rfid_card", label: "SỐ THẺ RFID", },
-    { key: "fingerprint_and_face_count", label: "TRẠNG THÁI ĐỊNH DANH", },
+    { key: "rfid_card", label: "TÊN THẺ", },
+    { key: "fingerprint_and_face_count", label: "ĐỊNH DANH", },
     { key: "hours_indoor", label: "SỐ GIỜ HỌC LÝ THUYẾT", },
     { key: "info_outdoor", label: "THÔNG TIN HỌC THỰC HÀNH", },
     {
