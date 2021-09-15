@@ -14,12 +14,6 @@ const nav = [
     to: '/khoahoc',
     icon: 'cil-drop',
   },
-  {
-    _tag: 'CSidebarNavItem',
-    name: 'Học viên',
-    to: '/hocvien',
-    icon: 'cil-drop',
-  },
   // {
   //   _tag: 'CSidebarNavItem',
   //   name: 'Dashboard',
