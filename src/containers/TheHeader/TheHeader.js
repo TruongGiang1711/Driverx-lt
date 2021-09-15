@@ -22,10 +22,8 @@ import {
   // TheHeaderDropdownNotif,
   // TheHeaderDropdownTasks
 } from '../index'
-// import { getUser } from 'src/utils/common';
 
 const TheHeader = (props) => {
-  // const user = getUser();
   const dispatch = useDispatch()
   const sidebarShow = useSelector(state => state.sidebarShow)
 
