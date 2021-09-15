@@ -7,6 +7,7 @@ import {
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
+import { listStatus } from "./KhoahocData";
 const { Option } = Select;
 const { Search } = Input;
 export const FilterKhoahoc = (props) => {
@@ -33,14 +34,6 @@ export const FilterKhoahoc = (props) => {
                 break;
         }
     }
-    const arrStatus = []
-    let listStatus = () => {
-        for (let i = 0; i < 4; i++) {
-            arrStatus.push({ id: i, name: props.getStatus(i) })
-        }
-        return arrStatus
-    }
-
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(props.branches && props.branches.length > 1) ?
