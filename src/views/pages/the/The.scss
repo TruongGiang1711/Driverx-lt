@@ -1,8 +1,8 @@
-.trainess-card {
+.courses-card {
     label {
         color: #3399ff;
     }
-    .trainess-table {
+    .courses-table {
         th,
         td {
             white-space: nowrap;
@@ -10,6 +10,13 @@
         tbody {
             td {
                 vertical-align: middle;
+                &.courses-status,
+                &.courses-card_status {
+                    .alert,
+                    .badge {
+                        width: 80px;
+                    }
+                }
             }
         }
     }
