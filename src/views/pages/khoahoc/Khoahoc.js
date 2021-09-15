@@ -10,18 +10,23 @@ import {
   CRow,
   CDataTable,
   CNavLink,
+  CToaster,
+  CToast,
+  CToastHeader,
+  CToastBody,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
-import { usersDataFake } from "./KhoahocData";
-import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
+import { listStatus, usersDataFake } from "./KhoahocData";
+import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow, Toaster } from "./KhoahocModal";
 import { FilterKhoahoc } from "./KhoahocFilter";
-import { Pagination } from 'antd';
+import { Pagination, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getBranches, getHangs } from "src/services/userService";
+import { getCourses, getBranches, getHangs, updateCourse } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 // import { Khoahoc_Info } from "src/js/actions";
+const { Option } = Select;
 
 const Khoahoc = () => {
   // const dispatch = useDispatch();
@@ -30,7 +35,16 @@ const Khoahoc = () => {
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
   const [addRow, setAddRow] = useState(false);
-  const [deleteRow, setDeleteRow] = useState(false);
+  const [toast, setToast] = useState(
+    {
+      position: 'top-right',
+      show: false,
+    }
+  )
+  const [deleteRow, setDeleteRow] = useState({
+    item: undefined,
+    on_off: false
+  });
   const [syncRow, setSyncRow] = useState(false);
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
@@ -50,8 +64,8 @@ const Khoahoc = () => {
     { key: "hang_gplx", label: "HẠNG", },
     { key: "ngay_khai_giang", label: "KHAI GIẢNG", },
     { key: "status", label: "TRẠNG THÁI", },
-    { key: "card_status", label: "GÁN THẺ", },
-    { key: "biometrics", label: "SINH TRẮC", },
+    // { key: "card_status", label: "GÁN THẺ", },
+    { key: "biometrics", label: "ĐỊNH DANH", },
     { key: "so_hoc_sinh", label: "SĨ SỐ", },
     { key: "data_synchronizing", label: "ĐỒNG BỘ DỮ LIỆU", },
     // { key: "theory", label: "LÝ THUYẾT", },
@@ -64,10 +78,7 @@ const Khoahoc = () => {
       filter: false,
     },
   ];
-  async function redirectUser(item) {
-    // const coursesid = dispatch(Khoahoc_Info(item))
-    // console.log(coursesid && coursesid.id != 0 ? coursesid : '');
-    // history.push(`/hocvien?courseid=${coursesid && coursesid.id !== 0 ? coursesid.id : ''}`)
+  const redirectUser = (item) => {
     history.push(`/hocvien?course_id=${item.id}`);
   }
 
@@ -75,7 +86,9 @@ const Khoahoc = () => {
     async function fetchCourses() {
       try {
         const courses = await getCourses(filter);
+        // console.log(courses);
         setCourses(courses.data.items);
+        setTotalpages(courses.data.total)
       } catch (error) {
       }
     }
@@ -118,6 +131,19 @@ const Khoahoc = () => {
       }
     }
     fetchCourses()
+  }
+  const handleChange = (value, item) => {
+    getStatus(value)
+    async function updateStatusCourse() {
+      try {
+        const updateStatus = await updateCourse(item.id, value);
+        setToast({ ...toast, show: true })
+        // setTimeout(() => { setToast({ ...toast, show: false }) }, 3000)
+        console.log(updateStatus);
+      } catch (error) {
+      }
+    }
+    updateStatusCourse()
   }
   return (
     <>
@@ -171,12 +197,17 @@ const Khoahoc = () => {
                       </td>
                     )
                   },
-                  status: (item) => {
+                  status: (item, index) => {
                     return (
                       <td className="text-center courses-status">
-                        <CBadge color={getColor(item.status)}>
+                        <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
+                          {listStatus().map((item, index) => {
+                            return <Option key={item.id} value={item.id}>{item.name}</Option>
+                          })}
+                        </Select>
+                        {/* <CBadge color={getColor(item.status)}>
                           {getStatus(item.status)}
-                        </CBadge>
+                        </CBadge> */}
                         {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert> */}
                       </td>
                     )
@@ -282,7 +313,7 @@ const Khoahoc = () => {
                     return (
                       <td className="text-center">
                         <span role="button">
-                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow(!deleteRow)} />
+                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: !deleteRow.on_off })} />
                         </span>
                       </td>
                     );
@@ -298,6 +329,23 @@ const Khoahoc = () => {
       {ModalAddRow({ addRow, setAddRow, })}
       {ModalDeleteRow({ deleteRow, setDeleteRow, })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
+      {/* {Toaster({ toast, setToast })} */}
+      <CToaster
+        position={toast.position}
+      >
+        <CToast
+          key={'toast'}
+          show={toast.show}
+          autohide={true && 3000}
+        >
+          <CToastHeader>
+            Toast title
+          </CToastHeader>
+          <CToastBody>
+            {`This is a toast in positioned toaster number.`}
+          </CToastBody>
+        </CToast>
+      </CToaster>
     </>
   );
 };

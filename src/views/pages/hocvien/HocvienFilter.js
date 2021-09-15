@@ -109,13 +109,6 @@ export const FilterKhoahoc = (props) => {
                 break;
         }
     };
-    const onSearchEnter = (value, key) => {
-        switch (key) {
-
-            default:
-                break;
-        }
-    }
     const searchTrainess = () => {
         async function fetchTrainees() {
             try {
