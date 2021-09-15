@@ -70,7 +70,7 @@ export const FilterKhoahoc = (props) => {
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
                 <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
-                    <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Khóa
+                    <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Thẻ
                 </CButton>
             </div>
             {/* <div className="mb-3 pr-3">

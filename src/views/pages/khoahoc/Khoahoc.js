@@ -200,7 +200,7 @@ const Khoahoc = () => {
                   status: (item, index) => {
                     return (
                       <td className="text-center courses-status">
-                        <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
+                        <Select defaultValue={getStatus(item.status)} className={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
                           {listStatus().map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
                           })}

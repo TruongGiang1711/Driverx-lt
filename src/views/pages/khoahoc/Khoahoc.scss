@@ -1,3 +1,15 @@
+$colors: (
+    error: #e55353,
+    success: #2eb85c,
+    warning: #f9b115,
+    secondary: #ced2d8,
+);
+@each $colorname, $color in $colors {
+    .square--#{$colorname} {
+        background-color: $color;
+    }
+}
+
 .courses-card {
     label {
         color: #3399ff;
