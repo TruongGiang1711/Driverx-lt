@@ -20,6 +20,12 @@ const nav = [
     to: '/hocvien',
     icon: 'cil-drop',
   },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Thẻ',
+    to: '/the',
+    icon: 'cil-drop',
+  },
   // {
   //   _tag: 'CSidebarNavItem',
   //   name: 'Dashboard',

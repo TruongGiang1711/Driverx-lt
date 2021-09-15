@@ -40,11 +40,13 @@ import React from 'react';
 
 const Khoahoc = React.lazy(() => import('./views/pages/khoahoc/Khoahoc'));
 const Hocvien = React.lazy(() => import('./views/pages/hocvien/Hocvien'));
+const The = React.lazy(() => import('./views/pages/the/The'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/khoahoc', exact: true, name: 'Khóa học', component: Khoahoc },
   { path: '/hocvien', exact: true, name: 'Học viên', component: Hocvien },
+  { path: '/the', exact: true, name: 'Thẻ', component: The },
   // { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   // { path: '/theme', name: 'Theme', component: Colors, exact: true },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
