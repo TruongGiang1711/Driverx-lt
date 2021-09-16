@@ -20,6 +20,10 @@ export async function getCourses(params) {              // danh sách khóa theo
   const apiEndPointCourses = "/courses";
   return http.get(apiEndPointCourses, { params });
 }
+export async function addCourse(params) {              // thêm khóa học
+  const apiEndPointCourses = "/courses";
+  return http.post(apiEndPointCourses);
+}
 export async function getCoursesID(course_id) {         // thông tin khóa học
   const apiEndPointCoursesID = `/courses/${course_id}`;
   return http.get(apiEndPointCoursesID, { course_id });
@@ -28,7 +32,7 @@ export async function updateCourse(course_id, status) {              // cập nh
   const apiEndPointCourses = `/courses/${course_id}`;
   return http.put(apiEndPointCourses, { status });
 }
-export async function deleteCourses(course_id) {              // xóa khóa học
+export async function deleteCourse(course_id) {              // xóa khóa học
   const apiEndPointCourses = `/courses/${course_id}`;
   return http.delete(apiEndPointCourses, { course_id });
 }

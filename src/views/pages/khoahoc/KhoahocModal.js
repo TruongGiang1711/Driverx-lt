@@ -10,30 +10,53 @@ import {
     CToast,
     CToastHeader,
     CToastBody,
+    CInput,
 } from '@coreui/react'
+import { addCourse, deleteCourse } from "src/services/userService";
 
 export const ModalAddRow = (props) => {
+    const selectFile = () => {
+        async function addCourses() {
+            const dataArray = new FormData();
+            dataArray.append("file", props.addRow.file);
+            dataArray.append("branch_id", props.addRow.branch_id);
+            console.log(dataArray);
+            // const ob = {
+            //     file: props.addRow.item,
+            //     branch_id: props.addRow.branch_id
+            // }
+            try {
+                const add = await addCourse(dataArray, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+                console.log(add);
+            } catch (error) {
+            }
+        }
+        addCourses()
+    }
     return (
         <CModal
-            show={props.addRow}
-            onClose={() => props.setAddRow(!props.addRow)}
-            color="primary"
+            show={props.addRow.on_off}
+            onClose={() => props.setAddRow({ ...props.addRow, on_off: !props.addRow.on_off })}
+            color="info"
         >
             <CModalHeader closeButton>
                 <CModalTitle>Modal title</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                culpa qui officia deserunt mollit anim id est laborum.
+                <CInput
+                    type="file"
+                    onChange={(value) => props.setAddRow({ ...props.addRow, item: value.target.files })}
+                />
             </CModalBody>
             <CModalFooter>
-                <CButton color="primary" onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton color="info" onClick={selectFile}>
                     Do Something
                 </CButton>{' '}
-                <CButton color="primary" onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton color="info" onClick={() => props.setAddRow(!props.addRow)}>
                     Cancel
                 </CButton>
             </CModalFooter>
@@ -41,15 +64,17 @@ export const ModalAddRow = (props) => {
     )
 }
 export const ModalDeleteRow = (props) => {
-    // console.log(props);
     const onDeleteRow = (id) => {
-        async function deleteCourses() {
+        async function deleteCourseID() {
+            console.log(id);
             try {
-                const courses = await deleteCourses(id);
+                const courses = await deleteCourse(id);
+                console.log(courses);
             } catch (error) {
             }
+            // setDeleteRow(!deleteRow.on_off)
         }
-        deleteCourses()
+        deleteCourseID()
     }
     return (
         <CModal
