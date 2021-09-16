@@ -23,7 +23,7 @@ import { FilterKhoahoc } from "./KhoahocFilter";
 import { Pagination, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getBranches, getHangs, updateCourse } from "src/services/userService";
+import { getCourses, getBranches, getHangs, updateCourse, deleteCourse } from "src/services/userService";
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 // import { Khoahoc_Info } from "src/js/actions";
 const { Option } = Select;
@@ -34,7 +34,11 @@ const Khoahoc = () => {
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
-  const [addRow, setAddRow] = useState(false);
+  const [addRow, setAddRow] = useState({
+    branch_id: 0,
+    file: undefined,
+    on_off: false
+  });
   const [toast, setToast] = useState(
     {
       position: 'top-right',
@@ -86,7 +90,7 @@ const Khoahoc = () => {
     async function fetchCourses() {
       try {
         const courses = await getCourses(filter);
-        // console.log(courses);
+        console.log(courses);
         setCourses(courses.data.items);
         setTotalpages(courses.data.total)
       } catch (error) {
@@ -145,6 +149,7 @@ const Khoahoc = () => {
     }
     updateStatusCourse()
   }
+
   return (
     <>
       <CRow>
@@ -152,7 +157,7 @@ const Khoahoc = () => {
           <CCard className="courses-card">
             <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
             <CCardBody>
-              {FilterKhoahoc({ filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus })}
+              {FilterKhoahoc({ filter, setFilter, addRow, setAddRow, branches, courses, hangs, getStatus, addRow, setAddRow })}
               <CDataTable
                 addTableClasses="courses-table"
                 items={courses}
@@ -225,12 +230,12 @@ const Khoahoc = () => {
                   biometrics: (item, index) => {
                     return (
                       <td>
-                        {
+                        {/* {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fingerprint
                         } <span className="pr-3 coreui-icon_inline"><CIcon name={'cil-fingerprint'} /></span>
                         {
                           usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fade_id
-                        } <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span>
+                        } <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span> */}
                       </td>
                     )
                   },
@@ -244,22 +249,16 @@ const Khoahoc = () => {
                   data_synchronizing: (item, index) => {
                     return (
                       <td className="text-center">
-                        <span className="pr-3" role="button">
+                        {/* <span className="pr-3" role="button">
                           <CBadge color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
                           </CBadge>
-                          {/* <CAlert className="d-inline-flex p-2 mb-0" role="button" color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
-                            <CIcon name={'cil-screen-smartphone'} />
-                          </CAlert> */}
                         </span>
                         <span className="pr-3" role="button">
                           <CBadge color={"success"}>
                             <CIcon name={'cil-truck'} />
                           </CBadge>
-                          {/* <CAlert className="d-inline-flex p-2 mb-0" color={"success"}>
-                            <CIcon name={'cil-truck'} />
-                          </CAlert> */}
-                        </span>
+                        </span> */}
                       </td>
                     )
                   },
@@ -327,7 +326,7 @@ const Khoahoc = () => {
         </CCol>
       </CRow>
       {ModalAddRow({ addRow, setAddRow, })}
-      {ModalDeleteRow({ deleteRow, setDeleteRow, })}
+      {ModalDeleteRow({ deleteRow, setDeleteRow })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
       {/* {Toaster({ toast, setToast })} */}
       <CToaster
