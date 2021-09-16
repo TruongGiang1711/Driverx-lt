@@ -36,7 +36,7 @@ export const ModalAddRow = (props) => {
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Modal title</CModalTitle>
+                <CModalTitle>Thêm khóa</CModalTitle>
             </CModalHeader>
             <CModalBody>
                 <CFormGroup>
@@ -69,9 +69,9 @@ export const ModalDeleteRow = (props) => {
             color="danger"
             closeOnBackdrop={false}
         >
-            {/* <CModalHeader closeButton>
-                <CModalTitle></CModalTitle>
-            </CModalHeader> */}
+            <CModalHeader closeButton>
+                <CModalTitle>Xóa khóa</CModalTitle>
+            </CModalHeader>
             <CModalBody>Bạn có muốn xóa khóa học {props.deleteRow.item && props.deleteRow.item.ten_khoa_hoc}</CModalBody>
             <CModalFooter>
                 <CButton color="danger" onClick={() => props.onDeleteRow(props.deleteRow.item && props.deleteRow.item.id)}>

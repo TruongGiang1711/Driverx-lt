@@ -21,14 +21,18 @@ import { Pagination, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
 import { getCourses, getBranches, getHangs, updateCourse, addCourse, deleteCourse } from "src/services/userService";
-import { getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
+import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 const { Option } = Select;
 
 const Khoahoc = () => {
   const history = useHistory()
+  const redirectUser = (item) => {
+    history.push(`/hocvien?course_id=${item.id}`);
+  }
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
+  const [statusColor, setStatusColor] = useState(0);
   const [addRow, setAddRow] = useState({
     branch_id: 0,
     file: undefined,
@@ -52,7 +56,8 @@ const Khoahoc = () => {
       show: false,
       item: undefined,
       value: 0,
-      error:'',
+      error: '',
+      statusColor: statusColor
     }
   ])
   const toasters = (() => {
@@ -95,9 +100,6 @@ const Khoahoc = () => {
       filter: false,
     },
   ];
-  const redirectUser = (item) => {
-    history.push(`/hocvien?course_id=${item.id}`);
-  }
 
   useEffect(() => {
     async function fetchCourses() {
@@ -110,7 +112,7 @@ const Khoahoc = () => {
       }
     }
     fetchCourses();
-  }, [filter, addRow.hasData, deleteRow.delData]);
+  }, [filter, addRow.hasData, deleteRow.delData, statusColor]);
   useEffect(() => {
     async function fetchBranches() {
       const ob = {
@@ -153,7 +155,9 @@ const Khoahoc = () => {
     async function updateStatusCourse() {
       try {
         const update = await updateCourse(item.id, value);
+        console.log(update.data.status);
         if (update.statusText === "OK") {
+          setStatusColor(update.data.status)
           setToasts([
             ...toasts,
             {
@@ -164,7 +168,8 @@ const Khoahoc = () => {
               show: true,
               item: item,
               value: value,
-              error: ''
+              error: '',
+              statusColor: update.data.status,
             }
           ])
         }
@@ -173,13 +178,11 @@ const Khoahoc = () => {
     }
     updateStatusCourse()
   }
-
   const onDeleteRow = (id) => {
     setDeleteRow({ ...deleteRow, disable: true, loading: true })
     async function deleteCourseID() {
       try {
         const del = await deleteCourse(id);
-        console.log(del);
         if (del.data.success === true) {
           setDeleteRow({ ...deleteRow, delData: del.data.success, on_off: false, disable: true, loading: false })
         }
@@ -194,7 +197,8 @@ const Khoahoc = () => {
             show: true,
             item: undefined,
             value: 0,
-            error: error.message
+            error: error.message,
+            statusColor: -1,
           }
         ])
       }
@@ -270,7 +274,7 @@ const Khoahoc = () => {
                   status: (item, index) => {
                     return (
                       <td className="text-center courses-status">
-                        <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => changeStatus(item, value)}>
+                        <Select defaultValue={getStatus(item.status)} className={getColor(item.status)} style={{ width: 120 }} onChange={(value) => changeStatus(item, value)}>
                           {listStatus().map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
                           })}
