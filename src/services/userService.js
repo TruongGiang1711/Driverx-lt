@@ -22,7 +22,11 @@ export async function getCourses(params) {              // danh sách khóa theo
 }
 export async function addCourse(params) {              // thêm khóa học
   const apiEndPointCourses = "/courses";
-  return http.post(apiEndPointCourses);
+  return http.post(apiEndPointCourses, params, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+})
 }
 export async function getCoursesID(course_id) {         // thông tin khóa học
   const apiEndPointCoursesID = `/courses/${course_id}`;

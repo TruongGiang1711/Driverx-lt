@@ -1,4 +1,3 @@
-// import { useLocation } from "react-router-dom";
 import {
     CButton,
     CCol,
@@ -8,8 +7,10 @@ import {
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
 import { listStatus } from "./KhoahocData";
+
 const { Option } = Select;
 const { Search } = Input;
+
 export const FilterKhoahoc = (props) => {
     // console.log(props)
     const handleChange = (value, key) => {
@@ -73,16 +74,10 @@ export const FilterKhoahoc = (props) => {
             </CCol>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow({ ...props.addRow, on_off: !props.addRow.on_off })}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow({ ...props.addRow, on_off: true })}>
                     <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Khóa
                 </CButton>
             </div>
-            {/* <div className="mb-3 pr-3">
-                <CLabel htmlFor="ccimport" className="invisible">import</CLabel><br />
-                <CButton block color="primary align-middle">
-                    <ImportOutlined className='pr-2 d-inline-flex' />Import
-                </CButton>
-            </div> */}
         </CRow>
     )
 }
