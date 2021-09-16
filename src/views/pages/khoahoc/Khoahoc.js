@@ -10,45 +10,63 @@ import {
   CRow,
   CDataTable,
   CNavLink,
-  CToaster,
-  CToast,
-  CToastHeader,
-  CToastBody,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
-import { listStatus, usersDataFake } from "./KhoahocData";
-import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow, Toaster } from "./KhoahocModal";
+import { listStatus, getDataFake } from "./KhoahocData";
+import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./KhoahocModal";
+import { ToastStatus } from "./KhoahocToast";
 import { FilterKhoahoc } from "./KhoahocFilter";
 import { Pagination, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 
-import { getCourses, getBranches, getHangs, updateCourse, deleteCourse } from "src/services/userService";
-import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
-// import { Khoahoc_Info } from "src/js/actions";
+import { getCourses, getBranches, getHangs, updateCourse, addCourse, deleteCourse } from "src/services/userService";
+import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
 const { Option } = Select;
 
 const Khoahoc = () => {
-  // const dispatch = useDispatch();
   const history = useHistory()
+  const redirectUser = (item) => {
+    history.push(`/hocvien?course_id=${item.id}`);
+  }
   const [courses, setCourses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [hangs, setHangs] = useState([]);
+  const [statusColor, setStatusColor] = useState(0);
   const [addRow, setAddRow] = useState({
     branch_id: 0,
     file: undefined,
-    on_off: false
+    nameFile: '',
+    on_off: false,
+    disable: true,
+    loading: false,
+    hasData: '',
   });
-  const [toast, setToast] = useState(
-    {
-      position: 'top-right',
-      show: false,
-    }
-  )
   const [deleteRow, setDeleteRow] = useState({
     item: undefined,
-    on_off: false
+    on_off: false,
+    disable: true,
+    loading: false,
+    delData: false,
   });
+  const [toasts, setToasts] = useState([
+    {
+      position: 'top-right',
+      autohide: 3000,
+      show: false,
+      item: undefined,
+      value: 0,
+      error: '',
+      statusColor: statusColor
+    }
+  ])
+  const toasters = (() => {
+    return toasts.reduce((toasters, toast) => {
+      toasters[toast.position] = toasters[toast.position] || []
+      toasters[toast.position].push(toast)
+      return toasters
+    }, {})
+  })()
   const [syncRow, setSyncRow] = useState(false);
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
@@ -82,22 +100,19 @@ const Khoahoc = () => {
       filter: false,
     },
   ];
-  const redirectUser = (item) => {
-    history.push(`/hocvien?course_id=${item.id}`);
-  }
 
   useEffect(() => {
     async function fetchCourses() {
       try {
         const courses = await getCourses(filter);
-        console.log(courses);
+        // console.log(courses);
         setCourses(courses.data.items);
         setTotalpages(courses.data.total)
       } catch (error) {
       }
     }
     fetchCourses();
-  }, [filter]);
+  }, [filter, addRow.hasData, deleteRow.delData, statusColor]);
   useEffect(() => {
     async function fetchBranches() {
       const ob = {
@@ -136,20 +151,76 @@ const Khoahoc = () => {
     }
     fetchCourses()
   }
-  const handleChange = (value, item) => {
-    getStatus(value)
+  const changeStatus = (item, value) => {
     async function updateStatusCourse() {
       try {
-        const updateStatus = await updateCourse(item.id, value);
-        setToast({ ...toast, show: true })
-        // setTimeout(() => { setToast({ ...toast, show: false }) }, 3000)
-        console.log(updateStatus);
+        const update = await updateCourse(item.id, value);
+        console.log(update.data.status);
+        if (update.statusText === "OK") {
+          setStatusColor(update.data.status)
+          setToasts([
+            ...toasts,
+            {
+              position: 'top-right',
+              autohide: true && 5000,
+              closeButton: true,
+              fade: true,
+              show: true,
+              item: item,
+              value: value,
+              error: '',
+              statusColor: update.data.status,
+            }
+          ])
+        }
       } catch (error) {
       }
     }
     updateStatusCourse()
   }
-
+  const onDeleteRow = (id) => {
+    setDeleteRow({ ...deleteRow, disable: true, loading: true })
+    async function deleteCourseID() {
+      try {
+        const del = await deleteCourse(id);
+        if (del.data.success === true) {
+          setDeleteRow({ ...deleteRow, delData: del.data.success, on_off: false, disable: true, loading: false })
+        }
+      } catch (error) {
+        setToasts([
+          ...toasts,
+          {
+            position: 'top-right',
+            autohide: true && 5000,
+            closeButton: true,
+            fade: true,
+            show: true,
+            item: undefined,
+            value: 0,
+            error: error.message,
+            statusColor: -1,
+          }
+        ])
+      }
+    }
+    deleteCourseID()
+  }
+  const onAddFileXML = () => {
+    setAddRow({ ...addRow, disable: true, loading: true })
+    async function addCourseXML() {
+      const formData = new FormData();
+      formData.append("file", addRow.file[0]);
+      formData.append("branch_id", addRow.branch_id);
+      try {
+        const add = await addCourse(formData);
+        if (add.statusText === "OK") {
+          setAddRow({ ...addRow, hasData: add.statusText, nameFile: undefined, on_off: false, disable: true, loading: false })
+        }
+      } catch (error) {
+      }
+    }
+    addCourseXML()
+  }
   return (
     <>
       <CRow>
@@ -162,10 +233,8 @@ const Khoahoc = () => {
                 addTableClasses="courses-table"
                 items={courses}
                 fields={fields}
-                // itemsPerPage={50}
                 hover
                 sorter
-                // pagination={{ align: 'center', size: 'lg' }}
                 scopedSlots={{
                   stt: (item, index) => {
                     return (
@@ -205,7 +274,7 @@ const Khoahoc = () => {
                   status: (item, index) => {
                     return (
                       <td className="text-center courses-status">
-                        <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
+                        <Select defaultValue={getStatus(item.status)} className={getColor(item.status)} style={{ width: 120 }} onChange={(value) => changeStatus(item, value)}>
                           {listStatus().map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
                           })}
@@ -230,12 +299,12 @@ const Khoahoc = () => {
                   biometrics: (item, index) => {
                     return (
                       <td>
-                        {/* {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fingerprint
+                        {
+                          getDataFake(index).biometrics.fingerprint
                         } <span className="pr-3 coreui-icon_inline"><CIcon name={'cil-fingerprint'} /></span>
                         {
-                          usersDataFake.find((itemFake) => itemFake.stt === index).biometrics.fade_id
-                        } <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span> */}
+                          getDataFake(index).biometrics.fade_id
+                        } <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span>
                       </td>
                     )
                   },
@@ -249,8 +318,8 @@ const Khoahoc = () => {
                   data_synchronizing: (item, index) => {
                     return (
                       <td className="text-center">
-                        {/* <span className="pr-3" role="button">
-                          <CBadge color={getData_synchronizing_status(usersDataFake.find((itemFake) => itemFake.stt === index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
+                        <span className="pr-3" role="button">
+                          <CBadge color={getData_synchronizing_status(getDataFake(index).data_synchronizing)} onClick={() => setSyncRow(!syncRow)}>
                             <CIcon name={'cil-screen-smartphone'} />
                           </CBadge>
                         </span>
@@ -258,7 +327,7 @@ const Khoahoc = () => {
                           <CBadge color={"success"}>
                             <CIcon name={'cil-truck'} />
                           </CBadge>
-                        </span> */}
+                        </span>
                       </td>
                     )
                   },
@@ -312,7 +381,7 @@ const Khoahoc = () => {
                     return (
                       <td className="text-center">
                         <span role="button">
-                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: !deleteRow.on_off })} />
+                          <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: true })} />
                         </span>
                       </td>
                     );
@@ -321,30 +390,13 @@ const Khoahoc = () => {
               />
             </CCardBody>
             <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
-            {/* <Pagination defaultCurrent={1} total={50} /> */}
           </CCard>
         </CCol>
       </CRow>
-      {ModalAddRow({ addRow, setAddRow, })}
-      {ModalDeleteRow({ deleteRow, setDeleteRow })}
+      {ModalAddRow({ addRow, setAddRow, onAddFileXML })}
+      {ModalDeleteRow({ deleteRow, setDeleteRow, onDeleteRow })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
-      {/* {Toaster({ toast, setToast })} */}
-      <CToaster
-        position={toast.position}
-      >
-        <CToast
-          key={'toast'}
-          show={toast.show}
-          autohide={true && 3000}
-        >
-          <CToastHeader>
-            Toast title
-          </CToastHeader>
-          <CToastBody>
-            {`This is a toast in positioned toaster number.`}
-          </CToastBody>
-        </CToast>
-      </CToaster>
+      {ToastStatus(toasters)}
     </>
   );
 };

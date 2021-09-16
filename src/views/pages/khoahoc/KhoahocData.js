@@ -7,6 +7,11 @@ export const usersDataFake = [
     { stt: 3, biometrics: { fingerprint: 30, fade_id: 20 }, data_synchronizing: 1, theory: { number: 10, start_theory: 11, end_theory: 41, sum: 90 }, practise: { start_practise: 1000, end_practise: 2000, sum: 1200 } },
 ]
 
+export function getDataFake(id) {
+    const index = id % usersDataFake.length
+    return usersDataFake[index]
+}
+
 export let listStatus = () => {
     const arrStatus = []
     for (let i = 0; i < 4; i++) {

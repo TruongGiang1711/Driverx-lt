@@ -1,93 +1,80 @@
-import React, { useEffect } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import {
     CButton,
+    CCol,
+    CFormGroup,
     CModal,
     CModalBody,
     CModalFooter,
     CModalHeader,
     CModalTitle,
-    CToaster,
-    CToast,
-    CToastHeader,
-    CToastBody,
     CInput,
+    CLabel,
+    CSpinner,
+    CInputFile,
 } from '@coreui/react'
-import { addCourse, deleteCourse } from "src/services/userService";
 
 export const ModalAddRow = (props) => {
-    const selectFile = () => {
-        async function addCourses() {
-            const dataArray = new FormData();
-            dataArray.append("file", props.addRow.file);
-            dataArray.append("branch_id", props.addRow.branch_id);
-            console.log(dataArray);
-            // const ob = {
-            //     file: props.addRow.item,
-            //     branch_id: props.addRow.branch_id
-            // }
-            try {
-                const add = await addCourse(dataArray, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                });
-                console.log(add);
-            } catch (error) {
-            }
+    const onChangeFile = (value) => {
+        if (value.target.files.length > 0) {
+            props.setAddRow({ ...props.addRow, file: value.target.files, nameFile: value.target.files[0].name, disable: false })
+        } else {
+            props.setAddRow({ ...props.addRow, nameFile: undefined, disable: true })
         }
-        addCourses()
     }
+    const closeModal = () => {
+        props.setAddRow({ ...props.addRow, nameFile: undefined, on_off: !props.addRow.on_off, disable: true })
+    }
+    useEffect(() => {
+        document.getElementById("custom-file-input").value = "";
+    }, [props.addRow.on_off])
     return (
         <CModal
             show={props.addRow.on_off}
-            onClose={() => props.setAddRow({ ...props.addRow, on_off: !props.addRow.on_off })}
+            onClose={closeModal}
             color="info"
+            closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Modal title</CModalTitle>
+                <CModalTitle>Thêm khóa</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <CInput
-                    type="file"
-                    onChange={(value) => props.setAddRow({ ...props.addRow, item: value.target.files })}
-                />
+                <CFormGroup>
+                    <CCol>
+                        <CInputFile custom id="custom-file-input" onChange={(value) => onChangeFile(value)} disabled={props.addRow.loading ? true : false} />
+                        <CLabel htmlFor="custom-file-input" variant="custom-file">
+                            {props.addRow.nameFile ? props.addRow.nameFile : "Chọn file XML"}
+                        </CLabel>
+                    </CCol>
+                </CFormGroup>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={selectFile}>
-                    Do Something
+                <CButton color="info" onClick={() => props.onAddFileXML()} disabled={props.addRow.disable}>
+                    {props.addRow.loading ? <CSpinner component="span" size="sm" aria-hidden="true" /> : ""}
+                    Đồng ý
                 </CButton>{' '}
-                <CButton color="info" onClick={() => props.setAddRow(!props.addRow)}>
-                    Cancel
+                <CButton color="info" onClick={closeModal}>
+                    Hủy
                 </CButton>
             </CModalFooter>
         </CModal>
     )
 }
 export const ModalDeleteRow = (props) => {
-    const onDeleteRow = (id) => {
-        async function deleteCourseID() {
-            console.log(id);
-            try {
-                const courses = await deleteCourse(id);
-                console.log(courses);
-            } catch (error) {
-            }
-            // setDeleteRow(!deleteRow.on_off)
-        }
-        deleteCourseID()
-    }
+    // console.log(props);
     return (
         <CModal
             show={props.deleteRow.on_off}
             onClose={() => props.setDeleteRow(!props.deleteRow.on_off)}
             color="danger"
+            closeOnBackdrop={false}
         >
-            {/* <CModalHeader closeButton>
-                <CModalTitle></CModalTitle>
-            </CModalHeader> */}
+            <CModalHeader closeButton>
+                <CModalTitle>Xóa khóa</CModalTitle>
+            </CModalHeader>
             <CModalBody>Bạn có muốn xóa khóa học {props.deleteRow.item && props.deleteRow.item.ten_khoa_hoc}</CModalBody>
             <CModalFooter>
-                <CButton color="danger" onClick={onDeleteRow(props.deleteRow.item && props.deleteRow.item.id)}>
+                <CButton color="danger" onClick={() => props.onDeleteRow(props.deleteRow.item && props.deleteRow.item.id)}>
                     Đồng ý
                 </CButton>{' '}
                 <CButton color="danger" onClick={() => props.setDeleteRow(!props.deleteRow.on_off)}>
@@ -123,28 +110,4 @@ export const ModalData_synchronizingRow = (props) => {
             </CModalFooter>
         </CModal>
     )
-}
-
-export const Toaster = (props) => {
-    console.log(props);
-    useEffect(() => {
-        if (props.toast.show === true)
-            props.setToast({ ...props.toast, show: false })
-    }, [props.toast.show])
-    return <CToaster
-        position={props.toast.position}
-    >
-        <CToast
-            key={'toast'}
-            show={props.toast.show}
-            autohide={true && 3000}
-        >
-            <CToastHeader>
-                Toast title
-            </CToastHeader>
-            <CToastBody>
-                {`This is a toast in positioned toaster number.`}
-            </CToastBody>
-        </CToast>
-    </CToaster>
 }
