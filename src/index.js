@@ -8,13 +8,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import { icons } from './assets/icons'
+// import store from "./store";
 
-// import { createStore } from "redux";
+import { createStore } from "redux";
 import { Provider } from 'react-redux'
-// import { allReducers } from "./js/reducers";
-import store from "./store";
+import { allReducers } from "./js/reducers/index";
+const store = createStore(allReducers);
 
-// const store = createStore(allReducers);
 
 React.icons = icons
 

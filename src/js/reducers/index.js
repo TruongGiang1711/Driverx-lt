@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
 
-import { KhoahocInfo_Reducer } from "./counter";
+import counter from "./counter";
+import add from "./add";
 
 export const allReducers = combineReducers({
-    KhoahocInfo_Reducer,
+    counter,
+    add,
     // add more reducers here
 });

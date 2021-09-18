@@ -48,6 +48,29 @@ label.custom-file-label {
     overflow: hidden;
     padding-right: 80px;
 }
+.course-to-vehicles {
+    .form-group {
+        align-items: center;
+        label {
+            width: 70px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+    }
+}
+.card-sm {
+    header.card-header {
+        padding: 0.3rem;
+    }
+    .list-group-sm {
+        border: 0;
+        li.list-group-item {
+            padding: 0.3rem;
+            border-right: 0;
+            border-left: 0;
+        }
+    }
+}
 
 // toast
 .toast-custom {
