@@ -1,7 +1,13 @@
-const KhoaHoc_initialState = {
-    initialState: {}
+export const counterReducer = (state = 0, action) => {
+    // console.log(state, action);
+    switch (action.type) {
+        case "INCREMENT":
+            return state + action.payload;
+        case "DECREMENT":
+            return state - action.payload;
+        default:
+            return state;
+    }
 };
 
-export const KhoahocInfo_Reducer = (state = KhoaHoc_initialState, { type, ...rest }) => {
-    return { ...rest };
-};
+export default counterReducer;

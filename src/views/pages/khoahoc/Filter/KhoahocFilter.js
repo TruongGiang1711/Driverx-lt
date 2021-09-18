@@ -6,30 +6,33 @@ import {
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
-import { listStatus } from "./KhoahocData";
+import { listStatus } from "./../KhoahocData";
+import { addRow } from "./../../../../js/actions/index";
 
 const { Option } = Select;
 const { Search } = Input;
 
-export const FilterKhoahoc = (props) => {
+const KhoahocFilter = (props) => {
     // console.log(props)
     const handleChange = (value, key) => {
         switch (key) {
             case 'name':
-                props.setFilter({ ...props.filter, name: value })
+                console.log(value);
+                props.filter.setFilter({ ...props.filter.filter, name: value })
                 break;
             case 'enter':
-                props.setFilter({ ...props.filter, name: value.target.value })
+                console.log(value.target.value);
+                props.filter.setFilter({ ...props.filter.filter, name: value.target.value })
                 break;
             case 'branch':
-                props.setFilter({ ...props.filter, branch_id: value })
-                props.setAddRow({ ...props.addRow, branch_id: value })
+                props.filter.setFilter({ ...props.filter.filter, branch_id: value })
+                props.addRow.setAddRow({ ...props.addRow.addRow, branch_id: value })
                 break;
             case 'status':
-                props.setFilter({ ...props.filter, status: value })
+                props.filter.setFilter({ ...props.filter.filter, status: value })
                 break;
             case 'hang':
-                props.setFilter({ ...props.filter, hang: value })
+                props.filter.setFilter({ ...props.filter.filter, hang: value })
                 break;
 
             default:
@@ -39,15 +42,15 @@ export const FilterKhoahoc = (props) => {
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(props.branches && props.branches.length > 1) ?
-                <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
+                <div className="mb-3 px-3" style={{ width: '310px' }}>
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select defaultValue="Tất cả" style={{ width: '100%' }} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
                         {props.branches.map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
                         })}
                     </Select>
-                </CCol> : undefined
+                </div> : undefined
             }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái</CLabel><br />
@@ -70,14 +73,18 @@ export const FilterKhoahoc = (props) => {
                 <Search
                     enterButton="Tìm"
                     placeholder="Tên khóa"
-                    onPressEnter={(item) => handleChange(item, 'name')} />
+                    onPressEnter={(value) => handleChange(value, 'enter')}
+                    onSearch={(value) => handleChange(value, 'name')}
+                />
             </CCol>
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow({ ...props.addRow, on_off: true })}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.branch_id === 0 ? true : false} onClick={() => props.addRow.setAddRow({ ...props.addRow.addRow, on_off: true })}>
                     <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Khóa
                 </CButton>
             </div>
         </CRow>
     )
-}
+};
+
+export default KhoahocFilter;

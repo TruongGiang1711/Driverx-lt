@@ -7,7 +7,7 @@ import {
 import { getColor, getStatus } from "src/views/component/getBadge/GetBadge";
 
 export const ToastStatus = (props) => {
-    console.log(props);
+    // console.log(props);
     return Object.keys(props).map((toasterKey) => (
         <CToaster
             position={toasterKey}
