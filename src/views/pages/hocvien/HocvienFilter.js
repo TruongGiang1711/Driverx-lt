@@ -8,8 +8,10 @@ import {
 } from "@coreui/react";
 import { Input, Select } from 'antd';
 import { useEffect, useState } from "react";
-import { getCourses, getCoursesID, getBranches, getTrainees } from "src/services/userService";
 import { getStatus } from "../../component/getBadge/GetBadge";
+import { getBranches } from "src/services/branchService";
+import { getCourses, getCoursesID } from "src/services/courseService";
+import { getTrainees } from "src/services/traineesService";
 
 const { Option } = Select;
 const { Search } = Input;

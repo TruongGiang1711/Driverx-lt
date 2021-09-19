@@ -50,7 +50,7 @@ const ModalData_synchronizing = (props) => {
     })
     const [checkBoxArr, setCheckBoxArr] = useState([])
     const closeModal = () => {
-        props.sync.props.sync.setSyncRow({ ...props.sync.props.sync.syncRow, on_off: !props.sync.props.sync.syncRow.on_off })
+        props.sync.setSyncRow({ ...props.sync.syncRow, on_off: !props.sync.syncRow.on_off })
     }
     const searchMay = (value) => {
         // console.log(value.target.value);
@@ -58,7 +58,7 @@ const ModalData_synchronizing = (props) => {
     const changeCheck = (item, value) => {
         console.log(item);
         console.log(value.target.checked);
-        const a = props.sync.props.sync.devicesCourse.find(d => d.id === item.id)
+        const a = props.sync.devicesCourse.find(d => d.id === item.id)
         // console.log(evt.target.checked);
         // const a = [...checkedList]
         // a[evt.target.id] = evt.target.checked
@@ -72,11 +72,11 @@ const ModalData_synchronizing = (props) => {
         // }
     }
     useEffect(() => {
-        props.sync.props.sync.devices.map(item => {
-            console.log(props.sync.props.sync.devicesCourse.find(d => d.id === item.id));
-                // props.sync.props.sync.setDevicesCourse({ ...props.sync.props.sync.devicesCourse, checked: true })
+        props.sync.devices.map(item => {
+            console.log(props.sync.devicesCourse.find(d => d.id === item.id));
+                // props.sync.setDevicesCourse({ ...props.sync.devicesCourse, checked: true })
         })
-    }, [props.sync.props.sync.devicesCourse])
+    }, [props.sync.devicesCourse])
     // function doSomething() {
     //     const result = ["may 1", "may 2"]; // tu backen
     //     const listCu = [...result]; //["may 1","may 2"]
@@ -123,7 +123,7 @@ const ModalData_synchronizing = (props) => {
     // }
     return (
         <CModal
-            show={props.sync.props.sync.syncRow.on_off}
+            show={props.sync.syncRow.on_off}
             onClose={closeModal}
             size="lg"
         >
@@ -138,7 +138,7 @@ const ModalData_synchronizing = (props) => {
                                 <CFormGroup row>
                                     <CLabel>Khóa</CLabel>
                                     <CCol>
-                                        <CInput placeholder="Khóa" defaultValue={props.sync.props.sync.syncRow.item && props.sync.props.sync.syncRow.item.ten_khoa_hoc} onChange={(value) => props.sync.props.sync.changeSyncRow(value)} />
+                                        <CInput placeholder="Khóa" defaultValue={props.sync.syncRow.item && props.sync.syncRow.item.ten_khoa_hoc} onChange={(value) => props.sync.changeSyncRow(value)} />
                                     </CCol>
                                 </CFormGroup>
                             </CCol>
@@ -146,7 +146,7 @@ const ModalData_synchronizing = (props) => {
                                 <CFormGroup row>
                                     <CLabel>Hạng</CLabel>
                                     <CCol>
-                                        <CInput placeholder="Hạng" defaultValue={props.sync.props.sync.syncRow.item && props.sync.props.sync.syncRow.item.hang_gplx} onChange={(value) => props.sync.props.sync.changeSyncRow(value)} />
+                                        <CInput placeholder="Hạng" defaultValue={props.sync.syncRow.item && props.sync.syncRow.item.hang_gplx} onChange={(value) => props.sync.changeSyncRow(value)} />
                                     </CCol>
                                 </CFormGroup>
                             </CCol>
@@ -154,7 +154,7 @@ const ModalData_synchronizing = (props) => {
                                 <CFormGroup row>
                                     <CLabel>Sĩ số</CLabel>
                                     <CCol>
-                                        <CInput placeholder="Sĩ số" defaultValue={props.sync.props.sync.syncRow.item && props.sync.props.sync.syncRow.item.so_hoc_sinh} onChange={(value) => props.sync.props.sync.changeSyncRow(value)} />
+                                        <CInput placeholder="Sĩ số" defaultValue={props.sync.syncRow.item && props.sync.syncRow.item.so_hoc_sinh} onChange={(value) => props.sync.changeSyncRow(value)} />
                                     </CCol>
                                 </CFormGroup>
                             </CCol>
@@ -164,7 +164,7 @@ const ModalData_synchronizing = (props) => {
                                 <CFormGroup row>
                                     <CLabel>Phân hiệu</CLabel>
                                     <CCol>
-                                        <CInput placeholder="Phân hiệu" defaultValue={props.sync.props.sync.syncRow.item && props.sync.props.sync.syncRow.item.branch_name} onChange={(value) => props.sync.props.sync.changeSyncRow(value)} />
+                                        <CInput placeholder="Phân hiệu" defaultValue={props.sync.syncRow.item && props.sync.syncRow.item.branch_name} onChange={(value) => props.sync.changeSyncRow(value)} />
                                     </CCol>
                                 </CFormGroup>
                             </CCol>
@@ -184,7 +184,7 @@ const ModalData_synchronizing = (props) => {
                 <CRow>
                     <CCol xs="12" lg="8">
                         <CDataTable
-                            items={props.sync.props.sync.devices}
+                            items={props.sync.devices}
                             fields={fields}
                             size="sm"
                             border
@@ -233,7 +233,7 @@ const ModalData_synchronizing = (props) => {
                                 Gán 3/3 máy
                             </CCardHeader>
                             <CListGroup className="list-group-sm">
-                                {props.sync.props.sync.devicesCourse.map(item => {
+                                {props.sync.devicesCourse.map(item => {
                                     return <CFade in={showCard} key={item.id}>
                                         <CListGroupItem className="justify-content-between">
                                             {item.name} - {item.id}
