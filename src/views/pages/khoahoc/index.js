@@ -9,15 +9,13 @@ import {
 } from "@coreui/react";
 import { ToastStatus } from "./Toasts/KhoahocToast";
 import { Pagination } from 'antd';
-
 import KhoahocTable from "./Table/KhoahocTable";
 import KhoahocFilter from "./Filter/KhoahocFilter";
 import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
-import ModalData_synchronizing from "./Modal/Sync/ModalSync";
-import { addCourse, deleteCourse, getCourses, getDevicesCourse } from "src/services/courseService";
+import ModalSync from "./Modal/Sync/ModalSync";
+import { getCourses } from "src/services/courseService";
 import { getBranches } from "src/services/branchService";
-import { getDevices } from "src/services/deviceService";
 import { getHangs } from "src/services/hangService";
 
 const Index = () => {
@@ -27,20 +25,21 @@ const Index = () => {
     const [devices, setDevices] = useState([]);
     const [devicesCourse, setDevicesCourse] = useState([]);
     const [statusColor, setStatusColor] = useState(0);
+    const [totalpages, setTotalpages] = useState(1);
     const [page, setPage] = useState(1);
     const [addRow, setAddRow] = useState({
         branch_id: 0,
         file: undefined,
         nameFile: '',
         on_off: false,
-        disable: true,
+        disable: false,
         loading: false,
         hasData: '',
     });
     const [deleteRow, setDeleteRow] = useState({
         item: undefined,
         on_off: false,
-        disable: true,
+        disable: false,
         loading: false,
         delData: false,
     });
@@ -66,7 +65,6 @@ const Index = () => {
             return toasters
         }, {})
     })()
-    const [totalpages, setTotalpages] = useState(1);
     const [filter, setFilter] = useState({
         province_id: 0,
         customer_id: 0,
@@ -127,138 +125,8 @@ const Index = () => {
         }
         fetchCourses()
     }
-    const onDeleteRow = (id) => {
-        setDeleteRow({ ...deleteRow, disable: true, loading: true })
-        async function deleteCourseID() {
-            try {
-                const del = await deleteCourse(id);
-                if (del.data.success === true) {
-                    setDeleteRow({ ...deleteRow, delData: del.data.success, on_off: false, disable: true, loading: false })
-                    async function fetchCourses() {
-                        try {
-                            const courses = await getCourses(filter);
-                            // console.log(courses);
-                            setCourses(courses.data.items);
-                            setTotalpages(courses.data.total)
-                        } catch (error) {
-                        }
-                    }
-                    fetchCourses();
-                }
-            } catch (error) {
-                setToasts([
-                    ...toasts,
-                    {
-                        position: 'top-right',
-                        autohide: true && 5000,
-                        closeButton: true,
-                        fade: true,
-                        show: true,
-                        item: undefined,
-                        value: 0,
-                        error: error.message,
-                        statusColor: -1,
-                    }
-                ])
-            }
-        }
-        deleteCourseID()
-    }
-    const onAddFileXML = () => {
-        setAddRow({ ...addRow, disable: true, loading: true })
-        async function addCourseXML() {
-            const formData = new FormData();
-            formData.append("file", addRow.file[0]);
-            formData.append("branch_id", addRow.branch_id);
-            try {
-                const add = await addCourse(formData);
-                if (add.statusText === "OK") {
-                    setAddRow({ ...addRow, hasData: add.statusText, nameFile: undefined, on_off: false, disable: true, loading: false })
-                    async function fetchCourses() {
-                        try {
-                            const courses = await getCourses(filter);
-                            // console.log(courses);
-                            setCourses(courses.data.items);
-                            setTotalpages(courses.data.total)
-                        } catch (error) {
-                        }
-                    }
-                    fetchCourses();
-                }
-            } catch (error) {
-            }
-        }
-        addCourseXML()
-    }
     const getDataCourseDevices = async (item) => {
         setSyncRow({ item: item, on_off: true })
-        async function fetchDevices() {
-            const ob = {
-                name: '',
-                serial: '',
-                working_status: -1,
-                sync_status: -1,
-                province_id: 0,
-                customer_id: 0,
-                branch_id: item.branch_id,
-                page: 1,
-            }
-            try {
-                const devices = await getDevices(ob);
-                const arr = []
-                devices.data.items.map(item => {
-                    arr.push({
-                        id: item.id,
-                        name: item.name,
-                        checked: false,
-                    })
-                })
-                setDevices(arr)
-            } catch (error) {
-            }
-        }
-        await fetchDevices();
-
-        async function fetchDevicesCourse() {
-            try {
-                const devicesCourse = await getDevicesCourse(item.id);
-                const arr = []
-                devicesCourse.data.map(item => {
-                    arr.push({
-                        id: item.device.id,
-                        name: item.device.name,
-                        checked: false,
-                    })
-                })
-                setDevicesCourse(arr)
-                // setDevicesCourse([...devicesCourse,
-                // {
-                //   id: devicesCourse.data.device.id,
-                //   name: devicesCourse.data.device.name,
-                // }])
-            } catch (error) {
-            }
-        }
-        await fetchDevicesCourse();
-    }
-    const changeSyncRow = (key, value) => {
-        switch (key) {
-            case 'course':
-
-                break;
-            case 'hang':
-
-                break;
-            case 'siso':
-
-                break;
-            case 'branch':
-
-                break;
-
-            default:
-                break;
-        }
     }
     return (
         <>
@@ -277,7 +145,6 @@ const Index = () => {
                                 filter={{ filter, setFilter }}
                                 statusColor={{ statusColor, setStatusColor }}
                                 toasts={{ toasts, setToasts }}
-                                syncRow={{ syncRow, setSyncRow }}
                                 devices={{ devices, setDevices }}
                                 devicesCourse={{ devicesCourse, setDevicesCourse }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
@@ -290,13 +157,13 @@ const Index = () => {
                 </CCol>
             </CRow>
             <ModalAdd
-                add={{ addRow, setAddRow, onAddFileXML }}
+                add={{ addRow, setAddRow, filter, setCourses, setTotalpages , toasts, setToasts }}
             />
             <ModalDelete
-                delete={{ deleteRow, setDeleteRow, onDeleteRow }}
+                delete={{ deleteRow, setDeleteRow, filter, setCourses, setTotalpages, toasts, setToasts }}
             />
-            <ModalData_synchronizing
-                sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, changeSyncRow }}
+            <ModalSync
+                sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
             />
             {/* <KhoahocModal
                 delete={{ deleteRow, setDeleteRow, onDeleteRow }}

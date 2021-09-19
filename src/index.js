@@ -6,14 +6,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { Provider } from "react-redux";
 
 import { icons } from "./assets/icons";
-// import store from "./store";
+import store from "./store";
 
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import { allReducers } from "./js/reducers/index";
-const store = createStore(allReducers);
+// import { createStore } from "redux";
+// import { allReducers } from "./js/reducers/index";
+// const store = createStore(allReducers);
 
 React.icons = icons;
 

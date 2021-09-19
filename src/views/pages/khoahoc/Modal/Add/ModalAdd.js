@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
     CButton,
     CCol,
@@ -8,37 +8,82 @@ import {
     CModalFooter,
     CModalHeader,
     CModalTitle,
-    CInput,
     CLabel,
     CSpinner,
     CInputFile,
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CRow,
-    CDataTable,
-    CListGroup,
-    CListGroupItem,
-    CFade,
-    CLink,
-    CInputCheckbox,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { addCourse, getCourses } from 'src/services/courseService'
 
 const ModalAdd = (props) => {
     const onChangeFile = (value) => {
         if (value.target.files.length > 0) {
-            props.add.setAddRow({ ...props.add.addRow, file: value.target.files, nameFile: value.target.files[0].name, disable: false })
+            props.add.setAddRow({ ...props.add.addRow, nameFile: value.target.files[0].name, file: value.target.files })
         } else {
-            props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, disable: true })
+            props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, file: undefined })
         }
     }
     const closeModal = () => {
-        props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: !props.add.addRow.on_off, disable: true })
+        props.add.setAddRow({ ...props.add.addRow, on_off: false, })
+    }
+    const onAddFileXML = () => {
+        props.add.setAddRow({ ...props.add.addRow, disable: true, loading: true })
+        async function addCourseXML() {
+            const formData = new FormData();
+            formData.append("file", props.add.addRow.file && props.add.addRow.file[0]);
+            formData.append("branch_id", props.add.addRow.branch_id);
+            try {
+                const add = await addCourse(formData);
+                if (add.statusText === "OK") {
+                    props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
+                    async function fetchCourses() {
+                        try {
+                            const courses = await getCourses(props.add.filter);
+                            // console.log(courses);
+                            props.add.setCourses(courses.data.items);
+                            props.add.setTotalpages(courses.data.total)
+                        } catch (error) {
+                        }
+                    }
+                    fetchCourses();
+                    props.add.setToasts([
+                        ...props.add.toasts,
+                        {
+                            position: 'top-right',
+                            autohide: true && 5000,
+                            closeButton: true,
+                            fade: true,
+                            show: true,
+                            item: undefined,
+                            value: 0,
+                            error: `Thêm khóa thành công!`,
+                            statusColor: -1,
+                        }
+                    ])
+                }
+            } catch (error) {
+                props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: true })
+                props.add.setToasts([
+                    ...props.add.toasts,
+                    {
+                        position: 'top-right',
+                        autohide: true && 5000,
+                        closeButton: true,
+                        fade: true,
+                        show: true,
+                        item: undefined,
+                        value: 0,
+                        error: `Thêm khóa không thành công!`,
+                        statusColor: -1,
+                    }
+                ])
+            }
+        }
+        addCourseXML()
     }
     useEffect(() => {
-        document.getElementById("custom-file-input").value = "";
-    }, [props.add.addRow.on_off])
+        if (props.add.addRow.nameFile === undefined)
+            document.getElementById("custom-file-input").value = "";
+    }, [props.add.addRow.nameFile])
     return (
         <CModal
             show={props.add.addRow.on_off}
@@ -60,10 +105,10 @@ const ModalAdd = (props) => {
                 </CFormGroup>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={() => props.add.onAddFileXML()} disabled={props.add.addRow.disable}>
+                <CButton color="info" onClick={() => onAddFileXML()} disabled={props.add.addRow.disable}>
                     {props.add.addRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Đồng ý
-                </CButton>{' '}
+                </CButton>
                 <CButton color="info" onClick={closeModal}>
                     Hủy
                 </CButton>

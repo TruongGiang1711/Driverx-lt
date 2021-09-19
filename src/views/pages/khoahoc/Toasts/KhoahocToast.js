@@ -28,7 +28,7 @@ export const ToastStatus = (props) => {
                                 Toast title
                             </CToastHeader>
                             <CToastBody>
-                                {toast.error ? `Khóa học đã được bắt đầu hoặc thẻ được chỉ định cho khóa học.` : `Đã cập nhật trạng thái ${getStatus(toast.value)} cho khóa ${toast.item && toast.item.ten_khoa_hoc}.`}
+                                {toast.error}
                             </CToastBody>
                         </CToast>
                     )
