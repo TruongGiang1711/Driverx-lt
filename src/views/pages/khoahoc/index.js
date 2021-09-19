@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import './Khoahoc.scss';
 import {
-    CBadge,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
     CRow,
-    CDataTable,
-    CNavLink,
 } from "@coreui/react";
-import CIcon from '@coreui/icons-react'
-import Moment from 'react-moment';
-import { listStatus, getDataFake } from "./KhoahocData";
-import KhoahocModal, { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./Modal";
 import { ToastStatus } from "./Toasts/KhoahocToast";
-import { Modal, Pagination, Select } from 'antd';
-import { DeleteTwoTone } from '@ant-design/icons';
+import { Pagination } from 'antd';
 
-import { getCourses, getBranches, getHangs, updateCourse, addCourse, deleteCourse, getDevices, getDevicesCourse } from "src/services/userService";
-import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../component/getBadge/GetBadge";
 import KhoahocTable from "./Table/KhoahocTable";
 import KhoahocFilter from "./Filter/KhoahocFilter";
-const { Option } = Select;
+import ModalAdd from "./Modal/Add/ModalAdd";
+import ModalDelete from "./Modal/Delete/ModalDelete";
+import ModalData_synchronizing from "./Modal/Sync/ModalSync";
+import { addCourse, deleteCourse, getCourses, getDevicesCourse } from "src/services/courseService";
+import { getBranches } from "src/services/branchService";
+import { getDevices } from "src/services/deviceService";
+import { getHangs } from "src/services/hangService";
 
 const Index = () => {
     const [courses, setCourses] = useState([]);
@@ -294,11 +289,19 @@ const Index = () => {
                     </CCard>
                 </CCol>
             </CRow>
-            <KhoahocModal
+            <ModalAdd
                 add={{ addRow, setAddRow, onAddFileXML }}
+            />
+            <ModalDelete
                 delete={{ deleteRow, setDeleteRow, onDeleteRow }}
+            />
+            <ModalData_synchronizing
                 sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, changeSyncRow }}
             />
+            {/* <KhoahocModal
+                delete={{ deleteRow, setDeleteRow, onDeleteRow }}
+                sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, changeSyncRow }}
+            /> */}
             {/* {ModalAddRow({ addRow, setAddRow, onAddFileXML })}
             {ModalDeleteRow({ deleteRow, setDeleteRow, onDeleteRow })}
             {ModalData_synchronizingRow({ syncRow, setSyncRow, devices, devicesCourse, changeSyncRow })} */}

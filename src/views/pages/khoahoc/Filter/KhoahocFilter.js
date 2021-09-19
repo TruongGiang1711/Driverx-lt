@@ -7,7 +7,6 @@ import {
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
 import { listStatus } from "./../KhoahocData";
-import { addRow } from "./../../../../js/actions/index";
 
 const { Option } = Select;
 const { Search } = Input;

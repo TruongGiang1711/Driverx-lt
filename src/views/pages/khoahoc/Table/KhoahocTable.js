@@ -1,27 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import './../Khoahoc.scss';
 import {
   CBadge,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
   CDataTable,
   CNavLink,
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
 import { listStatus, getDataFake } from "../KhoahocData";
-import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "../Modal";
-import { ToastStatus } from "../Toasts/KhoahocToast";
-import { FilterKhoahoc } from "../Filter/KhoahocFilter";
-import { Pagination, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
+import { Select } from 'antd';
 
-import { getCourses, getBranches, getHangs, updateCourse, addCourse, deleteCourse, getDevices, getDevicesCourse } from "src/services/userService";
 import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../../component/getBadge/GetBadge";
+import { updateCourse } from "src/services/courseService";
 const { Option } = Select;
 
 const KhoahocTable = (props) => {

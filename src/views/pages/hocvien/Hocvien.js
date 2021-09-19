@@ -14,8 +14,7 @@ import { ModalAddRow, ModalDeleteRow, ModalData_synchronizingRow } from "./Hocvi
 import { FilterKhoahoc } from "./HocvienFilter";
 import { Pagination } from 'antd';
 import { EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-import { getTrainees } from "src/services/userService";
+import { getTrainees } from "src/services/traineesService";
 
 const Hocvien = () => {
   // const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
