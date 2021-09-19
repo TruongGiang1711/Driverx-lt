@@ -1,0 +1,16 @@
+.trainess-card {
+    label {
+        color: #3399ff;
+    }
+    .trainess-table {
+        th,
+        td {
+            white-space: nowrap;
+        }
+        tbody {
+            td {
+                vertical-align: middle;
+            }
+        }
+    }
+}

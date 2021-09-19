@@ -5,13 +5,19 @@ const nav = [
   {
     _tag: 'CSidebarNavItem',
     name: 'Trang chủ',
-    to: '/dashboard',
+    to: '/',
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Khóa học',
     to: '/khoahoc',
+    icon: 'cil-drop',
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Học viên',
+    to: '/hocvien',
     icon: 'cil-drop',
   },
   // {

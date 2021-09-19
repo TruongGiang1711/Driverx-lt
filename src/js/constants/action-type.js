@@ -1,0 +1,1 @@
+export const KHOAHOC_INFO = "KHOAHOC_INFO";

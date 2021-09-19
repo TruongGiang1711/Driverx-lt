@@ -1,23 +1,27 @@
 import "react-app-polyfill/ie11"; // For IE 11 support
 import "react-app-polyfill/stable";
 import "./polyfill";
+import "antd/dist/antd.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 import { icons } from "./assets/icons";
+// import store from "./store";
 
+import { createStore } from "redux";
 import { Provider } from "react-redux";
-import store from "./store";
-import "antd/dist/antd.css";
-import "font-awesome/css/font-awesome.css";
+import { allReducers } from "./js/reducers/index";
+const store = createStore(allReducers);
+
 React.icons = icons;
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
+
   document.getElementById("root")
 );
 

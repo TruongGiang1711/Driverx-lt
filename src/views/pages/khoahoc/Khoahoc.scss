@@ -1,64 +1,82 @@
+$colors: (
+    error: #e55353,
+    success: #2eb85c,
+    warning: #f9b115,
+    secondary: #ced2d8,
+);
+
+// table
 .courses-card {
     label {
         color: #3399ff;
     }
-    .courses-icon {
-        display: inline-flex;
-        vertical-align: middle;
-        padding-bottom: 0.2rem;
-        svg {
-            margin: 0;
-        }
-    }
     .courses-table {
-        thead {
-            tr {
-                th {
-                    white-space: nowrap;
-                }
-            }
+        th,
+        td {
+            white-space: nowrap;
         }
         tbody {
             td {
-                white-space: nowrap;
                 vertical-align: middle;
-                &.courses-status,
-                &.courses-card_status {
-                    .alert {
-                        width: 120px;
-                        white-space: nowrap;
+                &.courses-status {
+                    @each $colorname, $color in $colors {
+                        .#{$colorname} {
+                            &.ant-select {
+                                .ant-select-selector {
+                                    background-color: $color;
+                                }
+                            }
+                        }
                     }
                 }
-                button {
-                    box-shadow: none;
-                }
+                // &.courses-status,
+                // &.courses-card_status {
+                //     .alert,
+                //     .badge {
+                //         width: 80px;
+                //     }
+                // }
             }
         }
     }
+}
 
-    // .pagination {
-    //     .page-item {
-    //         padding: 0 0.5rem;
-    //         .page-link {
-    //             border: 0;
-    //             color: #b1b7c1;
-    //             padding: 0.25rem 0.75rem;
-    //             &:hover {
-    //                 border-radius: 5px;
-    //                 background-color: transparent;
-    //                 color: #3399ff;
-    //             }
-    //             &:focus {
-    //                 box-shadow: none;
-    //             }
-    //         }
-    //         &.active {
-    //             .page-link {
-    //                 background-color: #2eb85c21;
-    //                 color: #3399ff;
-    //                 border-radius: 5px;
-    //             }
-    //         }
-    //     }
-    // }
+// modal
+label.custom-file-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 80px;
+}
+.course-to-vehicles {
+    .form-group {
+        align-items: center;
+        label {
+            width: 70px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+    }
+}
+.card-sm {
+    header.card-header {
+        padding: 0.3rem;
+    }
+    .list-group-sm {
+        border: 0;
+        li.list-group-item {
+            padding: 0.3rem;
+            border-right: 0;
+            border-left: 0;
+        }
+    }
+}
+
+// toast
+.toast-custom {
+    @each $colorname, $color in $colors {
+        .#{$colorname} {
+            background-color: $color;
+        }
+    }
 }
