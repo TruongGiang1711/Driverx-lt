@@ -16,11 +16,9 @@ const KhoahocFilter = (props) => {
     const handleChange = (value, key) => {
         switch (key) {
             case 'name':
-                console.log(value);
                 props.filter.setFilter({ ...props.filter.filter, name: value })
                 break;
             case 'enter':
-                console.log(value.target.value);
                 props.filter.setFilter({ ...props.filter.filter, name: value.target.value })
                 break;
             case 'branch':
@@ -43,7 +41,7 @@ const KhoahocFilter = (props) => {
             {(props.branches && props.branches.length > 1) ?
                 <div className="mb-3 px-3" style={{ width: '310px' }}>
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select defaultValue="Tất cả" style={{ width: '100%' }} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
                         {props.branches.map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>

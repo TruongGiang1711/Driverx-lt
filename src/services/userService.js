@@ -1,8 +1,8 @@
 import { setJwt, getJwt } from "./authService";
 import http from "./httpService";
 
-const apiEndpointLogin = "/login";
 export async function postLogin(email, password) {
+  const apiEndpointLogin = "/login";
   const { data } = await http.post(apiEndpointLogin, { email, password });
   return setJwt(data)
 }

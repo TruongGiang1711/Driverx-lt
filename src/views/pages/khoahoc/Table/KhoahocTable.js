@@ -58,12 +58,26 @@ const KhoahocTable = (props) => {
               show: true,
               item: item,
               value: value,
-              error: '',
+              error: `Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`,
               statusColor: update.data.status,
             }
           ])
         }
       } catch (error) {
+        props.toasts.setToasts([
+          ...props.toasts.toasts,
+          {
+            position: 'top-right',
+            autohide: true && 5000,
+            closeButton: true,
+            fade: true,
+            show: true,
+            item: item,
+            value: value,
+            error: `Cập nhật trạng thái ${getStatus(item.id)} cho khóa ${item.ten_khoa_hoc} không thành công!`,
+            statusColor: -1,
+          }
+        ])
       }
     }
     updateStatusCourse()

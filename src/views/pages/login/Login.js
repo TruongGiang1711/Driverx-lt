@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import {
   CButton,
@@ -89,9 +89,9 @@ class Login extends Form {
 
   render() {
     if (authService.getCurrentUser()) return <Redirect to="/"></Redirect>;
-    const data = { ...this.state.data };
-    const username = data.username;
-    const error = this.state.error;
+    // const data = { ...this.state.data };
+    // const username = data.username;
+    // const error = this.state.error;
     const loading = this.state.loading;
 
     return (
