@@ -26,7 +26,7 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const ModalData_synchronizing = (props) => {
-    console.log(props);
+    // console.log(props);
     const fields = [{
         key: "stt",
         label: "STT",
@@ -42,6 +42,7 @@ const ModalData_synchronizing = (props) => {
         label: "",
     },
     ]
+    const [valueInput, setValueInput] = useState('')
     const [showCard, setShowCard] = useState(true)
     const [checkedList, setCheckedList] = useState([])
     const [checkBox, setCheckBox] = useState({
@@ -73,10 +74,10 @@ const ModalData_synchronizing = (props) => {
     }
     useEffect(() => {
         props.sync.devices.map(item => {
-            console.log(props.sync.devicesCourse.find(d => d.id === item.id));
-                // props.sync.setDevicesCourse({ ...props.sync.devicesCourse, checked: true })
+            if (props.sync.devicesCourse.find(d => d.id === item.id))
+                props.sync.setDevicesCourse([...props.sync.devicesCourse, { checked: true }])
         })
-    }, [props.sync.devicesCourse])
+    }, [])
     // function doSomething() {
     //     const result = ["may 1", "may 2"]; // tu backen
     //     const listCu = [...result]; //["may 1","may 2"]
@@ -121,11 +122,15 @@ const ModalData_synchronizing = (props) => {
     //     console.log(a, "resul =================================");
     //     return a
     // }
+    const handleOnTableFilterChange = (value) => {
+        setValueInput(value.target.value)
+    }
     return (
         <CModal
             show={props.sync.syncRow.on_off}
             onClose={closeModal}
             size="lg"
+            closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
                 <CModalTitle>Chỉ định Khóa tới Máy điểm danh</CModalTitle>
@@ -161,7 +166,7 @@ const ModalData_synchronizing = (props) => {
                         </CRow>
                         <CRow>
                             <CCol>
-                                <CFormGroup row>
+                                <CFormGroup row className="pb-0">
                                     <CLabel>Phân hiệu</CLabel>
                                     <CCol>
                                         <CInput placeholder="Phân hiệu" defaultValue={props.sync.syncRow.item && props.sync.syncRow.item.branch_name} onChange={(value) => props.sync.changeSyncRow(value)} />
@@ -176,19 +181,19 @@ const ModalData_synchronizing = (props) => {
                         <CFormGroup row className="mb-0">
                             <CLabel>Tìm máy</CLabel>
                             <CCol>
-                                <CInput placeholder="Tìm máy..." onSelect={searchMay} />
+                                <CInput placeholder="Tìm máy..." onSelect={searchMay} onChange={handleOnTableFilterChange} />
                             </CCol>
                         </CFormGroup>
                     </CCardBody>
                 </CCard>
                 <CRow>
-                    <CCol xs="12" lg="8">
+                    <CCol xs="12" lg="8" style={{ height: "200px" }}>
                         <CDataTable
                             items={props.sync.devices}
                             fields={fields}
                             size="sm"
                             border
-                            // tableFilter
+                            tableFilterValue={valueInput}
                             scopedSlots={{
                                 stt: (item, index) => {
                                     return (
@@ -249,11 +254,11 @@ const ModalData_synchronizing = (props) => {
                 </CRow>
             </CModalBody>
             <CModalFooter>
-                <CButton color="primary">
-                    Do Something
+                <CButton color="info">
+                    Cập nhật
                 </CButton>{' '}
                 <CButton color="secondary" onClick={closeModal}>
-                    Cancel
+                    Hủy
                 </CButton>
             </CModalFooter>
         </CModal>
