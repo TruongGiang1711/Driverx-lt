@@ -28,20 +28,20 @@ import CIcon from '@coreui/icons-react'
 const ModalAdd = (props) => {
     const onChangeFile = (value) => {
         if (value.target.files.length > 0) {
-            props.add.props.add.setAddRow({ ...props.add.props.add.addRow, file: value.target.files, nameFile: value.target.files[0].name, disable: false })
+            props.add.setAddRow({ ...props.add.addRow, file: value.target.files, nameFile: value.target.files[0].name, disable: false })
         } else {
-            props.add.props.add.setAddRow({ ...props.add.props.add.addRow, nameFile: undefined, disable: true })
+            props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, disable: true })
         }
     }
     const closeModal = () => {
-        props.add.props.add.setAddRow({ ...props.add.props.add.addRow, nameFile: undefined, on_off: !props.add.props.add.addRow.on_off, disable: true })
+        props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: !props.add.addRow.on_off, disable: true })
     }
     useEffect(() => {
         document.getElementById("custom-file-input").value = "";
-    }, [props.add.props.add.addRow.on_off])
+    }, [props.add.addRow.on_off])
     return (
         <CModal
-            show={props.add.props.add.addRow.on_off}
+            show={props.add.addRow.on_off}
             onClose={closeModal}
             color="info"
             closeOnBackdrop={false}
@@ -52,16 +52,16 @@ const ModalAdd = (props) => {
             <CModalBody>
                 <CFormGroup>
                     <CCol>
-                        <CInputFile custom id="custom-file-input" onChange={(value) => onChangeFile(value)} disabled={props.add.props.add.addRow.loading ? true : false} />
+                        <CInputFile custom id="custom-file-input" onChange={(value) => onChangeFile(value)} disabled={props.add.addRow.loading ? true : false} />
                         <CLabel htmlFor="custom-file-input" variant="custom-file">
-                            {props.add.props.add.addRow.nameFile ? props.add.props.add.addRow.nameFile : "Chọn file XML"}
+                            {props.add.addRow.nameFile ? props.add.addRow.nameFile : "Chọn file XML"}
                         </CLabel>
                     </CCol>
                 </CFormGroup>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={() => props.add.props.add.onAddFileXML()} disabled={props.add.props.add.addRow.disable}>
-                    {props.add.props.add.addRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
+                <CButton color="info" onClick={() => props.add.onAddFileXML()} disabled={props.add.addRow.disable}>
+                    {props.add.addRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Đồng ý
                 </CButton>{' '}
                 <CButton color="info" onClick={closeModal}>

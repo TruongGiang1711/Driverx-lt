@@ -28,11 +28,11 @@ import CIcon from '@coreui/icons-react'
 const ModalDelete = (props) => {
     // console.log(props);
     const closeModal = () => {
-        props.delete.props.delete.setDeleteRow(!props.delete.props.delete.deleteRow.on_off)
+        props.delete.setDeleteRow(!props.delete.deleteRow.on_off)
     }
     return (
         <CModal
-            show={props.delete.props.delete.deleteRow.on_off}
+            show={props.delete.deleteRow.on_off}
             onClose={closeModal}
             color="danger"
             closeOnBackdrop={false}
@@ -40,9 +40,9 @@ const ModalDelete = (props) => {
             <CModalHeader closeButton>
                 <CModalTitle>Xóa khóa</CModalTitle>
             </CModalHeader>
-            <CModalBody>Bạn có muốn xóa khóa học {props.delete.props.delete.deleteRow.item && props.delete.props.delete.deleteRow.item.ten_khoa_hoc}</CModalBody>
+            <CModalBody>Bạn có muốn xóa khóa học {props.delete.deleteRow.item && props.delete.deleteRow.item.ten_khoa_hoc}</CModalBody>
             <CModalFooter>
-                <CButton color="danger" onClick={() => props.delete.props.delete.onDeleteRow(props.delete.props.delete.deleteRow.item && props.delete.props.delete.deleteRow.item.id)}>
+                <CButton color="danger" onClick={() => props.delete.onDeleteRow(props.delete.deleteRow.item && props.delete.deleteRow.item.id)}>
                     Đồng ý
                 </CButton>{' '}
                 <CButton color="danger" onClick={closeModal}>
