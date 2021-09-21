@@ -7,13 +7,14 @@ import {
     CCol,
     CRow,
 } from "@coreui/react";
-import { ToastStatus } from "./Toasts/KhoahocToast";
-import { Pagination } from 'antd';
+import KhoahocToast from "./Toasts/KhoahocToast";
 import KhoahocTable from "./Table/KhoahocTable";
 import KhoahocFilter from "./Filter/KhoahocFilter";
 import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
-import ModalSync from "./Modal/Sync/ModalSync";
+import ModalSyncDevices from "./Modal/Sync/ModalSyncDevices";
+import ModalSyncVehicles from "./Modal/Sync/ModalSyncVehicles";
+import { Pagination } from 'antd';
 import { getCourses } from "src/services/courseService";
 import { getBranches } from "src/services/branchService";
 import { getHangs } from "src/services/hangService";
@@ -43,7 +44,11 @@ const Index = () => {
         loading: false,
         delData: false,
     });
-    const [syncRow, setSyncRow] = useState({
+    const [syncRowDevice, setSyncRowDevice] = useState({
+        item: undefined,
+        on_off: false,
+    });
+    const [syncRowVehicles, setSyncRowVehicles] = useState({
         item: undefined,
         on_off: false,
     });
@@ -126,7 +131,10 @@ const Index = () => {
         fetchCourses()
     }
     const getDataCourseDevices = async (item) => {
-        setSyncRow({ item: item, on_off: true })
+        setSyncRowDevice({ item: item, on_off: true })
+    }
+    const getDataCourseVehicles = async (item) => {
+        setSyncRowVehicles({ item: item, on_off: true })
     }
     return (
         <>
@@ -150,6 +158,7 @@ const Index = () => {
                                 deleteRow={{ deleteRow, setDeleteRow }}
                                 page={{ page, setPage }}
                                 getDataCourseDevices={getDataCourseDevices}
+                                getDataCourseVehicles={getDataCourseVehicles}
                             />
                         </CCardBody>
                         <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
@@ -157,22 +166,18 @@ const Index = () => {
                 </CCol>
             </CRow>
             <ModalAdd
-                add={{ addRow, setAddRow, filter, setCourses, setTotalpages , toasts, setToasts }}
+                add={{ addRow, setAddRow, filter, setCourses, setTotalpages, toasts, setToasts }}
             />
             <ModalDelete
                 delete={{ deleteRow, setDeleteRow, filter, setCourses, setTotalpages, toasts, setToasts }}
             />
-            <ModalSync
-                sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
+            <ModalSyncDevices
+                sync={{ syncRowDevice, setSyncRowDevice, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
             />
-            {/* <KhoahocModal
-                delete={{ deleteRow, setDeleteRow, onDeleteRow }}
-                sync={{ syncRow, setSyncRow, devices, devicesCourse, setDevicesCourse, changeSyncRow }}
-            /> */}
-            {/* {ModalAddRow({ addRow, setAddRow, onAddFileXML })}
-            {ModalDeleteRow({ deleteRow, setDeleteRow, onDeleteRow })}
-            {ModalData_synchronizingRow({ syncRow, setSyncRow, devices, devicesCourse, changeSyncRow })} */}
-            {ToastStatus(toasters)}
+            <ModalSyncVehicles
+                sync={{ syncRowVehicles, setSyncRowVehicles, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
+            />
+            {KhoahocToast(toasters)}
         </>
     );
 };

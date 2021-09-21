@@ -36,3 +36,15 @@ export async function deleteDevicesCourse(course_id, device_id) {               
   const apiEndPointDeleteDevicesCourse = `courses/${course_id}/devices/${device_id}`;
   return http.delete(apiEndPointDeleteDevicesCourse);
 }
+export async function getVehiclesCourse(course_id) {                                     // danh sách xe đã assign theo khóa
+  const apiEndPointVehiclesCourse = `courses/${course_id}/vehicles`;
+  return http.get(apiEndPointVehiclesCourse, { course_id });
+}
+export async function addVehiclesCourse(course_id, params) {                             // thêm xe cho khóa
+  const apiEndPointAddVehiclesCourse = `courses/${course_id}/vehicles`;
+  return http.post(apiEndPointAddVehiclesCourse, { ...params });
+}
+export async function deleteVehiclesCourse(course_id, vehicles) {                        // xóa xe của khóa
+  const apiEndPointDeleteVehiclesCourse = `courses/${course_id}/vehicles/${vehicles}`;
+  return http.delete(apiEndPointDeleteVehiclesCourse);
+}

@@ -4,9 +4,9 @@ import {
     CToastHeader,
     CToastBody,
 } from "@coreui/react";
-import { getColor, getStatus } from "src/views/component/getBadge/GetBadge";
+import { getColor } from "src/views/component/getBadge/GetBadge";
 
-export const ToastStatus = (props) => {
+const KhoahocToast = (props) => {
     // console.log(props);
     return Object.keys(props).map((toasterKey) => (
         <CToaster
@@ -37,3 +37,5 @@ export const ToastStatus = (props) => {
         </CToaster>
     ))
 }
+
+export default KhoahocToast;

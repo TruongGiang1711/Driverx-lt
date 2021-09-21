@@ -178,7 +178,7 @@ const KhoahocTable = (props) => {
                 </CBadge>
               </span>
               <span className="pr-3" role="button">
-                <CBadge color={"success"}>
+                <CBadge color={"success"} onClick={() => props.getDataCourseVehicles(item)}>
                   <CIcon name={'cil-truck'} />
                 </CBadge>
               </span>

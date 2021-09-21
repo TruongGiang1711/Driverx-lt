@@ -71,6 +71,28 @@ label.custom-file-label {
         }
     }
 }
+.vehicles-table {
+    .table-responsive {
+        columns: 2;
+        table {
+            display: contents;
+            thead {
+                visibility: collapse;
+            }
+            tbody {
+                tr {
+                    td {
+                        width: 100%;
+                        &.col-mid {
+                            display: inline-block;
+                            width: 17.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 // toast
 .toast-custom {
