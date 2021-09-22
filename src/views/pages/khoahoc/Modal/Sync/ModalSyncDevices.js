@@ -362,14 +362,12 @@ const ModalSyncDevices = (props) => {
                                         </td>
                                     );
                                 },
-                                // 'status':
-                                //     (item) => (
-                                //         <td>
-                                //             <CBadge color={getBadge(item.status)}>
-                                //                 {item.status}
-                                //             </CBadge>
-                                //         </td>
-                                //     )
+                                model:
+                                    (item) => (
+                                        <td>
+                                            {item.firmware}
+                                        </td>
+                                    ),
                                 checkbox_row: (item, index) => {
                                     return (
                                         <td className="text-center">

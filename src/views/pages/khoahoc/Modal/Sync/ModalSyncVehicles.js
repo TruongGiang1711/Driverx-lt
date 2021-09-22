@@ -114,7 +114,7 @@ const ModalSyncVehicles = (props) => {
                                         show: true,
                                         item: undefined,
                                         value: 0,
-                                        error: `Xóa thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
+                                        error: `Xóa thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
                                         statusColor: -1,
                                     }
                                 ])
@@ -130,7 +130,7 @@ const ModalSyncVehicles = (props) => {
                                     show: true,
                                     item: undefined,
                                     value: 0,
-                                    error: `Xóa không thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
+                                    error: `Xóa không thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
                                     statusColor: -1,
                                 }
                             ])
@@ -147,7 +147,7 @@ const ModalSyncVehicles = (props) => {
                     // console.log("có trong list mới ====", item);
                     async function addDevice() {
                         const ob = {
-                            vehicles_id: item.id,
+                            vehicle_id: item.id,
                             status: 0,
                             auto_sync: true
                         }
@@ -165,7 +165,7 @@ const ModalSyncVehicles = (props) => {
                                         show: true,
                                         item: undefined,
                                         value: 0,
-                                        error: `Thiết bị ${item.name} đã được gán thành công cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
+                                        error: `Thiết bị ${item.plate} đã được gán thành công cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
                                         statusColor: -1,
                                     }
                                 ])
@@ -181,7 +181,7 @@ const ModalSyncVehicles = (props) => {
                                     show: true,
                                     item: undefined,
                                     value: 0,
-                                    error: `Thiết bị ${item.name} đã được gán cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
+                                    error: `Thiết bị ${item.plate} đã được gán cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
                                     statusColor: -1,
                                 }
                             ])
@@ -228,7 +228,7 @@ const ModalSyncVehicles = (props) => {
             await processGetDeviceOfCourse();
             // console.log(vehiclesInThisCourse.length);
             vehiclesInThisCourse.map((d) => {
-                const index = vehicles.findIndex((vehicles) => vehicles.id === d.vehicles.id);
+                const index = vehicles.findIndex((vehicle) => vehicle.id === d.vehicle.id);
                 if (index > -1) {
                     vehicles[index].selected = true;
                 }

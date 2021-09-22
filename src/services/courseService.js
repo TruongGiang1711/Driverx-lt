@@ -44,7 +44,7 @@ export async function addVehiclesCourse(course_id, params) {                    
   const apiEndPointAddVehiclesCourse = `courses/${course_id}/vehicles`;
   return http.post(apiEndPointAddVehiclesCourse, { ...params });
 }
-export async function deleteVehiclesCourse(course_id, vehicles) {                        // xóa xe của khóa
-  const apiEndPointDeleteVehiclesCourse = `courses/${course_id}/vehicles/${vehicles}`;
+export async function deleteVehiclesCourse(course_id, vehicles_id) {                        // xóa xe của khóa
+  const apiEndPointDeleteVehiclesCourse = `courses/${course_id}/vehicles/${vehicles_id}`;
   return http.delete(apiEndPointDeleteVehiclesCourse);
 }

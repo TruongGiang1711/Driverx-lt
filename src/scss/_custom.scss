@@ -22,6 +22,44 @@
     background: grey;
 }
 
+// hover sidebar
+@media (min-width: 992px) {
+    html:not([dir="rtl"]) .c-sidebar-unfoldable:not(:hover):not(.c-sidebar-right) {
+        margin-left: -56px;
+    }
+    .c-sidebar-unfoldable:not(:hover).c-sidebar-fixed {
+        z-index: 1031;
+        width: 56px;
+    }
+    .c-sidebar-unfoldable:not(:hover) {
+        z-index: 1031;
+        flex: 0 0 56px;
+    }
+    .c-sidebar-unfoldable {
+        z-index: 1031 !important;
+    }
+    html:not([dir="rtl"]) .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right),
+    html:not([dir="rtl"]) .c-sidebar.c-sidebar-show:not(.c-sidebar-right) {
+        margin-left: 0;
+    }
+}
+@media (min-width: 992px) and (min-width: 992px) {
+    html:not([dir="rtl"])
+        .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right).c-sidebar-fixed.c-sidebar-minimized
+        ~ .c-wrapper,
+    html:not([dir="rtl"])
+        .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right).c-sidebar-fixed.c-sidebar-unfoldable
+        ~ .c-wrapper,
+    html:not([dir="rtl"])
+        .c-sidebar.c-sidebar-show:not(.c-sidebar-right).c-sidebar-fixed.c-sidebar-minimized
+        ~ .c-wrapper,
+    html:not([dir="rtl"])
+        .c-sidebar.c-sidebar-show:not(.c-sidebar-right).c-sidebar-fixed.c-sidebar-unfoldable
+        ~ .c-wrapper {
+        margin-left: 56px;
+    }
+}
+
 // cutom bottom
 button.button-coreui {
     height: 32px;
