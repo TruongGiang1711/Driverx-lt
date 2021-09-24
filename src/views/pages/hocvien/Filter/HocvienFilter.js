@@ -7,7 +7,7 @@ import {
 import { Input, Select } from 'antd';
 import { useEffect, useState } from "react";
 import { getStatus } from "../../../component/getBadge/GetBadge";
-import { getCourses } from "src/services/courseService";
+import { getCourses } from "src/services/coursesService";
 import { getTrainees } from "src/services/traineesService";
 const { Option } = Select;
 const { Search } = Input;
@@ -212,7 +212,6 @@ const HocvienFilter = (props) => {
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
                 <Search placeholder="Tên học viên"
                     enterButton="Tìm"
-                    value={props.filter.filter.name}
                     onChange={(item) => handleChange(item, 'name')}
                     onSearch={(item, event) => searchTrainess(item, 'iconsearch')}
                     onPressEnter={(item) => searchTrainess(item, 'enter')} />

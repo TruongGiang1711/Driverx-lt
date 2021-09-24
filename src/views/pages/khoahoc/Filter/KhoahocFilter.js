@@ -13,9 +13,9 @@ const { Search } = Input;
 
 const KhoahocFilter = (props) => {
     // console.log(props)
-    const handleChange = (value, key) => {
+    const searchCourses = (value, key) => {
         switch (key) {
-            case 'name':
+            case 'iconsearch':
                 props.filter.setFilter({ ...props.filter.filter, name: value })
                 break;
             case 'enter':
@@ -41,7 +41,7 @@ const KhoahocFilter = (props) => {
             {(props.branches && props.branches.length > 1) ?
                 <div className="mb-3 px-3" style={{ width: '310px' }}>
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => searchCourses(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
                         {props.branches.map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -51,7 +51,7 @@ const KhoahocFilter = (props) => {
             }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái</CLabel><br />
-                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
+                <Select defaultValue="Tất cả" style={{ width: '100%' }} onSelect={(item) => searchCourses(item, 'status')}>
                     <Option key={'-1'} value={'-1'}>Tất cả</Option>
                     {listStatus().map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -60,7 +60,7 @@ const KhoahocFilter = (props) => {
             </CCol>
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Hạng</CLabel><br />
-                <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'hang')}>
+                <Select defaultValue="" style={{ width: '100%' }} onSelect={(item) => searchCourses(item, 'hang')}>
                     <Option key={''} value={''}>Tất cả</Option>
                     {props.hangs && props.hangs.map((item, index) => <Option key={item} value={item}>{item}</Option>)}
                 </Select>
@@ -70,8 +70,8 @@ const KhoahocFilter = (props) => {
                 <Search
                     enterButton="Tìm"
                     placeholder="Tên khóa"
-                    onPressEnter={(value) => handleChange(value, 'enter')}
-                    onSearch={(value) => handleChange(value, 'name')}
+                    onSearch={(value) => searchCourses(value, 'iconsearch')}
+                    onPressEnter={(value) => searchCourses(value, 'enter')}
                 />
             </CCol>
             <div className="mb-3 pr-3 ml-auto">

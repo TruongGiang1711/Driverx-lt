@@ -18,7 +18,7 @@ import TableIndoor from './Table/Indoor/TableIndoor';
 import TableOutdoor from './Table/Outdoor/TableOutdoor';
 
 const ModalInfoLearn = (props) => {
-    console.log(props);
+    // console.log(props);
     const columnsIndoor = [
         { title: 'Name', dataIndex: 'name', key: 'name' },
         { title: 'Age', dataIndex: 'age', key: 'age' },

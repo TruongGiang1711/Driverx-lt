@@ -23,7 +23,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { getVehicles } from "src/services/vehiclesService";
-import { addVehiclesCourse, deleteVehiclesCourse, getVehiclesCourse } from "src/services/courseService";
+import { addVehiclesCourse, deleteVehiclesCourse, getVehiclesCourse } from "src/services/coursesService";
 
 const ModalSyncVehicles = (props) => {
     // console.log(props);

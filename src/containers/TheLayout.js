@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getMe } from 'src/services/userService';
+import { getMe } from 'src/services/usersService';
 import {
   TheContent,
   TheSidebar,

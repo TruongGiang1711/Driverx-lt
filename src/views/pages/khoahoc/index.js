@@ -15,9 +15,9 @@ import ModalDelete from "./Modal/Delete/ModalDelete";
 import ModalSyncDevices from "./Modal/Sync/ModalSyncDevices";
 import ModalSyncVehicles from "./Modal/Sync/ModalSyncVehicles";
 import { Pagination } from 'antd';
-import { getCourses } from "src/services/courseService";
-import { getBranches } from "src/services/branchService";
-import { getHangs } from "src/services/hangService";
+import { getCourses } from "src/services/coursesService";
+import { getBranches } from "src/services/branchsService";
+import { getHangs } from "src/services/hangsService";
 
 const Index = () => {
     const [courses, setCourses] = useState([]);
@@ -92,6 +92,7 @@ const Index = () => {
             }
         }
         fetchCourses();
+        setPage(1)
     }, [filter, statusColor]);
     useEffect(() => {
         async function fetchBranches() {
@@ -147,7 +148,8 @@ const Index = () => {
                             <KhoahocFilter
                                 filter={{ filter, setFilter }}
                                 addRow={{ addRow, setAddRow }}
-                                branches={branches} hangs={hangs}
+                                branches={branches}
+                                hangs={hangs}
                             />
                             <KhoahocTable
                                 courses={courses}

@@ -33,8 +33,6 @@ const HocvienTable = (props) => {
             addTableClasses="trainess-table"
             items={props.trainees}
             fields={fields}
-            // tableFilterValue={filterSearch}
-            // itemsPerPage={50}
             size={'sm'}
             hover
             sorter

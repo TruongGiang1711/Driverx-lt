@@ -10,7 +10,7 @@ import { listStatus, getDataFake } from "./KhoahocData";
 import { DeleteTwoTone } from '@ant-design/icons';
 import { Select } from 'antd';
 import { getColor, getStatus, getColorCard_status, getCard_status, getData_synchronizing_status } from "./../../component/getBadge/GetBadge";
-import { updateCourse } from "src/services/courseService";
+import { updateCourse } from "src/services/coursesService";
 const { Option } = Select;
 
 const ScopeSlotsTable = (props) => {

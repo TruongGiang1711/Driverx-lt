@@ -22,8 +22,8 @@ import {
     CInputCheckbox,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { getDevices } from "src/services/deviceService";
-import { addDevicesCourse, deleteDevicesCourse, getDevicesCourse } from "src/services/courseService";
+import { getDevices } from "src/services/devicesService";
+import { addDevicesCourse, deleteDevicesCourse, getDevicesCourse } from "src/services/coursesService";
 
 const ModalSyncDevices = (props) => {
     // console.log(props);

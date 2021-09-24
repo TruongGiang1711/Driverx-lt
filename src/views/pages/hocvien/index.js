@@ -9,15 +9,15 @@ import {
 } from "@coreui/react";
 import HocvienFilter from "./Filter/HocvienFilter";
 import HocvienTable from "./Table/HocvienTable";
-import { useLocation } from "react-router-dom";
-import { Pagination } from 'antd';
-import { getTrainees } from "src/services/traineesService";
-import { getBranches } from "src/services/branchService";
-import { getCoursesID } from "src/services/courseService";
 import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
 import ModalEdit from "./Modal/Edit/ModalEdit";
 import ModalInfoLearn from "./Modal/InfoLearn/ModalInfoLearn";
+import { useLocation } from "react-router-dom";
+import { Pagination } from 'antd';
+import { getTrainees } from "src/services/traineesService";
+import { getBranches } from "src/services/branchsService";
+import { getCoursesID } from "src/services/coursesService";
 
 const Index = () => {
   const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
@@ -154,8 +154,8 @@ const Index = () => {
                 editRow={{ editRow, setEditRow }}
                 info={{ infoLearnRow, setInfoLearnRow }}
                 page={{ page, setPage }}
-              // statusColor={{ statusColor, setStatusColor }}
-              // toasts={{ toasts, setToasts }}
+                statusColor={{ statusColor, setStatusColor }}
+                toasts={{ toasts, setToasts }}
               />
             </CCardBody>
             <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
