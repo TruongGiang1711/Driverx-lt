@@ -22,8 +22,8 @@ import {
     CInputCheckbox,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { getDevices } from "src/services/deviceService";
-import { addDevicesCourse, deleteDevicesCourse, getDevicesCourse } from "src/services/courseService";
+import { getDevices } from "src/services/devicesService";
+import { addDevicesCourse, deleteDevicesCourse, getDevicesCourse } from "src/services/coursesService";
 
 const ModalSyncDevices = (props) => {
     // console.log(props);
@@ -362,14 +362,12 @@ const ModalSyncDevices = (props) => {
                                         </td>
                                     );
                                 },
-                                // 'status':
-                                //     (item) => (
-                                //         <td>
-                                //             <CBadge color={getBadge(item.status)}>
-                                //                 {item.status}
-                                //             </CBadge>
-                                //         </td>
-                                //     )
+                                model:
+                                    (item) => (
+                                        <td>
+                                            {item.firmware}
+                                        </td>
+                                    ),
                                 checkbox_row: (item, index) => {
                                     return (
                                         <td className="text-center">

@@ -12,7 +12,7 @@ import {
     CSpinner,
     CInputFile,
 } from '@coreui/react'
-import { addCourse, getCourses } from 'src/services/courseService'
+import { addCourse, getCourses } from 'src/services/coursesService'
 
 const ModalAdd = (props) => {
     const onChangeFile = (value) => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CCreateElement,
@@ -20,14 +20,19 @@ import navigation from '../_nav'
 const TheSidebar = () => {
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)
-
+  const [unfoldable, setUnfoldable] = useState(false)
+  const onHoverSidebar = () => {
+    setUnfoldable(!unfoldable)
+  }
   return (
     <CSidebar
       show={show}
       onShowChange={(val) => dispatch({ type: 'set', sidebarShow: val })}
-      className="sidebar-custom"
+      unfoldable={true}
+      onMouseOver={onHoverSidebar}
+      onMouseOut={onHoverSidebar}
     >
-      <CSidebarBrand className="d-md-down-none sidebar-custom_brand" to="/">
+      <CSidebarBrand className="d-md-down-none" to="/">
         {/* <CIcon
           className="c-sidebar-brand-full"
           name="logo-negative"
@@ -35,12 +40,12 @@ const TheSidebar = () => {
         /> */}
         <div className="c-sidebar-brand-full">DRIVERX-LT</div>
         <CIcon
-          className="c-sidebar-brand-minimized"
           name="sygnet"
           height={35}
+          className="c-sidebar-brand-minimized"
         />
       </CSidebarBrand>
-      <CSidebarNav className="sidebar-custom_nav">
+      <CSidebarNav>
         <CCreateElement
           items={navigation}
           components={{
@@ -51,7 +56,7 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none sidebar-custom_minimizer" />
+      <CSidebarMinimizer className="c-d-md-down-none" />
     </CSidebar>
   )
 }

@@ -12,13 +12,19 @@ const nav = [
     _tag: 'CSidebarNavItem',
     name: 'Khóa học',
     to: '/khoahoc',
-    icon: 'cil-drop',
+    icon: 'cil-lock-locked',
   },
   {
     _tag: 'CSidebarNavItem',
     name: 'Học viên',
     to: '/hocvien',
-    icon: 'cil-drop',
+    icon: 'cil-user',
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Thẻ',
+    to: '/the',
+    icon: 'cil-credit-card',
   },
   // {
   //   _tag: 'CSidebarNavItem',

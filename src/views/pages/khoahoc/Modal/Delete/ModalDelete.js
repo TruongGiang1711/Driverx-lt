@@ -8,7 +8,7 @@ import {
     CModalTitle,
     CSpinner,
 } from '@coreui/react'
-import { deleteCourse, getCourses } from 'src/services/courseService'
+import { deleteCourse, getCourses } from 'src/services/coursesService'
 
 const ModalDelete = (props) => {
     // console.log(props);
