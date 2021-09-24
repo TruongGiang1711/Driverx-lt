@@ -27,6 +27,10 @@
     html:not([dir="rtl"]) .c-sidebar-unfoldable:not(:hover):not(.c-sidebar-right) {
         margin-left: -56px;
     }
+    html:not([dir="rtl"]) .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right),
+    html:not([dir="rtl"]) .c-sidebar.c-sidebar-show:not(.c-sidebar-right) {
+        margin-left: 0;
+    }
     .c-sidebar-unfoldable:not(:hover).c-sidebar-fixed {
         z-index: 1031;
         width: 56px;
@@ -38,9 +42,17 @@
     .c-sidebar-unfoldable {
         z-index: 1031 !important;
     }
-    html:not([dir="rtl"]) .c-sidebar.c-sidebar-lg-show:not(.c-sidebar-right),
-    html:not([dir="rtl"]) .c-sidebar.c-sidebar-show:not(.c-sidebar-right) {
-        margin-left: 0;
+    html:not([dir="rtl"]) .c-sidebar-unfoldable:hover .c-sidebar-minimizer:before {
+        transform: rotate(-180deg);
+    }
+    .c-sidebar-brand-full {
+        white-space: nowrap;
+    }
+    .c-sidebar-unfoldable:not(:hover) .c-sidebar-brand-full {
+        display: none;
+    }
+    .c-sidebar-unfoldable:not(:hover) .c-sidebar-brand-minimized {
+        display: block;
     }
 }
 @media (min-width: 992px) and (min-width: 992px) {

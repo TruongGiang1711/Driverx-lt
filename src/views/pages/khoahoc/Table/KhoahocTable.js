@@ -11,7 +11,6 @@ import Moment from 'react-moment';
 import { listStatus, getDataFake } from "../KhoahocData";
 import { DeleteTwoTone } from '@ant-design/icons';
 import { Select } from 'antd';
-
 import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../../component/getBadge/GetBadge";
 import { updateCourse } from "src/services/courseService";
 const { Option } = Select;
@@ -234,7 +233,7 @@ const KhoahocTable = (props) => {
         delete_row: (item, index) => {
           return (
             <td className="text-center">
-              <span role="button">
+              <span>
                 <DeleteTwoTone twoToneColor="#e55353" onClick={() => props.deleteRow.setDeleteRow({ ...props.deleteRow.deleteRow, item: item, on_off: true })} />
               </span>
             </td>

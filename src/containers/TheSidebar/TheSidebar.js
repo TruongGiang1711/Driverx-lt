@@ -22,7 +22,6 @@ const TheSidebar = () => {
   const show = useSelector(state => state.sidebarShow)
   const [unfoldable, setUnfoldable] = useState(false)
   const onHoverSidebar = () => {
-    console.log(1);
     setUnfoldable(!unfoldable)
   }
   return (
@@ -43,6 +42,7 @@ const TheSidebar = () => {
         <CIcon
           name="sygnet"
           height={35}
+          className="c-sidebar-brand-minimized"
         />
       </CSidebarBrand>
       <CSidebarNav>

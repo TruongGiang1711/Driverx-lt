@@ -84,8 +84,9 @@ const Index = () => {
         async function fetchCourses() {
             try {
                 const courses = await getCourses(filter);
-                // console.log(courses);
-                setCourses(courses.data.items);
+                setCourses(courses.data.items.sort(function (a, b) {
+                    return a.id - b.id;
+                }));
                 setTotalpages(courses.data.total)
             } catch (error) {
             }

@@ -39,7 +39,7 @@ import React from 'react';
 // const User = React.lazy(() => import('./views/users/User'));
 
 const Khoahoc = React.lazy(() => import('./views/pages/khoahoc/index'));
-const Hocvien = React.lazy(() => import('./views/pages/hocvien/Hocvien'));
+const Hocvien = React.lazy(() => import('./views/pages/hocvien/index'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },

@@ -1,5 +1,3 @@
-// import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import {
     CButton,
     CCol,
@@ -8,21 +6,18 @@ import {
 } from "@coreui/react";
 import { Input, Select } from 'antd';
 import { useEffect, useState } from "react";
-import { getStatus } from "../../component/getBadge/GetBadge";
-import { getBranches } from "src/services/branchService";
-import { getCourses, getCoursesID } from "src/services/courseService";
+import { getStatus } from "../../../component/getBadge/GetBadge";
+import { getCourses } from "src/services/courseService";
 import { getTrainees } from "src/services/traineesService";
-
 const { Option } = Select;
 const { Search } = Input;
-export const FilterKhoahoc = (props) => {
+
+const HocvienFilter = (props) => {
     // console.log(props)
-    const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
-    const courseID = Number(queryPage && queryPage[1] ? queryPage[1] : 0)
     let timeout;
     let currentValue;
-    const [idCourseUrl, setIdCourseUrl] = useState(courseID)
-    const [branches, setBranches] = useState([]);
+    const [idCourseUrl, setIdCourseUrl] = useState(props.courseID)
+    const [courses, setCourses] = useState([])
     const [search, setSearch] = useState({
         data: [],
     })
@@ -46,7 +41,7 @@ export const FilterKhoahoc = (props) => {
             const ob = {
                 name: value,
                 status: status,
-                branch_id: props.filter.branch_id
+                branch_id: props.filter.filter.branch_id
             }
             getCourses(ob)
                 .then(response => response.data.items)
@@ -67,7 +62,7 @@ export const FilterKhoahoc = (props) => {
     }
     const handleSearch = value => {
         if (value) {
-            fetchCourse(value, data => setSearch({ ...search, data }), props.filter.status);
+            fetchCourse(value, data => setSearch({ ...search, data }), props.filter.filter.status);
         } else {
             setSearch({
                 ...search,
@@ -78,33 +73,31 @@ export const FilterKhoahoc = (props) => {
     const handleChange = (value, key) => {
         switch (key) {
             case 'name':
-                props.setFilter({ ...props.filter, name: value.target.value })
+                props.filter.setFilter({ ...props.filter.filter, name: value.target.value })
                 break;
             case 'iconsearch':
-                console.log(value, key);
-                props.setFilter({ ...props.filter, name: value })
+                props.filter.setFilter({ ...props.filter.filter, name: value })
                 searchTrainess()
                 break;
             case 'enter':
-                console.log(value.target.value, key);
-                props.setFilter({ ...props.filter, name: value.target.value })
+                props.filter.setFilter({ ...props.filter.filter, name: value.target.value })
                 searchTrainess()
                 break;
             case 'branch':
                 setSearch({
                     data: [],
                 })
-                props.setFilter({ ...props.filter, branch_id: value, course_id: 0, status: -1 })
+                props.filter.setFilter({ ...props.filter.filter, branch_id: value, course_id: 0, status: -1 })
                 break;
             case 'status':
                 setSearch({
                     ...search,
                     data: [],
                 })
-                props.setFilter({ ...props.filter, status: value, course_id: 0, })
+                props.filter.setFilter({ ...props.filter.filter, status: value, course_id: 0, })
                 break;
             case 'course':
-                props.setFilter({ ...props.filter, course_id: value, })
+                props.filter.setFilter({ ...props.filter.filter, course_id: value, })
                 break;
 
             default:
@@ -114,85 +107,76 @@ export const FilterKhoahoc = (props) => {
     const searchTrainess = () => {
         async function fetchTrainees() {
             try {
-                const trainees = await getTrainees(props.filter);
-                props.setTrainees(trainees.data.items);
-                props.setTotalpages(trainees.data.total)
+                const trainees = await getTrainees(props.filter.filter);
+                props.trainees.setTrainees(trainees.data.items);
+                props.totalpages.setTotalpages(trainees.data.total)
             } catch (error) {
             }
         }
         fetchTrainees()
-        props.setPage(1)
+        props.page.setPage(1)
     }
 
     useEffect(() => {
         async function fetchTrainees() {
             const ob = {
-                ...props.filter,
+                ...props.filter.filter,
                 course_id: idCourseUrl,
             }
             try {
                 const trainees = await getTrainees(ob);
-                props.setTrainees(trainees.data.items);
-                props.setTotalpages(trainees.data.total)
+                props.trainees.setTrainees(trainees.data.items);
+                props.totalpages.setTotalpages(trainees.data.total)
             } catch (error) {
             }
         }
         fetchTrainees()
     }, [idCourseUrl])
     useEffect(() => {
-        async function fetchBranches() {
-            const ob = {
-                name: '',
-                customer_id: 0,
-                province_id: 0
-            }
-            try {
-                const branches = await getBranches(ob);
-                setBranches(branches.data);
-            } catch (error) {
-            }
-        }
-        fetchBranches();
-        async function fetchCoursesID() {
-            try {
-                if (courseID === 0) {
-                    return
-                }
-                const response = await getCoursesID(courseID);
-                props.setFilter({
-                    ...props.filter,
-                    course_id: response.data.ten_khoa_hoc,
-                    branch_id: response.data.branch.id,
-                    status: response.data.status,
-                })
-            } catch (error) {
-            }
-        }
-        fetchCoursesID()
-    }, []);
-    useEffect(() => {
-        if (courseID === 0) {
+        if (props.courseID === 0) {
             setSearch({
                 data: [],
             })
-            props.setFilter({
-                ...props.filter,
+            props.filter.setFilter({
+                ...props.filter.filter,
                 branch_id: 0,
                 course_id: 0,
                 status: -1,
             })
-            props.setPage(1)
+            props.page.setPage(1)
         }
-        setIdCourseUrl(courseID)
-    }, [courseID])
+        setIdCourseUrl(props.courseID)
+    }, [props.courseID])
+
+    useEffect(() => {
+        async function fetchCourses() {
+            const ob = {
+                province_id: 0,
+                customer_id: 0,
+                branch_id: 0,
+                name: '',
+                hang: '',
+                status: -1,
+                page: 1
+            }
+            try {
+                const courses = await getCourses(ob);
+                setCourses(courses.data.items.sort(function (a, b) {
+                    return a.id - b.id;
+                }));
+            } catch (error) {
+            }
+        }
+        fetchCourses();
+    }, []);
     return (
         <CRow className="d-flex flex-wrap-reverse">
-            {(branches && branches.length > 1) ?
+            {(props.branches && props.branches.length > 1) ?
                 <div className="mb-3 px-3" style={{ width: '310px' }}>
                     <CLabel htmlFor="ccfilter">Phân hiệu</CLabel><br />
-                    <Select value={props.filter.branch === 0 ? "Tất cả" : props.filter.branch_id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
+                    <Select value={props.filter.filter.branch === 0 ? "Tất cả" : props.filter.filter.branch_id} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'branch')}>
                         <Option key={0} value={0}>Tất cả</Option>
-                        {branches.map((item, index) => {
+                        {props.branches.map((item, index) => {
                             return <Option key={item.id} value={item.id}>{item.name}</Option>
                         })}
                     </Select>
@@ -200,7 +184,7 @@ export const FilterKhoahoc = (props) => {
             }
             <CCol col="6" sm="4" md="2" lg="3" xl="2" className="mb-3">
                 <CLabel htmlFor="ccfilter">Trạng thái khóa học</CLabel><br />
-                <Select value={props.filter.status === -1 ? "Tất cả" : props.filter.status} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
+                <Select value={props.filter.filter.status === -1 ? "Tất cả" : props.filter.filter.status} style={{ width: '100%' }} onSelect={(item) => handleChange(item, 'status')}>
                     <Option key={'-1'} value={'-1'}>Tất cả</Option>
                     {listStatus().map((item, index) => {
                         return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -212,7 +196,7 @@ export const FilterKhoahoc = (props) => {
                 <Select
                     style={{ width: '100%' }}
                     showSearch
-                    value={props.filter.course_id === 0 ? "Tất cả" : props.filter.course_id}
+                    value={props.filter.filter.course_id === 0 ? "Tất cả" : courses.find(item => item.id === props.filter.filter.course_id).ten_khoa_hoc || ''}
                     placeholder="Khóa học"
                     showArrow={false}
                     filterOption={false}
@@ -228,7 +212,7 @@ export const FilterKhoahoc = (props) => {
                 <CLabel htmlFor="ccsearch">Tìm kiếm</CLabel><br />
                 <Search placeholder="Tên học viên"
                     enterButton="Tìm"
-                    value={props.filter.name}
+                    value={props.filter.filter.name}
                     onChange={(item) => handleChange(item, 'name')}
                     onSearch={(item, event) => searchTrainess(item, 'iconsearch')}
                     onPressEnter={(item) => searchTrainess(item, 'enter')} />
@@ -241,10 +225,12 @@ export const FilterKhoahoc = (props) => {
             </div> */}
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.branch_id === 0 ? true : false} onClick={() => props.setAddRow(!props.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.branch_id === 0 ? true : false} onClick={() => props.addRow.setAddRow(!props.addRow.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>
         </CRow >
     )
 }
+
+export default HocvienFilter
