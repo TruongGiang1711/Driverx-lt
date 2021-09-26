@@ -12,6 +12,9 @@ import TheTable from "./Table/TheTable";
 import { Pagination } from 'antd';
 import { getBranches } from "src/services/branchsService";
 import { getRfcards } from "src/services/rfcardsService";
+import ModalDelete from "./Modal/Delete/ModalDelete";
+import ModalEdit from "./Modal/Edit/ModalEdit";
+import ModalAdd from "./Modal/Add/ModalAdd";
 
 const Index = () => {
   const [branches, setBranches] = useState([]);
@@ -140,6 +143,15 @@ const Index = () => {
           </CCard>
         </CCol>
       </CRow>
+      <ModalAdd
+        add={{ addRow, setAddRow, filter, setRfcards, setTotalpages, toasts, setToasts }}
+      />
+      <ModalDelete
+        delete={{ deleteRow, setDeleteRow, filter, setTotalpages, toasts, setToasts }}
+      />
+      <ModalEdit
+        edit={{ editRow, setEditRow, filter, setTotalpages, toasts, setToasts }}
+      />
       {/* {ModalAddRow({ addRow, setAddRow, })}
       {ModalDeleteRow({ deleteRow, setDeleteRow, })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}

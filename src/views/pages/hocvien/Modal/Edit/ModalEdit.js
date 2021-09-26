@@ -25,7 +25,7 @@ const ModalEdit = (props) => {
         <CModal
             show={props.edit.editRow.on_off}
             onClose={closeModal}
-            color="info"
+            color="warning"
             closeOnBackdrop={false}
             size="lg"
         >
@@ -102,11 +102,11 @@ const ModalEdit = (props) => {
                 </CRow>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
+                <CButton color="warning" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
                     {props.edit.editRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Cập nhật
-                </CButton>{' '}
-                <CButton color="info" onClick={closeModal}>
+                </CButton>
+                <CButton color="secondary" onClick={closeModal}>
                     Hủy
                 </CButton>
             </CModalFooter>

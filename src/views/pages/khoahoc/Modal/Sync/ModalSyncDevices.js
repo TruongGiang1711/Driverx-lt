@@ -252,8 +252,10 @@ const ModalSyncDevices = (props) => {
     return (
         <CModal
             show={props.sync.syncRowDevice && props.sync.syncRowDevice.on_off}
-            onClose={closeModal} size="lg"
+            onClose={closeModal}
+            size="lg"
             closeOnBackdrop={false}
+            color="warning"
         >
             <CModalHeader closeButton>
                 <CModalTitle>Chỉ định Khóa tới Máy điểm danh</CModalTitle>
@@ -414,7 +416,7 @@ const ModalSyncDevices = (props) => {
                 </CRow>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={updateListInCourse}>Cập nhật</CButton>
+                <CButton color="warning" onClick={updateListInCourse}>Cập nhật</CButton>
                 <CButton color="secondary" onClick={closeModal}>
                     Hủy
                 </CButton>

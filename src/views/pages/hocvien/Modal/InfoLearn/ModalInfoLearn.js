@@ -114,7 +114,7 @@ const ModalInfoLearn = (props) => {
                 </CTabs>
             </CModalBody>
             <CModalFooter>
-                <CButton color="warning" onClick={closeModal}>
+                <CButton color="secondary" onClick={closeModal}>
                     Đóng
                 </CButton>
             </CModalFooter>

@@ -82,7 +82,7 @@ const ModalDelete = (props) => {
                     {props.delete.deleteRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Đồng ý
                 </CButton>
-                <CButton color="danger" onClick={closeModal}>
+                <CButton color="secondary" onClick={closeModal}>
                     Hủy
                 </CButton>
             </CModalFooter>

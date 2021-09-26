@@ -248,8 +248,10 @@ const ModalSyncVehicles = (props) => {
     return (
         <CModal
             show={props.sync.syncRowVehicles && props.sync.syncRowVehicles.on_off}
-            onClose={closeModal} size="xl"
+            onClose={closeModal}
+            size="xl"
             closeOnBackdrop={false}
+            color="warning"
         >
             <CModalHeader closeButton>
                 <CModalTitle>Chỉ định Khóa tới Xe</CModalTitle>
@@ -413,7 +415,7 @@ const ModalSyncVehicles = (props) => {
                 </CRow>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={updateListInCourse}>Cập nhật</CButton>
+                <CButton color="warning" onClick={updateListInCourse}>Cập nhật</CButton>
                 <CButton color="secondary" onClick={closeModal}>
                     Hủy
                 </CButton>

@@ -38,3 +38,12 @@ export const getData_synchronizing_status = (status) => {
         default: return
     }
 };
+export const getStatusCards = (status) => {
+    switch (status) {
+        case -2: return 'Tất cả'
+        case 1: return 'Đã sử dụng'
+        case 0: return 'Chưa sử dụng'
+        case -1: return 'Thẻ mất'
+        default: return
+    }
+};

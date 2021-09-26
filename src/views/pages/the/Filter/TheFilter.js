@@ -6,6 +6,7 @@ import {
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
+import { listCard } from "../TheData";
 const { Option } = Select;
 const { Search } = Input;
 
@@ -30,12 +31,6 @@ const TheFilter = (props) => {
                 break;
         }
     }
-    const listCard = [
-        { id: -2, name: 'Tất cả' },
-        { id: 1, name: 'Đã sử dụng' },
-        { id: 0, name: 'Chưa sử dụng' },
-        { id: -1, name: 'Thẻ mất' },
-    ]
     return (
         <CRow className="d-flex flex-wrap-reverse">
             {(props.branches && props.branches.length > 1) ?
