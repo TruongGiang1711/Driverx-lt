@@ -14,7 +14,7 @@ import { updateCourse } from "src/services/coursesService";
 const { Option } = Select;
 
 const ScopeSlotsTable = (props) => {
-    console.log(props)
+    // console.log(props)
     const history = useHistory()
     const redirectUser = (item) => {
         history.push(`/hocvien?course_id=${item.id}`);
@@ -25,36 +25,10 @@ const ScopeSlotsTable = (props) => {
                 const update = await updateCourse(item.id, value);
                 if (update.statusText === "OK") {
                     props.statusColor.setStatusColor(update.data.status)
-                    props.toasts.setToasts([
-                        ...props.toasts.toasts,
-                        {
-                            position: 'top-right',
-                            autohide: true && 5000,
-                            closeButton: true,
-                            fade: true,
-                            show: true,
-                            item: item,
-                            value: value,
-                            error: `Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`,
-                            statusColor: update.data.status,
-                        }
-                    ])
+                    props.delete.callToast(`Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`)
                 }
             } catch (error) {
-                props.toasts.setToasts([
-                    ...props.toasts.toasts,
-                    {
-                        position: 'top-right',
-                        autohide: true && 5000,
-                        closeButton: true,
-                        fade: true,
-                        show: true,
-                        item: item,
-                        value: value,
-                        error: `Cập nhật trạng thái ${getStatus(item.id)} cho khóa ${item.ten_khoa_hoc} không thành công!`,
-                        statusColor: -1,
-                    }
-                ])
+                props.delete.callToast(`Cập nhật trạng thái ${getStatus(item.id)} cho khóa ${item.ten_khoa_hoc} không thành công!`)
             }
         }
         updateStatusCourse()

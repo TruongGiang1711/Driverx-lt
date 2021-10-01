@@ -15,7 +15,6 @@ import {
     CLabel,
     CInput,
 } from '@coreui/react'
-import img from './../../../../../assets/mA5gDcEg.png'
 
 const ModalEdit = (props) => {
     const closeModal = () => {
@@ -25,7 +24,7 @@ const ModalEdit = (props) => {
         <CModal
             show={props.edit.editRow.on_off}
             onClose={closeModal}
-            color="info"
+            color=""
             closeOnBackdrop={false}
             size="lg"
         >
@@ -36,9 +35,10 @@ const ModalEdit = (props) => {
                 <CRow>
                     <CCol xs="12" md="3">
                         <CImg
-                            src={img}
+                            src={props.edit.editRow.item && props.edit.editRow.item.anh_chan_dung}
+                            alt={props.edit.editRow.item && props.edit.editRow.item.anh_chan_dung}
                             fluid
-                            className="mb-2 img-fluid"
+                            className="img-fluid"
                         />
                     </CCol>
                     <CCol>
@@ -48,6 +48,7 @@ const ModalEdit = (props) => {
                                     <CLabel>Họ và tên</CLabel>
                                     <CInput
                                         placeholder="Họ và tên"
+                                        defaultValue={props.edit.editRow.item && props.edit.editRow.item.ho_va_ten}
                                     />
                                 </CFormGroup>
                             </CCol>
@@ -58,16 +59,18 @@ const ModalEdit = (props) => {
                                     <CLabel>Ngày sinh</CLabel>
                                     <CInput type="date"
                                         placeholder="Ngày sinh"
+                                        defaultValue={props.edit.editRow.item && props.edit.editRow.item.ngay_sinh}
                                     />
                                 </CFormGroup>
                             </CCol>
                             <CCol xs="12" md="4">
                                 <CFormGroup>
                                     <CLabel>Giới tính</CLabel>
-                                    <CSelect custom>
+                                    <CSelect custom
+                                        value={props.edit.editRow.item && props.edit.editRow.item.gioi_tinh}
+                                    >
                                         <option value="M">Nam</option>
                                         <option value="F">Nữ</option>
-                                        <option value="OR">Khác</option>
                                     </CSelect>
                                 </CFormGroup>
                             </CCol>
@@ -76,6 +79,7 @@ const ModalEdit = (props) => {
                                     <CLabel>CMND</CLabel>
                                     <CInput
                                         placeholder="CMND"
+                                        defaultValue={props.edit.editRow.item && props.edit.editRow.item.so_cmt}
                                     />
                                 </CFormGroup>
                             </CCol>
@@ -86,6 +90,7 @@ const ModalEdit = (props) => {
                                     <CLabel>RFID</CLabel>
                                     <CInput
                                         placeholder="RFID"
+                                        defaultValue={props.edit.editRow.item && props.edit.editRow.item.rfid_card}
                                     />
                                 </CFormGroup>
                             </CCol>
@@ -105,8 +110,8 @@ const ModalEdit = (props) => {
                 <CButton color="info" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
                     {props.edit.editRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Cập nhật
-                </CButton>{' '}
-                <CButton color="info" onClick={closeModal}>
+                </CButton>
+                <CButton color="secondary" onClick={closeModal}>
                     Hủy
                 </CButton>
             </CModalFooter>

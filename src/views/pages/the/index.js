@@ -12,6 +12,9 @@ import TheTable from "./Table/TheTable";
 import { Pagination } from 'antd';
 import { getBranches } from "src/services/branchsService";
 import { getRfcards } from "src/services/rfcardsService";
+import ModalDelete from "./Modal/Delete/ModalDelete";
+import ModalEdit from "./Modal/Edit/ModalEdit";
+import ModalAdd from "./Modal/Add/ModalAdd";
 
 const Index = () => {
   const [branches, setBranches] = useState([]);
@@ -68,7 +71,22 @@ const Index = () => {
       return toasters
     }, {})
   })()
-
+  const callToast = (mess) => {
+    setToasts([
+      ...toasts,
+      {
+        position: 'top-right',
+        autohide: true && 5000,
+        closeButton: true,
+        fade: true,
+        show: true,
+        item: undefined,
+        value: 0,
+        error: mess,
+        statusColor: -1,
+      }
+    ])
+  }
   useEffect(() => {
     async function fetchCards() {
       try {
@@ -130,7 +148,7 @@ const Index = () => {
                 rfcards={rfcards}
                 filter={{ filter, setFilter }}
                 statusColor={{ statusColor, setStatusColor }}
-                toasts={{ toasts, setToasts }}
+                toasts={{ callToast }}
                 deleteRow={{ deleteRow, setDeleteRow }}
                 editRow={{ editRow, setEditRow }}
                 page={{ page, setPage }}
@@ -140,6 +158,15 @@ const Index = () => {
           </CCard>
         </CCol>
       </CRow>
+      <ModalAdd
+        add={{ addRow, setAddRow, filter, setRfcards, setTotalpages, callToast }}
+      />
+      <ModalDelete
+        delete={{ deleteRow, setDeleteRow, filter, setTotalpages, callToast }}
+      />
+      <ModalEdit
+        edit={{ editRow, setEditRow, filter, setTotalpages, callToast }}
+      />
       {/* {ModalAddRow({ addRow, setAddRow, })}
       {ModalDeleteRow({ deleteRow, setDeleteRow, })}
       {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
@@ -152,7 +179,7 @@ const Index = () => {
           autohide={true && 3000}
         >
           <CToastHeader>
-            Toast title
+            Thông báo
           </CToastHeader>
           <CToastBody>
             {`This is a toast in positioned toaster number.`}

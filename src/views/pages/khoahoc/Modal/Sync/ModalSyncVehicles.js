@@ -43,37 +43,17 @@ const ModalSyncVehicles = (props) => {
         },
     ];
     const [valueInput, setValueInput] = useState('');
-    const [vehicles, setVehicles] = useState([]);                     // danh sach thiet bi cua phan hieu
+    const [vehicles, setVehicles] = useState([]);                       // danh sach thiet bi cua phan hieu
     const [vehicelsInCourse, setVehiclesInCourse] = useState([]);       // danh sach thiet bi cua khoa hoc mới
     const [vehicelsInCourseOld, setVehiclesInCourseOld] = useState([]); // danh sach thiet bi cua khoa hoc cũ
+    const [page, setPage] = useState(1);
     const closeModal = () => {
         props.sync.setSyncRowVehicles({
             ...props.sync.syncRowVehicles,
             on_off: !props.sync.syncRowVehicles.on_off,
         });
     };
-    const changeSyncRow = (key, value) => {
-        switch (key) {
-            case 'course':
-
-                break;
-            case 'hang':
-
-                break;
-            case 'siso':
-
-                break;
-            case 'branch':
-
-                break;
-
-            default:
-                break;
-        }
-    }
     const changeCheck = (item, value) => {
-        // console.log(item);
-        // console.log(value.target.checked);
         const oldVehicles = [...vehicles];
         const index = oldVehicles.findIndex((x) => x.id === item.id);
         oldVehicles[index].selected = value !== false ? value.target.checked : value;
@@ -82,18 +62,13 @@ const ModalSyncVehicles = (props) => {
     };
     const getVehiclesInCoures = (vehicles) => {
         const result = vehicles.filter((d) => d.selected);
-        // console.log("getVehiclesInCoures result", result);
         return result && result.length > 0 ? result : [];
     };
     const handleOnTableFilterChange = (value) => {
         setValueInput(value.target.value)
     }
     const updateListInCourse = () => {
-        // console.log(vehicelsInCourseOld);
-        const listCu = [...vehicelsInCourseOld]; //["may 1","may 2"]
-        //object destructoring
-        //result = ["may 1","may fk"]
-        //listCu = []
+        const listCu = [...vehicelsInCourseOld];
         async function xoa() {
             listCu.map((item) => {
                 const khong = vehicelsInCourse.some(d => d.id === item.id)
@@ -104,36 +79,10 @@ const ModalSyncVehicles = (props) => {
                             const result = await deleteVehiclesCourse(props.sync.syncRowVehicles.item.id, item.id);
                             // console.log(result);
                             if (result.data.success === true) {
-                                props.sync.setToasts([
-                                    ...props.sync.toasts,
-                                    {
-                                        position: 'top-right',
-                                        autohide: true && 3000,
-                                        closeButton: true,
-                                        fade: true,
-                                        show: true,
-                                        item: undefined,
-                                        value: 0,
-                                        error: `Xóa thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
-                                        statusColor: -1,
-                                    }
-                                ])
+                                props.sync.callToast(`Xóa thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`)
                             }
                         } catch (error) {
-                            props.sync.setToasts([
-                                ...props.sync.toasts,
-                                {
-                                    position: 'top-right',
-                                    autohide: true && 3000,
-                                    closeButton: true,
-                                    fade: true,
-                                    show: true,
-                                    item: undefined,
-                                    value: 0,
-                                    error: `Xóa không thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
-                                    statusColor: -1,
-                                }
-                            ])
+                            props.sync.callToast(`Xóa không thành công thiết bị ${item.plate} của khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`)
                         }
                     }
                     deleteDevice()
@@ -155,36 +104,10 @@ const ModalSyncVehicles = (props) => {
                             const result = await addVehiclesCourse(props.sync.syncRowVehicles.item.id, ob);
                             // console.log(result);
                             if (result.statusText === "OK") {
-                                props.sync.setToasts([
-                                    ...props.sync.toasts,
-                                    {
-                                        position: 'top-right',
-                                        autohide: true && 3000,
-                                        closeButton: true,
-                                        fade: true,
-                                        show: true,
-                                        item: undefined,
-                                        value: 0,
-                                        error: `Thiết bị ${item.plate} đã được gán thành công cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
-                                        statusColor: -1,
-                                    }
-                                ])
+                                props.sync.callToast(`Thiết bị ${item.plate} đã được gán thành công cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`)
                             }
                         } catch (error) {
-                            props.sync.setToasts([
-                                ...props.sync.toasts,
-                                {
-                                    position: 'top-right',
-                                    autohide: true && 3000,
-                                    closeButton: true,
-                                    fade: true,
-                                    show: true,
-                                    item: undefined,
-                                    value: 0,
-                                    error: `Thiết bị ${item.plate} đã được gán cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`,
-                                    statusColor: -1,
-                                }
-                            ])
+                            props.sync.callToast(`Thiết bị ${item.plate} đã được gán cho khóa học ${props.sync.syncRowVehicles.item.ten_khoa_hoc}!`)
                         }
                     }
                     addDevice()
@@ -199,41 +122,42 @@ const ModalSyncVehicles = (props) => {
         chung()
     }
     const getApiVehiclesCourse = () => {
-        // console.log(props.sync.syncRow);
         let vehicles = [];
         let vehiclesInThisCourse = [];
-        async function processGetVehicles() {
+        async function processGetVehicles(page) {
             const ob = {
                 plate: '',
                 branch_id: props.sync.syncRowVehicles.item && props.sync.syncRowVehicles.item.branch_id,
                 customer_id: 0,
                 province_id: 0,
-                page: 1,
+                page: page,
             }
             try {
                 const result = await getVehicles(ob);
                 vehicles = result.data.items;
-                // console.log("vehicles", vehicles);
+                setPage(result.data.total % result.data.size)
             } catch (error) { }
         }
         async function processGetDeviceOfCourse() {
             try {
                 const result = await getVehiclesCourse(props.sync.syncRowVehicles.item.id);
                 vehiclesInThisCourse = result.data;
-                // console.log(result.data);
             } catch (error) { }
         }
         async function process() {
             await processGetVehicles();
+            // for (let index = 1; index <= page; index++) {
+            //     const data = await processGetVehicles(index)
+            //     const newData = [...vehicles, ...data]
+            //     vehicles = newData
+            // }
             await processGetDeviceOfCourse();
-            // console.log(vehiclesInThisCourse.length);
             vehiclesInThisCourse.map((d) => {
                 const index = vehicles.findIndex((vehicle) => vehicle.id === d.vehicle.id);
                 if (index > -1) {
                     vehicles[index].selected = true;
                 }
             });
-            // console.log("vehicles", vehicles);
             setVehicles(vehicles);
             setVehiclesInCourse(getVehiclesInCoures(vehicles));
             setVehiclesInCourseOld(getVehiclesInCoures(vehicles))
@@ -243,13 +167,13 @@ const ModalSyncVehicles = (props) => {
     useEffect(() => {
         getApiVehiclesCourse()
     }, [props.sync.syncRowVehicles && props.sync.syncRowVehicles.item]);
-    const log = (value) => {
-    }
     return (
         <CModal
             show={props.sync.syncRowVehicles && props.sync.syncRowVehicles.on_off}
-            onClose={closeModal} size="xl"
+            onClose={closeModal}
+            size="xl"
             closeOnBackdrop={false}
+            color=""
         >
             <CModalHeader closeButton>
                 <CModalTitle>Chỉ định Khóa tới Xe</CModalTitle>
@@ -269,7 +193,6 @@ const ModalSyncVehicles = (props) => {
                                                 props.sync.syncRowVehicles.item &&
                                                 props.sync.syncRowVehicles.item.ten_khoa_hoc
                                             }
-                                            onChange={(value) => changeSyncRow(value)}
                                             disabled
                                         />
                                     </CCol>
@@ -286,7 +209,6 @@ const ModalSyncVehicles = (props) => {
                                                 props.sync.syncRowVehicles.item &&
                                                 props.sync.syncRowVehicles.item.hang_gplx
                                             }
-                                            onChange={(value) => changeSyncRow(value)}
                                             disabled
                                         />
                                     </CCol>
@@ -303,7 +225,6 @@ const ModalSyncVehicles = (props) => {
                                                 props.sync.syncRowVehicles.item &&
                                                 props.sync.syncRowVehicles.item.so_hoc_sinh
                                             }
-                                            onChange={(value) => changeSyncRow(value)}
                                             disabled
                                         />
                                     </CCol>
@@ -312,7 +233,7 @@ const ModalSyncVehicles = (props) => {
                         </CRow>
                         <CRow>
                             <CCol>
-                                <CFormGroup row>
+                                <CFormGroup row className="mb-0">
                                     <CLabel>Phân hiệu</CLabel>
                                     <CCol>
                                         <CInput
@@ -322,7 +243,6 @@ const ModalSyncVehicles = (props) => {
                                                 props.sync.syncRowVehicles.item &&
                                                 props.sync.syncRowVehicles.item.branch_name
                                             }
-                                            onChange={(value) => changeSyncRow(value)}
                                             disabled
                                         />
                                     </CCol>
@@ -342,9 +262,8 @@ const ModalSyncVehicles = (props) => {
                     </CCardBody>
                 </CCard>
                 <CRow>
-                    <CCol xs="12" lg="8" className="vehicles-table" style={{ height: "500px", overflow: "auto" }}>
+                    <CCol xs="12" lg="8" className="vehicles-table" style={{ maxHeight: "300px", overflow: "auto" }}>
                         <CDataTable
-                            innerRef={(value) => log(value)}
                             items={vehicles}
                             fields={fields}
                             size="sm"

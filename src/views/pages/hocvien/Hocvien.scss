@@ -14,3 +14,56 @@
         }
     }
 }
+
+.hand {
+    img {
+        z-index: 2;
+        pointer-events: none;
+    }
+    .hand-touch {
+        z-index: 1;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #3399ff;
+        &-1 {
+            top: 20px;
+            left: 8px;
+        }
+        &-2 {
+            top: 0px;
+            left: 24px;
+        }
+        &-3 {
+            top: -8px;
+            left: 48px;
+        }
+        &-4 {
+            top: -2px;
+            left: 74px;
+        }
+        &-5 {
+            top: 42px;
+            left: 96px;
+        }
+        &-6 {
+            top: 42px;
+            left: 8px;
+        }
+        &-7 {
+            top: -2px;
+            left: 30px;
+        }
+        &-8 {
+            top: -8px;
+            left: 56px;
+        }
+        &-9 {
+            top: 0px;
+            left: 80px;
+        }
+        &-10 {
+            top: 20px;
+            left: 96px;
+        }
+    }
+}

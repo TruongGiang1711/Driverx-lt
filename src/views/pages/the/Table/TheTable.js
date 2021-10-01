@@ -3,7 +3,7 @@ import {
     CDataTable,
 } from "@coreui/react";
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
-import { getStatus } from "src/views/component/getBadge/GetBadge";
+import { getStatus, getStatusCards } from "src/views/component/getBadge/GetBadge";
 
 const TheTable = (props) => {
     const fields = [
@@ -57,8 +57,8 @@ const TheTable = (props) => {
                 },
                 status: (item, index) => {
                     return (
-                        <td className="text-center">
-                            {getStatus(item.status)}
+                        <td>
+                            {getStatusCards(item.status)}
                             {/* <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
                         {listCard().map((item, index) => {
                           return <Option key={item.id} value={item.id}>{item.name}</Option>

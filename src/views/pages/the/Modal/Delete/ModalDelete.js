@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     CButton,
     CModal,
     CModalBody,
     CModalFooter,
-    CModalHeader,
-    CModalTitle,
     CSpinner,
+    CModalTitle,
+    CModalHeader,
+    CToaster,
+    CToast,
+    CToastHeader,
+    CToastBody,
 } from '@coreui/react'
 
 const ModalDelete = (props) => {
+    console.log(props);
     const closeModal = () => {
         props.delete.setDeleteRow({ ...props.delete.deleteRow, on_off: false })
     }
@@ -21,15 +26,9 @@ const ModalDelete = (props) => {
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Xóa học viên</CModalTitle>
+                <CModalTitle>Xóa thẻ</CModalTitle>
             </CModalHeader>
-            <CModalBody>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                culpa qui officia deserunt mollit anim id est laborum.
-            </CModalBody>
+            <CModalBody>Bạn có muốn xóa thẻ {props.delete.deleteRow.item && props.delete.deleteRow.item.card_name}</CModalBody>
             <CModalFooter>
                 <CButton color="danger" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
                     {props.delete.deleteRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}

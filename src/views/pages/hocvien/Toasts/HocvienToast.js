@@ -6,7 +6,7 @@ import {
 } from "@coreui/react";
 import { getColor } from "src/views/component/getBadge/GetBadge";
 
-const KhoahocToast = (props) => {
+const HocvienToast = (props) => {
     // console.log(props);
     return Object.keys(props).map((toasterKey) => (
         <CToaster
@@ -38,4 +38,4 @@ const KhoahocToast = (props) => {
     ))
 }
 
-export default KhoahocToast;
+export default HocvienToast;

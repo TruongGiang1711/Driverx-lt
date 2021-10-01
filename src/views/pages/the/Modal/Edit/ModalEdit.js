@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     CButton,
     CModal,
@@ -7,17 +7,20 @@ import {
     CModalHeader,
     CModalTitle,
     CSpinner,
+    CToast,
+    CToastHeader,
+    CToastBody,
 } from '@coreui/react'
 
-const ModalAdd = (props) => {
+const ModalEdit = (props) => {
     const closeModal = () => {
-        props.add.setAddRow({ ...props.add.addRow, on_off: false, })
+        props.edit.setEditRow({ ...props.edit.editRow, on_off: false })
     }
     return (
         <CModal
-            show={props.add.addRow.on_off}
+            show={props.edit.editRow.on_off}
             onClose={closeModal}
-            color="primary"
+            color=""
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
@@ -31,16 +34,16 @@ const ModalAdd = (props) => {
                 culpa qui officia deserunt mollit anim id est laborum.
             </CModalBody>
             <CModalFooter>
-                <CButton color="primary" onClick={() => props.add.setAddRow(!props.add.addRow)}>
-                    {props.add.addRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
-                    Do Something
+                <CButton color="info" onClick={() => props.setAddRow(!props.addRow)}>
+                    {props.edit.editRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
+                    Cập nhật
                 </CButton>
-                <CButton color="primary" onClick={closeModal}>
-                    Cancel
+                <CButton color="secondary" onClick={closeModal}>
+                    Hủy
                 </CButton>
             </CModalFooter>
         </CModal>
     )
 }
 
-export default ModalAdd
+export default ModalEdit

@@ -103,7 +103,10 @@ const HocvienTable = (props) => {
                 fingerprint_and_face_count: (item, index) => {
                     return (
                         <td>
-                            {item.fingerprint_count} <span className="pr-3 coreui-icon_inline"><CIcon name={'cil-fingerprint'} /></span>
+                            {item.fingerprint_count}&nbsp;
+                            <span className="pr-3 coreui-icon_inline" role="button" onClick={() => props.fpRow.setFPRow({ ...props.fpRow.fpRow, item: item, on_off: true })}>
+                                <CIcon name={'cil-fingerprint'} />
+                            </span>
                             {item.face_count} <span className="coreui-icon_inline"><CIcon name={'cil-face'} /></span>
                         </td>
                     )

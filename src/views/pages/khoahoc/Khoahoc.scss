@@ -73,7 +73,7 @@ label.custom-file-label {
 }
 .vehicles-table {
     .table-responsive {
-        columns: 2;
+        columns: 4;
         table {
             display: contents;
             thead {
@@ -82,10 +82,10 @@ label.custom-file-label {
             tbody {
                 tr {
                     td {
-                        width: 100%;
+                        width: 10%;
                         &.col-mid {
                             display: inline-block;
-                            width: 17.5rem;
+                            width: 100%;
                         }
                     }
                 }

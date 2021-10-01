@@ -75,7 +75,7 @@ const ModalInfoLearn = (props) => {
         <CModal
             show={props.info.infoLearnRow.on_off}
             onClose={closeModal}
-            color="warning"
+            color=""
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
@@ -114,7 +114,7 @@ const ModalInfoLearn = (props) => {
                 </CTabs>
             </CModalBody>
             <CModalFooter>
-                <CButton color="warning" onClick={closeModal}>
+                <CButton color="secondary" onClick={closeModal}>
                     Đóng
                 </CButton>
             </CModalFooter>

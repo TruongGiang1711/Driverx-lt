@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
 import {
     CButton,
-    CCol,
-    CFormGroup,
     CModal,
     CModalBody,
     CModalFooter,
     CModalHeader,
     CModalTitle,
+    CFormGroup,
+    CCol,
+    CInputFile,
     CLabel,
     CSpinner,
-    CInputFile,
 } from '@coreui/react'
-import { addCourse, getCourses } from 'src/services/coursesService'
+import { addRfcards, getRfcards } from 'src/services/rfcardsService'
 
 const ModalAdd = (props) => {
     const onChangeFile = (value) => {
@@ -32,23 +32,23 @@ const ModalAdd = (props) => {
             formData.append("file", props.add.addRow.file && props.add.addRow.file[0]);
             formData.append("branch_id", props.add.addRow.branch_id);
             try {
-                const add = await addCourse(formData);
+                const add = await addRfcards(formData);
                 if (add.statusText === "OK") {
                     async function fetchCourses() {
                         try {
-                            const courses = await getCourses(props.add.filter);
+                            const courses = await getRfcards(props.add.filter);
                             // console.log(courses);
-                            props.add.setCourses(courses.data.items);
+                            props.add.setRfcards(courses.data.items);
                             props.add.setTotalpages(courses.data.total)
                         } catch (error) {
                         }
                     }
                     fetchCourses();
-                    props.add.callToast(`Thêm khóa thành công!`)
+                    props.add.callToast(`Thêm thẻ thành công!`)
                     props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.add.callToast(`Thêm khóa không thành công!`)
+                props.add.callToast(`Thêm thẻ không thành công!`)
                 props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: true })
             }
         }
@@ -66,7 +66,7 @@ const ModalAdd = (props) => {
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Thêm khóa</CModalTitle>
+                <CModalTitle>Thêm thẻ</CModalTitle>
             </CModalHeader>
             <CModalBody>
                 <CFormGroup>
@@ -91,4 +91,4 @@ const ModalAdd = (props) => {
     )
 }
 
-export default ModalAdd;
+export default ModalAdd

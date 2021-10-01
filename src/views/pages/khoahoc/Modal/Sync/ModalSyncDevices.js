@@ -107,36 +107,10 @@ const ModalSyncDevices = (props) => {
                             const result = await deleteDevicesCourse(props.sync.syncRowDevice.item.id, item.id);
                             // console.log(result);
                             if (result.data.success === true) {
-                                props.sync.setToasts([
-                                    ...props.sync.toasts,
-                                    {
-                                        position: 'top-right',
-                                        autohide: true && 3000,
-                                        closeButton: true,
-                                        fade: true,
-                                        show: true,
-                                        item: undefined,
-                                        value: 0,
-                                        error: `Xóa thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`,
-                                        statusColor: -1,
-                                    }
-                                ])
+                                props.sync.callToast(`Xóa thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`)
                             }
                         } catch (error) {
-                            props.sync.setToasts([
-                                ...props.sync.toasts,
-                                {
-                                    position: 'top-right',
-                                    autohide: true && 3000,
-                                    closeButton: true,
-                                    fade: true,
-                                    show: true,
-                                    item: undefined,
-                                    value: 0,
-                                    error: `Xóa không thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`,
-                                    statusColor: -1,
-                                }
-                            ])
+                            props.sync.callToast(`Xóa không thành công thiết bị ${item.name} của khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`)
                         }
                     }
                     deleteDevice()
@@ -158,36 +132,10 @@ const ModalSyncDevices = (props) => {
                             const result = await addDevicesCourse(props.sync.syncRowDevice.item.id, ob);
                             // console.log(result);
                             if (result.statusText === "OK") {
-                                props.sync.setToasts([
-                                    ...props.sync.toasts,
-                                    {
-                                        position: 'top-right',
-                                        autohide: true && 3000,
-                                        closeButton: true,
-                                        fade: true,
-                                        show: true,
-                                        item: undefined,
-                                        value: 0,
-                                        error: `Thiết bị ${item.name} đã được gán thành công cho khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`,
-                                        statusColor: -1,
-                                    }
-                                ])
+                                props.sync.callToast(`Thiết bị ${item.name} đã được gán thành công cho khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`)
                             }
                         } catch (error) {
-                            props.sync.setToasts([
-                                ...props.sync.toasts,
-                                {
-                                    position: 'top-right',
-                                    autohide: true && 3000,
-                                    closeButton: true,
-                                    fade: true,
-                                    show: true,
-                                    item: undefined,
-                                    value: 0,
-                                    error: `Thiết bị ${item.name} đã được gán cho khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`,
-                                    statusColor: -1,
-                                }
-                            ])
+                            props.sync.callToast(`Thiết bị ${item.name} đã được gán cho khóa học ${props.sync.syncRowDevice.item.ten_khoa_hoc}!`)
                         }
                     }
                     addDevice()
@@ -252,8 +200,10 @@ const ModalSyncDevices = (props) => {
     return (
         <CModal
             show={props.sync.syncRowDevice && props.sync.syncRowDevice.on_off}
-            onClose={closeModal} size="lg"
+            onClose={closeModal}
+            size="lg"
             closeOnBackdrop={false}
+            color=""
         >
             <CModalHeader closeButton>
                 <CModalTitle>Chỉ định Khóa tới Máy điểm danh</CModalTitle>
@@ -297,7 +247,7 @@ const ModalSyncDevices = (props) => {
                                 </CFormGroup>
                             </CCol>
                             <CCol xs="12" md="3">
-                                <CFormGroup row>
+                                <CFormGroup row className="mb-0">
                                     <CLabel>Sĩ số</CLabel>
                                     <CCol>
                                         <CInput

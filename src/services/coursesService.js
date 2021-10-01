@@ -1,10 +1,10 @@
 import http from "./httpService";
 
-export async function getCourses(params) {                            // danh sách khóa theo filter
+export async function getCourses(params) {                                              // danh sách khóa theo filter
   const apiEndPointGetCourses = "/courses";
   return http.get(apiEndPointGetCourses, { params });
 }
-export async function addCourse(params) {                           // thêm khóa học
+export async function addCourse(params) {                                               // thêm khóa học
   const apiEndPointAddCourses = "/courses";
   return http.post(apiEndPointAddCourses, params, {
     headers: {
@@ -44,7 +44,7 @@ export async function addVehiclesCourse(course_id, params) {                    
   const apiEndPointAddVehiclesCourse = `courses/${course_id}/vehicles`;
   return http.post(apiEndPointAddVehiclesCourse, { ...params });
 }
-export async function deleteVehiclesCourse(course_id, vehicles_id) {                        // xóa xe của khóa
+export async function deleteVehiclesCourse(course_id, vehicles_id) {                     // xóa xe của khóa
   const apiEndPointDeleteVehiclesCourse = `courses/${course_id}/vehicles/${vehicles_id}`;
   return http.delete(apiEndPointDeleteVehiclesCourse);
 }

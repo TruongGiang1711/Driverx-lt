@@ -18,6 +18,8 @@ import { Pagination } from 'antd';
 import { getTrainees } from "src/services/traineesService";
 import { getBranches } from "src/services/branchsService";
 import { getCoursesID } from "src/services/coursesService";
+import ModalFP from "./Modal/FP/ModalFP";
+import HocvienToast from "./Toasts/HocvienToast";
 
 const Index = () => {
   const queryPage = useLocation().search.match(/course_id=([0-9]+)/, '')
@@ -49,6 +51,12 @@ const Index = () => {
     disable: false,
     loading: false,
   });
+  const [fpRow, setFPRow] = useState({
+    item: undefined,
+    on_off: false,
+    disable: false,
+    loading: false,
+  });
   const [infoLearnRow, setInfoLearnRow] = useState({
     item: undefined,
     on_off: false,
@@ -72,6 +80,22 @@ const Index = () => {
       return toasters
     }, {})
   })()
+  const callToast = (mess, status) => {
+    setToasts([
+      ...toasts,
+      {
+        position: 'top-right',
+        autohide: true && 5000,
+        closeButton: true,
+        fade: true,
+        show: true,
+        item: undefined,
+        value: 0,
+        error: mess,
+        statusColor: status ? status : -1,
+      }
+    ])
+  }
   const [filter, setFilter] = useState({
     name: '',
     id_card: '',
@@ -152,10 +176,11 @@ const Index = () => {
                 filter={{ filter, setFilter }}
                 deleteRow={{ deleteRow, setDeleteRow }}
                 editRow={{ editRow, setEditRow }}
+                fpRow={{ fpRow, setFPRow }}
                 info={{ infoLearnRow, setInfoLearnRow }}
                 page={{ page, setPage }}
                 statusColor={{ statusColor, setStatusColor }}
-                toasts={{ toasts, setToasts }}
+                toasts={{ callToast }}
               />
             </CCardBody>
             <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
@@ -163,20 +188,21 @@ const Index = () => {
         </CCol>
       </CRow>
       <ModalAdd
-        add={{ addRow, setAddRow, filter, setTrainees, setTotalpages, toasts, setToasts }}
+        add={{ addRow, setAddRow, filter, setTrainees, setTotalpages, callToast }}
       />
       <ModalDelete
-        delete={{ deleteRow, setDeleteRow, filter, setTrainees, setTotalpages, toasts, setToasts }}
+        delete={{ deleteRow, setDeleteRow, filter, setTrainees, setTotalpages, callToast }}
       />
       <ModalEdit
-        edit={{ editRow, setEditRow, filter, setTrainees, setTotalpages, toasts, setToasts }}
+        edit={{ editRow, setEditRow, filter, setTrainees, setTotalpages, callToast }}
+      />
+      <ModalFP
+        fp={{ fpRow, setFPRow, filter, setTrainees, setTotalpages, callToast }}
       />
       <ModalInfoLearn
         info={{ infoLearnRow, setInfoLearnRow }}
       />
-      {/* {ModalAddRow({ addRow, setAddRow, })}
-      {ModalDeleteRow({ deleteRow, setDeleteRow, })}
-      {ModalData_synchronizingRow({ syncRow, setSyncRow, })} */}
+      {HocvienToast(toasters)}
     </>
   );
 };

@@ -115,7 +115,7 @@ export const Toaster = (props) => {
             autohide={true && 3000}
         >
             <CToastHeader>
-                Toast title
+                Thông báo
             </CToastHeader>
             <CToastBody>
                 {`This is a toast in positioned toaster number.`}
