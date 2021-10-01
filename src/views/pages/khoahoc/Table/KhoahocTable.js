@@ -11,7 +11,7 @@ import Moment from 'react-moment';
 import { listStatus, getDataFake } from "../KhoahocData";
 import { DeleteTwoTone } from '@ant-design/icons';
 import { Select } from 'antd';
-import { getStatus, getColor, getColorCard_status, getCard_status, getData_synchronizing_status } from "../../../component/getBadge/GetBadge";
+import { getStatus, getColor, getColorCard_status, getCard_status } from "../../../component/getBadge/GetBadge";
 import { updateCourse } from "src/services/coursesService";
 const { Option } = Select;
 
@@ -45,38 +45,13 @@ const KhoahocTable = (props) => {
     async function updateStatusCourse() {
       try {
         const update = await updateCourse(item.id, value);
+        // console.log(update);
         if (update.statusText === "OK") {
           props.statusColor.setStatusColor(update.data.status)
-          props.toasts.setToasts([
-            ...props.toasts.toasts,
-            {
-              position: 'top-right',
-              autohide: true && 5000,
-              closeButton: true,
-              fade: true,
-              show: true,
-              item: item,
-              value: value,
-              error: `Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`,
-              statusColor: update.data.status,
-            }
-          ])
+          props.toasts.callToast(`Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`, update.data.status)
         }
       } catch (error) {
-        props.toasts.setToasts([
-          ...props.toasts.toasts,
-          {
-            position: 'top-right',
-            autohide: true && 5000,
-            closeButton: true,
-            fade: true,
-            show: true,
-            item: item,
-            value: value,
-            error: `Cập nhật trạng thái ${getStatus(item.id)} cho khóa ${item.ten_khoa_hoc} không thành công!`,
-            statusColor: -1,
-          }
-        ])
+        props.toasts.callToast(`Cập nhật trạng thái ${getStatus(item.id)} cho khóa ${item.ten_khoa_hoc} không thành công!`)
       }
     }
     updateStatusCourse()
@@ -126,7 +101,7 @@ const KhoahocTable = (props) => {
         },
         status: (item, index) => {
           return (
-            <td className="text-center courses-status">
+            <td className="courses-status">
               <Select defaultValue={getStatus(item.status)} className={getColor(item.status)} style={{ width: 120 }} onChange={(value) => changeStatus(item, value)}>
                 {listStatus().map((item, index) => {
                   return <Option key={item.id} value={item.id}>{item.name}</Option>
@@ -170,9 +145,9 @@ const KhoahocTable = (props) => {
         },
         data_synchronizing: (item, index) => {
           return (
-            <td className="text-center">
+            <td>
               <span className="pr-3" role="button">
-                <CBadge color={getData_synchronizing_status(getDataFake(index).data_synchronizing)} onClick={() => props.getDataCourseDevices(item)}>
+                <CBadge color={"success"} onClick={() => props.getDataCourseDevices(item)}>
                   <CIcon name={'cil-screen-smartphone'} />
                 </CBadge>
               </span>

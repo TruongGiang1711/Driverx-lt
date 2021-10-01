@@ -34,7 +34,6 @@ const ModalAdd = (props) => {
             try {
                 const add = await addCourse(formData);
                 if (add.statusText === "OK") {
-                    props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
                     async function fetchCourses() {
                         try {
                             const courses = await getCourses(props.add.filter);
@@ -45,37 +44,12 @@ const ModalAdd = (props) => {
                         }
                     }
                     fetchCourses();
-                    props.add.setToasts([
-                        ...props.add.toasts,
-                        {
-                            position: 'top-right',
-                            autohide: true && 5000,
-                            closeButton: true,
-                            fade: true,
-                            show: true,
-                            item: undefined,
-                            value: 0,
-                            error: `Thêm khóa thành công!`,
-                            statusColor: -1,
-                        }
-                    ])
+                    props.add.callToast(`Thêm khóa thành công!`)
+                    props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
                 }
             } catch (error) {
+                props.add.callToast(`Thêm khóa không thành công!`)
                 props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: true })
-                props.add.setToasts([
-                    ...props.add.toasts,
-                    {
-                        position: 'top-right',
-                        autohide: true && 5000,
-                        closeButton: true,
-                        fade: true,
-                        show: true,
-                        item: undefined,
-                        value: 0,
-                        error: `Thêm khóa không thành công!`,
-                        statusColor: -1,
-                    }
-                ])
             }
         }
         addCourseXML()

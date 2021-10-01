@@ -75,7 +75,7 @@ const ModalInfoLearn = (props) => {
         <CModal
             show={props.info.infoLearnRow.on_off}
             onClose={closeModal}
-            color="warning"
+            color=""
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>

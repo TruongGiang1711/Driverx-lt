@@ -57,7 +57,7 @@ const TheTable = (props) => {
                 },
                 status: (item, index) => {
                     return (
-                        <td className="text-center">
+                        <td>
                             {getStatusCards(item.status)}
                             {/* <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
                         {listCard().map((item, index) => {

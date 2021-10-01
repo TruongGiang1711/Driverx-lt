@@ -224,7 +224,7 @@ const HocvienFilter = (props) => {
             </div> */}
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.branch_id === 0 ? true : false} onClick={() => props.addRow.setAddRow(!props.addRow.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.course_id === 0 ? true : false} onClick={() => props.addRow.setAddRow(!props.addRow.addRow)}>
                     Gán thẻ
                 </CButton>
             </div>

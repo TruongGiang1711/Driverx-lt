@@ -51,6 +51,7 @@ const Index = () => {
     const [syncRowVehicles, setSyncRowVehicles] = useState({
         item: undefined,
         on_off: false,
+        page: 1
     });
     const [toasts, setToasts] = useState([
         {
@@ -70,6 +71,22 @@ const Index = () => {
             return toasters
         }, {})
     })()
+    const callToast = (mess, status) => {
+        setToasts([
+            ...toasts,
+            {
+                position: 'top-right',
+                autohide: true && 5000,
+                closeButton: true,
+                fade: true,
+                show: true,
+                item: undefined,
+                value: 0,
+                error: mess,
+                statusColor: status ? status : -1,
+            }
+        ])
+    }
     const [filter, setFilter] = useState({
         province_id: 0,
         customer_id: 0,
@@ -155,7 +172,7 @@ const Index = () => {
                                 courses={courses}
                                 filter={{ filter, setFilter }}
                                 statusColor={{ statusColor, setStatusColor }}
-                                toasts={{ toasts, setToasts }}
+                                toasts={{ callToast }}
                                 devices={{ devices, setDevices }}
                                 devicesCourse={{ devicesCourse, setDevicesCourse }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
@@ -169,16 +186,16 @@ const Index = () => {
                 </CCol>
             </CRow>
             <ModalAdd
-                add={{ addRow, setAddRow, filter, setCourses, setTotalpages, toasts, setToasts }}
+                add={{ addRow, setAddRow, filter, setCourses, setTotalpages, callToast }}
             />
             <ModalDelete
-                delete={{ deleteRow, setDeleteRow, filter, setCourses, setTotalpages, toasts, setToasts }}
+                delete={{ deleteRow, setDeleteRow, filter, setCourses, setTotalpages, callToast }}
             />
             <ModalSyncDevices
-                sync={{ syncRowDevice, setSyncRowDevice, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
+                sync={{ syncRowDevice, setSyncRowDevice, devices, devicesCourse, setDevicesCourse, callToast }}
             />
             <ModalSyncVehicles
-                sync={{ syncRowVehicles, setSyncRowVehicles, devices, devicesCourse, setDevicesCourse, toasts, setToasts }}
+                sync={{ syncRowVehicles, setSyncRowVehicles, devices, devicesCourse, setDevicesCourse, callToast }}
             />
             {KhoahocToast(toasters)}
         </>

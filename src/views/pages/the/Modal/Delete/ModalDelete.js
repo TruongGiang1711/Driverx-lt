@@ -28,7 +28,7 @@ const ModalDelete = (props) => {
             <CModalHeader closeButton>
                 <CModalTitle>Xóa thẻ</CModalTitle>
             </CModalHeader>
-            <CModalBody>Bạn có muốn xóa khóa học { }</CModalBody>
+            <CModalBody>Bạn có muốn xóa thẻ {props.delete.deleteRow.item && props.delete.deleteRow.item.card_name}</CModalBody>
             <CModalFooter>
                 <CButton color="danger" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
                     {props.delete.deleteRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}

@@ -21,7 +21,6 @@ const ModalDelete = (props) => {
             try {
                 const del = await deleteCourse(id);
                 if (del.data.success === true) {
-                    props.delete.setDeleteRow({ ...props.delete.deleteRow, delData: del.data.success, on_off: false, loading: false })
                     async function fetchCourses() {
                         try {
                             const courses = await getCourses(props.delete.filter);
@@ -32,36 +31,12 @@ const ModalDelete = (props) => {
                         }
                     }
                     fetchCourses();
-                    props.delete.setToasts([
-                        ...props.delete.toasts,
-                        {
-                            position: 'top-right',
-                            autohide: true && 5000,
-                            closeButton: true,
-                            fade: true,
-                            show: true,
-                            item: undefined,
-                            value: 0,
-                            error: `Xóa thành công khóa học ${props.delete.deleteRow.item.ten_khoa_hoc}!`,
-                            statusColor: -1,
-                        }
-                    ])
+                    props.delete.callToast(`Xóa thành công khóa học ${props.delete.deleteRow.item.ten_khoa_hoc}!`)
+                    props.delete.setDeleteRow({ ...props.delete.deleteRow, delData: del.data.success, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.delete.setToasts([
-                    ...props.delete.toasts,
-                    {
-                        position: 'top-right',
-                        autohide: true && 5000,
-                        closeButton: true,
-                        fade: true,
-                        show: true,
-                        item: undefined,
-                        value: 0,
-                        error: `Khóa học ${props.delete.deleteRow.item.ten_khoa_hoc} đã được bắt đầu hoặc thẻ được chỉ định cho khóa học!`,
-                        statusColor: -1,
-                    }
-                ])
+                props.delete.callToast(`Khóa học ${props.delete.deleteRow.item.ten_khoa_hoc} đã được bắt đầu hoặc thẻ được chỉ định cho khóa học!`)
+                props.delete.setDeleteRow({ ...props.delete.deleteRow, disable: false, loading: false })
             }
         }
         deleteCourseID()
