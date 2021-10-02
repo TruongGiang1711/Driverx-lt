@@ -7,6 +7,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { Input, Select } from 'antd';
 import { listCard } from "../TheData";
+import { useEffect } from "react";
 const { Option } = Select;
 const { Search } = Input;
 
@@ -22,6 +23,7 @@ const TheFilter = (props) => {
                 break;
             case 'branch':
                 props.filter.setFilter({ ...props.filter.filter, branch_id: value })
+                props.addRow.setAddRow({ ...props.addRow.addRow, branch_id: value })
                 break;
             case 'status':
                 props.filter.setFilter({ ...props.filter.filter, status: value })

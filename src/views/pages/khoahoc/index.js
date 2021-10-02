@@ -83,7 +83,7 @@ const Index = () => {
                 item: undefined,
                 value: 0,
                 error: mess,
-                statusColor: status ? status : -1,
+                statusColor: status,
             }
         ])
     }
@@ -173,10 +173,10 @@ const Index = () => {
                                 filter={{ filter, setFilter }}
                                 statusColor={{ statusColor, setStatusColor }}
                                 toasts={{ callToast }}
-                                devices={{ devices, setDevices }}
-                                devicesCourse={{ devicesCourse, setDevicesCourse }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
                                 page={{ page, setPage }}
+                                devices={{ devices, setDevices }}
+                                devicesCourse={{ devicesCourse, setDevicesCourse }}
                                 getDataCourseDevices={getDataCourseDevices}
                                 getDataCourseVehicles={getDataCourseVehicles}
                             />

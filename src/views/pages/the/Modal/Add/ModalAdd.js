@@ -27,32 +27,33 @@ const ModalAdd = (props) => {
     }
     const onAddFileXML = () => {
         props.add.setAddRow({ ...props.add.addRow, disable: true, loading: true })
-        async function addCourseXML() {
+        async function add() {
             const formData = new FormData();
             formData.append("file", props.add.addRow.file && props.add.addRow.file[0]);
             formData.append("branch_id", props.add.addRow.branch_id);
             try {
                 const add = await addRfcards(formData);
+                console.log(add);
                 if (add.statusText === "OK") {
-                    async function fetchCourses() {
+                    async function fetchRfcards() {
                         try {
-                            const courses = await getRfcards(props.add.filter);
-                            // console.log(courses);
-                            props.add.setRfcards(courses.data.items);
-                            props.add.setTotalpages(courses.data.total)
+                            const cards = await getRfcards(props.add.filter);
+                            // console.log(cards);
+                            props.add.setRfcards(cards.data.items);
+                            props.add.setTotalpages(cards.data.total)
                         } catch (error) {
                         }
                     }
-                    fetchCourses();
-                    props.add.callToast(`Thêm thẻ thành công!`)
+                    fetchRfcards();
+                    props.add.callToast(`Thêm thẻ thành công!`, 2)
                     props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.add.callToast(`Thêm thẻ không thành công!`)
+                props.add.callToast(`Thêm thẻ không thành công!`, 3)
                 props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: true })
             }
         }
-        addCourseXML()
+        add()
     }
     useEffect(() => {
         if (props.add.addRow.nameFile === undefined)
@@ -73,7 +74,7 @@ const ModalAdd = (props) => {
                     <CCol>
                         <CInputFile custom id="custom-file-input" onChange={(value) => onChangeFile(value)} disabled={props.add.addRow.loading ? true : false} />
                         <CLabel htmlFor="custom-file-input" variant="custom-file">
-                            {props.add.addRow.nameFile ? props.add.addRow.nameFile : "Chọn file XML"}
+                            {props.add.addRow.nameFile ? props.add.addRow.nameFile : "Chọn file"}
                         </CLabel>
                     </CCol>
                 </CFormGroup>

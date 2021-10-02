@@ -9,7 +9,6 @@ import {
 } from "@coreui/react";
 import HocvienFilter from "./Filter/HocvienFilter";
 import HocvienTable from "./Table/HocvienTable";
-import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
 import ModalEdit from "./Modal/Edit/ModalEdit";
 import ModalInfoLearn from "./Modal/InfoLearn/ModalInfoLearn";
@@ -29,15 +28,6 @@ const Index = () => {
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
   const [statusColor, setStatusColor] = useState(0);
-  const [addRow, setAddRow] = useState({
-    branch_id: 0,
-    file: undefined,
-    nameFile: '',
-    on_off: false,
-    disable: false,
-    loading: false,
-    hasData: '',
-  });
   const [deleteRow, setDeleteRow] = useState({
     item: undefined,
     on_off: false,
@@ -92,7 +82,7 @@ const Index = () => {
         item: undefined,
         value: 0,
         error: mess,
-        statusColor: status ? status : -1,
+        statusColor: status,
       }
     ])
   }
@@ -164,12 +154,12 @@ const Index = () => {
             <CCardBody>
               <HocvienFilter
                 filter={{ filter, setFilter }}
-                addRow={{ addRow, setAddRow }}
                 trainees={{ trainees, setTrainees }}
                 totalpages={{ totalpages, setTotalpages }}
                 page={{ page, setPage }}
                 courseID={courseID}
                 branches={branches}
+                toasts={{ callToast }}
               />
               <HocvienTable
                 trainees={trainees}
@@ -187,9 +177,6 @@ const Index = () => {
           </CCard>
         </CCol>
       </CRow>
-      <ModalAdd
-        add={{ addRow, setAddRow, filter, setTrainees, setTotalpages, callToast }}
-      />
       <ModalDelete
         delete={{ deleteRow, setDeleteRow, filter, setTrainees, setTotalpages, callToast }}
       />

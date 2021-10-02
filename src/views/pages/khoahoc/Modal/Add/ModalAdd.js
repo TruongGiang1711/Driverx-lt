@@ -44,11 +44,11 @@ const ModalAdd = (props) => {
                         }
                     }
                     fetchCourses();
-                    props.add.callToast(`Thêm khóa thành công!`)
+                    props.add.callToast(`Thêm khóa thành công!`, 2)
                     props.add.setAddRow({ ...props.add.addRow, hasData: add.statusText, nameFile: undefined, file: undefined, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.add.callToast(`Thêm khóa không thành công!`)
+                props.add.callToast(`Thêm khóa không thành công!`, 3)
                 props.add.setAddRow({ ...props.add.addRow, nameFile: undefined, on_off: true })
             }
         }
@@ -73,7 +73,7 @@ const ModalAdd = (props) => {
                     <CCol>
                         <CInputFile custom id="custom-file-input" onChange={(value) => onChangeFile(value)} disabled={props.add.addRow.loading ? true : false} />
                         <CLabel htmlFor="custom-file-input" variant="custom-file">
-                            {props.add.addRow.nameFile ? props.add.addRow.nameFile : "Chọn file XML"}
+                            {props.add.addRow.nameFile ? props.add.addRow.nameFile : "Chọn file"}
                         </CLabel>
                     </CCol>
                 </CFormGroup>

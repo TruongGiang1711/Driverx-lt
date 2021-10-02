@@ -14,49 +14,20 @@ import {
     CFormGroup,
     CLabel,
     CInput,
-    CDataTable,
-    CInputCheckbox,
 } from '@coreui/react'
 import { getDevicesCourse } from 'src/services/coursesService';
 import hand from './../../../../../assets/hand.png';
-import { deleteFingerprintsTrainees } from 'src/services/traineesService';
+import { deleteFingerprintsTrainees, getFingerprint } from 'src/services/traineesService';
+import TableFP from './Table/TableFP';
 
 const ModalFP = (props) => {
     // console.log(props);
     const [deviesInCourse, setDeviesInCourse] = useState([]); // danh sach thiet bi cua khoa hoc
     const [disabled, setDisabled] = useState(true);
     const [name, setName] = useState('Xóa');
-    const fields = [
-        {
-            key: "stt",
-            label: "STT",
-        },
-        {
-            key: "name",
-            label: "Tên máy",
-        },
-        {
-            key: "manufacture",
-            label: "Thiết bị",
-        },
-        {
-            key: "serial",
-            label: "Serial",
-        },
-        {
-            key: "status",
-            label: "Trạng thái",
-        },
-        {
-            key: "checkbox_row",
-            label: "",
-        },
-    ];
     const closeModal = () => {
         props.fp.setFPRow({ ...props.fp.fpRow, on_off: false })
     }
-    const changeCheck = (item, value) => {
-    };
     const getApiDevicesCourse = () => {
         async function processGetDeviceOfCourse() {
             try {
@@ -70,9 +41,6 @@ const ModalFP = (props) => {
         }
         process();
     }
-    useEffect(() => {
-        getApiDevicesCourse()
-    }, [props.fp.fpRow && props.fp.fpRow.item]);
     const hand_touch = (value) => {
         const hand_list = [];
         if (value <= 5) {
@@ -87,6 +55,30 @@ const ModalFP = (props) => {
             }
             return hand_list;
         }
+    }
+    const getFingerprintCount = (index) => {
+        // console.log(index);
+        async function deleteFingerprint() {
+            const trainee_id = props.fp.fpRow && props.fp.fpRow.item.id
+            const ob = {
+                command: "PROMPT_ENROLL",
+                options: {
+                    trainee_id: trainee_id,
+                    device_id: 8,
+                    finger_index: index
+                }
+            }
+            try {
+                const result = await getFingerprint(ob);
+                // console.log(result);
+                // if (result.data.success === true) {
+                //     props.fp.callToast(``)
+                // }
+            } catch (error) {
+                // props.fp.callToast(``)
+            }
+        }
+        deleteFingerprint();
     }
     const deleteFingerprintCount = (index) => {
         // console.log(index);
@@ -113,6 +105,9 @@ const ModalFP = (props) => {
             setName('Xóa')
         }
     }
+    useEffect(() => {
+        getApiDevicesCourse()
+    }, [props.fp.fpRow && props.fp.fpRow.item]);
     return (
         <CModal
             show={props.fp.fpRow.on_off}
@@ -224,67 +219,8 @@ const ModalFP = (props) => {
                 </CRow>
                 <CRow>
                     <CCol>
-                        <CDataTable
-                            items={deviesInCourse}
-                            fields={fields}
-                            size="sm"
-                            border
-                            scopedSlots={{
-                                stt: (item, index) => {
-                                    return (
-                                        <td>
-                                            {/* {index + 1 + (page - 1) * 50} */}
-                                            {index + 1}
-                                        </td>
-                                    );
-                                },
-                                name: (item, index) => {
-                                    return (
-                                        <td>
-                                            {item.device.name}
-                                        </td>
-                                    );
-                                },
-                                manufacture: (item) => {
-                                    return (
-                                        <td>
-                                            {item.device.manufacture}
-                                        </td>
-                                    )
-                                },
-                                serial: (item, index) => {
-                                    return (
-                                        <td>
-                                            {item.device.serial_no}
-                                        </td>
-                                    );
-                                },
-                                status: (item, index) => {
-                                    return (
-                                        <td>
-                                            {item.device.status}
-                                        </td>
-                                    );
-                                },
-                                checkbox_row: (item, index) => {
-                                    return (
-                                        <td className="text-center">
-                                            <span role="button">
-                                                <CFormGroup variant="checkbox" className="checkbox">
-                                                    <CInputCheckbox
-                                                        type="checkbox"
-                                                        id={index}
-                                                        name={item.device.name}
-                                                        onChange={(value) => changeCheck(item, value)}
-                                                        checked={item.selected || false}
-                                                    />
-                                                </CFormGroup>
-                                                {/* <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: true })} /> */}
-                                            </span>
-                                        </td>
-                                    );
-                                },
-                            }}
+                        <TableFP
+                            deviesInCourse={deviesInCourse}
                         />
                     </CCol>
                 </CRow>

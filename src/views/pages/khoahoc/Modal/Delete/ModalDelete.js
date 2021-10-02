@@ -31,11 +31,11 @@ const ModalDelete = (props) => {
                         }
                     }
                     fetchCourses();
-                    props.delete.callToast(`Xóa thành công khóa học ${props.delete.deleteRow.item.ten_khoa_hoc}!`)
+                    props.delete.callToast(`Xóa thành công khóa học ${props.delete.deleteRow.item.ten_khoa_hoc}!`, 2)
                     props.delete.setDeleteRow({ ...props.delete.deleteRow, delData: del.data.success, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.delete.callToast(`Khóa học ${props.delete.deleteRow.item.ten_khoa_hoc} đã được bắt đầu hoặc thẻ được chỉ định cho khóa học!`)
+                props.delete.callToast(`Khóa học ${props.delete.deleteRow.item.ten_khoa_hoc} đã được bắt đầu hoặc thẻ được chỉ định cho khóa học!`, 3)
                 props.delete.setDeleteRow({ ...props.delete.deleteRow, disable: false, loading: false })
             }
         }
