@@ -20,19 +20,13 @@ import TableOutdoor from './Table/Outdoor/TableOutdoor';
 const ModalInfoLearn = (props) => {
     // console.log(props);
     const columnsIndoor = [
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Age', dataIndex: 'age', key: 'age' },
+        { title: 'Ngày', dataIndex: 'name', key: 'name' },
+        { title: 'Giờ', dataIndex: 'age', key: 'age' },
     ];
     const columnsOutdoor = [
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Age', dataIndex: 'age', key: 'age' },
-        { title: 'Address', dataIndex: 'address', key: 'address' },
-        {
-            title: 'Action',
-            dataIndex: '',
-            key: 'x',
-            render: () => <a>Delete</a>,
-        },
+        { title: 'Ngày giờ', dataIndex: 'name', key: 'name' },
+        { title: 'Quảng đường', dataIndex: 'age', key: 'age', align: 'center' },
+        { title: 'Thời gian', dataIndex: 'address', key: 'address' },
     ];
 
     const data = [

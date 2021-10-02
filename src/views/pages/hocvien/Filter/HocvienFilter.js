@@ -7,7 +7,7 @@ import {
 import { Input, Select } from 'antd';
 import { useEffect, useState } from "react";
 import { getStatus } from "../../../component/getBadge/GetBadge";
-import { getCourses } from "src/services/coursesService";
+import { assignRfcardsToCourse, getCourses } from "src/services/coursesService";
 import { getTrainees } from "src/services/traineesService";
 const { Option } = Select;
 const { Search } = Input;
@@ -116,7 +116,19 @@ const HocvienFilter = (props) => {
         fetchTrainees()
         props.page.setPage(1)
     }
-
+    const assignRfcardsToCourseId = () => {
+        // console.log(props.filter.filter.course_id);
+        async function assignRfcardsCourse() {
+            try {
+                const result = await assignRfcardsToCourse(props.filter.filter && props.filter.filter.course_id);
+                // console.log(result);
+                props.toasts.callToast(`Gán thẻ thành công!`)
+            } catch (error) {
+                props.toasts.callToast(`Gán thẻ không thành công!`)
+            }
+        }
+        assignRfcardsCourse()
+    }
     useEffect(() => {
         async function fetchTrainees() {
             const ob = {
@@ -147,7 +159,6 @@ const HocvienFilter = (props) => {
         }
         setIdCourseUrl(props.courseID)
     }, [props.courseID])
-
     useEffect(() => {
         async function fetchCourses() {
             const ob = {
@@ -224,7 +235,7 @@ const HocvienFilter = (props) => {
             </div> */}
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">Gán</CLabel><br />
-                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.course_id === 0 ? true : false} onClick={() => props.addRow.setAddRow(!props.addRow.addRow)}>
+                <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.course_id === 0 ? true : false} onClick={assignRfcardsToCourseId}>
                     Gán thẻ
                 </CButton>
             </div>

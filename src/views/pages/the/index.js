@@ -15,6 +15,7 @@ import { getRfcards } from "src/services/rfcardsService";
 import ModalDelete from "./Modal/Delete/ModalDelete";
 import ModalEdit from "./Modal/Edit/ModalEdit";
 import ModalAdd from "./Modal/Add/ModalAdd";
+import TheToast from "./Toasts/TheToast";
 
 const Index = () => {
   const [branches, setBranches] = useState([]);
@@ -71,7 +72,7 @@ const Index = () => {
       return toasters
     }, {})
   })()
-  const callToast = (mess) => {
+  const callToast = (mess, status) => {
     setToasts([
       ...toasts,
       {
@@ -83,23 +84,10 @@ const Index = () => {
         item: undefined,
         value: 0,
         error: mess,
-        statusColor: -1,
+        statusColor: status,
       }
     ])
   }
-  useEffect(() => {
-    async function fetchCards() {
-      try {
-        const rfcards = await getRfcards(filter);
-        console.log(rfcards);
-        setRfcards(rfcards.data.items);
-        setTotalpages(rfcards.data.total)
-      } catch (error) {
-      }
-    }
-    fetchCards();
-    setPage(1)
-  }, [filter]);
   useEffect(() => {
     async function fetchBranches() {
       const ob = {
@@ -110,11 +98,27 @@ const Index = () => {
       try {
         const branches = await getBranches(ob);
         setBranches(branches.data);
+        setFilter({ ...filter, branch_id: branches.data[0].id })
       } catch (error) {
       }
     }
     fetchBranches();
   }, []);
+  useEffect(() => {
+    if (branches.length > 0) {
+      async function fetchCards() {
+        try {
+          const rfcards = await getRfcards(filter);
+          // console.log(rfcards);
+          setRfcards(rfcards.data.items);
+          setTotalpages(rfcards.data.total)
+        } catch (error) {
+        }
+      }
+      fetchCards();
+      setPage(1)
+    }
+  }, [filter]);
   const changePage = (page) => {
     setPage(page)
     async function fetchCards() {
@@ -138,20 +142,17 @@ const Index = () => {
             <CCardHeader><h4 className="mb-0">Danh sách thẻ</h4></CCardHeader>
             <CCardBody>
               <TheFilter
-                branches={branches}
                 filter={{ filter, setFilter }}
                 addRow={{ addRow, setAddRow }}
-                totalpages={{ totalpages, setTotalpages }}
-                page={{ page, setPage }}
+                branches={branches}
               />
               <TheTable
                 rfcards={rfcards}
                 filter={{ filter, setFilter }}
-                statusColor={{ statusColor, setStatusColor }}
                 toasts={{ callToast }}
                 deleteRow={{ deleteRow, setDeleteRow }}
-                editRow={{ editRow, setEditRow }}
                 page={{ page, setPage }}
+                editRow={{ editRow, setEditRow }}
               />
             </CCardBody>
             <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
@@ -161,31 +162,13 @@ const Index = () => {
       <ModalAdd
         add={{ addRow, setAddRow, filter, setRfcards, setTotalpages, callToast }}
       />
-      <ModalDelete
-        delete={{ deleteRow, setDeleteRow, filter, setTotalpages, callToast }}
-      />
       <ModalEdit
-        edit={{ editRow, setEditRow, filter, setTotalpages, callToast }}
+        edit={{ editRow, setEditRow, filter, setRfcards, setTotalpages, callToast }}
       />
-      {/* {ModalAddRow({ addRow, setAddRow, })}
-      {ModalDeleteRow({ deleteRow, setDeleteRow, })}
-      {ModalData_synchronizingRow({ syncRow, setSyncRow, })}
-      <CToaster
-        position={toasts.position}
-      >
-        <CToast
-          key={'toast'}
-          show={toasts.show}
-          autohide={true && 3000}
-        >
-          <CToastHeader>
-            Thông báo
-          </CToastHeader>
-          <CToastBody>
-            {`This is a toast in positioned toaster number.`}
-          </CToastBody>
-        </CToast>
-      </CToaster> */}
+      <ModalDelete
+        delete={{ deleteRow, setDeleteRow, filter, setRfcards, setTotalpages, callToast }}
+      />
+      {TheToast(toasters)}
     </>
   );
 };
