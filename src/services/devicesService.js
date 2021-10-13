@@ -25,3 +25,16 @@ export async function deleteTrackingDevices(device_id) {                  // xó
   const apiEndPointDeleteTrackingDevices = `tracking_devices/${device_id}`;
   return http.delete(apiEndPointDeleteTrackingDevices, { device_id });
 }
+export async function editTrackingDevicesID(device_id) {                  // lấy thông tin thiết bị
+  const apiEndPointEditTrackingDevicesID = `tracking_devices/${device_id}`;
+  return http.get(apiEndPointEditTrackingDevicesID, { device_id });
+}
+export async function updateTrackingDevicesID(device_id, ob) {                  // cập nhật thông tin thiết bị
+  const apiEndPointUpdateTrackingDevicesID = `tracking_devices/${device_id}`;
+  return http.put(apiEndPointUpdateTrackingDevicesID, ob, {
+    headers: {
+      'Content-Type': 'text/json',
+      params: device_id
+    },
+  })
+}

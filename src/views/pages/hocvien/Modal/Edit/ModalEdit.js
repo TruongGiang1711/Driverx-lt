@@ -48,7 +48,7 @@ const ModalEdit = (props) => {
             size="lg"
         >
             <CModalHeader closeButton>
-                <CModalTitle>Thay đổi thông tin học viên</CModalTitle>
+                <CModalTitle>Cập nhật thông tin học viên</CModalTitle>
             </CModalHeader>
             <CModalBody>
                 <CRow>
