@@ -6,9 +6,9 @@ import {
 } from "@coreui/react";
 import { Input, Select } from 'antd';
 import { useEffect, useState } from "react";
-import { getStatus } from "../../../component/getBadge/GetBadge";
 import { assignRfcardsToCourse, getCourses } from "src/services/coursesService";
 import { getTrainees } from "src/services/traineesService";
+import { listStatus } from "../HocvienData";
 const { Option } = Select;
 const { Search } = Input;
 
@@ -21,13 +21,6 @@ const HocvienFilter = (props) => {
     const [search, setSearch] = useState({
         data: [],
     })
-    const arrStatus = []
-    let listStatus = () => {
-        for (let i = 0; i < 4; i++) {
-            arrStatus.push({ id: i, name: getStatus(i) })
-        }
-        return arrStatus
-    }
     const options = search.data.map(d => <Option key={d.id} value={d.id}>{d.name}</Option>);
 
     function fetchCourse(value, callback, status) {

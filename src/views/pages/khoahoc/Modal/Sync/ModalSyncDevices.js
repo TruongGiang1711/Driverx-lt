@@ -195,7 +195,8 @@ const ModalSyncDevices = (props) => {
         process();
     }
     useEffect(() => {
-        getApiDevicesCourse()
+        if (props.sync.syncRowDevice && props.sync.syncRowDevice.item)
+            getApiDevicesCourse()
     }, [props.sync.syncRowDevice && props.sync.syncRowDevice.item]);
     return (
         <CModal

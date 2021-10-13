@@ -3,7 +3,13 @@ import {
     CDataTable,
     CInputCheckbox,
 } from '@coreui/react'
+import { useEffect, useState } from 'react';
+import { setJwtCookie } from 'src/services/authService';
 const TableFP = (props) => {
+    const [arrayCookies, setArrayCookies] = useState([{
+        trainee: 0,
+        device: 0,
+    }])
     const fields = [
         {
             key: "stt",
@@ -31,7 +37,25 @@ const TableFP = (props) => {
         },
     ];
     const changeCheck = (item, value) => {
+        setJwtCookie(props.id, item.device.id)
     };
+    const cookies = () => {
+        var cookies = document.cookie
+        cookies.split(/[;] */).reduce(function (result, pairStr) {
+            var arr = pairStr.split('=');
+            if (arr.length === 2) {
+                setArrayCookies([
+                    ...arrayCookies, {
+                        trainee: arr[0],
+                        device: arr[1],
+                    }])
+            }
+        }, []);
+    }
+    useEffect(() => {
+        if (document.cookie)
+            cookies()
+    }, [document.cookie])
     return (
         <CDataTable
             items={props.deviesInCourse}
@@ -85,7 +109,7 @@ const TableFP = (props) => {
                                         id={index}
                                         name={item.device.name}
                                         onChange={(value) => changeCheck(item, value)}
-                                        checked={item.selected || false}
+                                        defaultChecked={arrayCookies.some(ele => ele.trainee === props.id && ele.device === item.device.id)}
                                     />
                                 </CFormGroup>
                                 {/* <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: true })} /> */}

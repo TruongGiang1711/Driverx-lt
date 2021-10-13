@@ -1,9 +1,10 @@
 
 import {
+    CBadge,
     CDataTable,
 } from "@coreui/react";
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
-import { getStatus, getStatusCards } from "src/views/component/getBadge/GetBadge";
+import { getStatusCards, getColor_StatusCards } from "../TheData";
 
 const TheTable = (props) => {
     const fields = [
@@ -58,16 +59,9 @@ const TheTable = (props) => {
                 status: (item, index) => {
                     return (
                         <td>
-                            {getStatusCards(item.status)}
-                            {/* <Select defaultValue={getStatus(item.status)} style={{ width: 120 }} onChange={(value) => handleChange(value, item)}>
-                        {listCard().map((item, index) => {
-                          return <Option key={item.id} value={item.id}>{item.name}</Option>
-                        })}
-                      </Select> */}
-                            {/* <CBadge color={getColor(item.status)}>
-                        {getStatus(item.status)}
-                      </CBadge> */}
-                            {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColor(item.status)}>{getStatus(item.status)}</CAlert> */}
+                            <CBadge color={getColor_StatusCards(item.status)}>
+                                {getStatusCards(item.status)}
+                            </CBadge>
                         </td>
                     )
                 },

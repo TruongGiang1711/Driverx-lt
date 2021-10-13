@@ -15,10 +15,29 @@ import {
     CLabel,
     CInput,
 } from '@coreui/react'
+import { updateRfcardsTrainee } from 'src/services/traineesService'
 
 const ModalEdit = (props) => {
+    // console.log(props);
     const closeModal = () => {
         props.edit.setEditRow({ ...props.edit.editRow, on_off: false })
+    }
+    const updateInfo = () => {
+        props.edit.setEditRow({ ...props.edit.editRow, disable: true, loading: true })
+        async function updateRfcard() {
+            try {
+                const del = await updateRfcardsTrainee(props.edit.editRow.item.id);
+                if (del.data.success === true) {
+                    props.edit.callToast(`Cập nhật thành công số thẻ cho học viên ${props.edit.editRow.item.ho_va_ten}!`, 2)
+                    props.edit.setEditRow({ ...props.edit.deeditRowleteRow, delData: del.data.success, on_off: false, loading: false })
+                }
+            } catch (error) {
+                props.edit.callToast(`Thẻ thực tập sinh không tìm thấy!`, 3)
+                props.edit.setEditRow({ ...props.edit.editRow, disable: false, loading: false })
+            }
+        }
+        updateRfcard()
+        // còn udpate info trainess
     }
     return (
         <CModal
@@ -107,7 +126,7 @@ const ModalEdit = (props) => {
                 </CRow>
             </CModalBody>
             <CModalFooter>
-                <CButton color="info" onClick={() => props.delete.setDeleteRow(!props.delete.deleteRow)}>
+                <CButton color="info" onClick={updateInfo}>
                     {props.edit.editRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}
                     Cập nhật
                 </CButton>
