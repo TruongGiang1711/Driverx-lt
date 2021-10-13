@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
     CButton,
     CRow,
@@ -17,6 +17,14 @@ import {
 import { addTrackingDevices, getTrackingDevices } from 'src/services/devicesService'
 
 const ModalAdd = (props) => {
+    const resetForm = useRef({})
+    const fields = [
+        { key: "serial_no", label: "Serial", },
+        { key: "manufacture", label: "Model", },
+        { key: "sim", label: "Số SIM", },
+        { key: "imei", label: "IMEI", },
+        { key: "config", label: "Ghi chú", },
+    ];
     const [obAdd, setObAdd] = useState({
         name: "",
         serial_no: "",
@@ -29,10 +37,10 @@ const ModalAdd = (props) => {
     const onChange = (key, value) => {
         const val = value.target.value;
         switch (key) {
-            case 'serial':
+            case 'serial_no':
                 setObAdd({ ...obAdd, serial_no: val })
                 break;
-            case 'model':
+            case 'manufacture':
                 setObAdd({ ...obAdd, manufacture: val })
                 break;
             case 'sim':
@@ -41,7 +49,7 @@ const ModalAdd = (props) => {
             case 'imei':
                 setObAdd({ ...obAdd, imei: val })
                 break;
-            case 'note':
+            case 'config':
                 setObAdd({ ...obAdd, config: val })
                 break;
 
@@ -58,7 +66,7 @@ const ModalAdd = (props) => {
             const ob = { ...obAdd, branch_id: props.add.addRow.branch_id }
             try {
                 const add = await addTrackingDevices(ob);
-                console.log(add);
+                // console.log(add);
                 if (add.statusText === "OK") {
                     async function fetchTrackingDevices() {
                         try {
@@ -73,14 +81,18 @@ const ModalAdd = (props) => {
                     fetchTrackingDevices();
                     props.add.callToast(`Thêm thiết bị thành công!`, 2)
                     props.add.setAddRow({ ...props.add.addRow, on_off: false, loading: false })
-                    // document.getElementById("tracking-devices-form").reset();
+                    resetFormTrackingDevices()
                 }
             } catch (error) {
                 props.add.callToast(`Thêm thiết bị không thành công!`, 3)
                 props.add.setAddRow({ ...props.add.addRow, on_off: true })
+                resetFormTrackingDevices()
             }
         }
         addTrackingDevice()
+    }
+    const resetFormTrackingDevices = () => {
+        fields.map(item => resetForm.current[item.key].value = '')
     }
     return (
         <CModal
@@ -90,35 +102,24 @@ const ModalAdd = (props) => {
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Thêm máy</CModalTitle>
+                <CModalTitle>Thêm thiết bị</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <CFormGroup id="tracking-devices-form">
+                <CFormGroup>
                     <CRow>
-                        <CCol>
-                            <CLabel>Serial</CLabel>
-                            <CInput onChange={(value) => onChange('serial', value)} />
-                        </CCol>
-                        <CCol>
-                            <CLabel>Model</CLabel>
-                            <CInput onChange={(value) => onChange('model', value)} />
-                        </CCol>
-                    </CRow>
-                    <CRow>
-                        <CCol>
-                            <CLabel>Số SIM</CLabel>
-                            <CInput onChange={(value) => onChange('sim', value)} />
-                        </CCol>
-                        <CCol>
-                            <CLabel>IMEI</CLabel>
-                            <CInput onChange={(value) => onChange('imei', value)} />
-                        </CCol>
-                    </CRow>
-                    <CRow>
-                        <CCol>
-                            <CLabel>Ghi chú</CLabel>
-                            <CTextarea onChange={(value) => onChange('note', value)} />
-                        </CCol>
+                        {fields.map(item => {
+                            if (item.key === 'config') {
+                                return <CCol xs='12'>
+                                    <CLabel>{item.label}</CLabel>
+                                    <CTextarea key={item.key} onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} />
+                                </CCol>
+                            } else {
+                                return <CCol xs='12' md='6'>
+                                    <CLabel>{item.label}</CLabel>
+                                    <CInput key={item.key} onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} disabled={item.key === 'imei' ? true : false} />
+                                </CCol>
+                            }
+                        })}
                     </CRow>
                 </CFormGroup>
             </CModalBody>

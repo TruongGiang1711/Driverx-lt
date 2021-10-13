@@ -64,7 +64,7 @@ const ThietbiFilter = (props) => {
             <div className="mb-3 pr-3 ml-auto">
                 <CLabel htmlFor="ccadd" className="invisible">add</CLabel><br />
                 <CButton block color="info" className={`ml-auto align-middle button-coreui`} disabled={props.filter.filter.branch_id === 0 ? true : false} onClick={() => props.addRow.setAddRow({ ...props.addRow.addRow, on_off: true })}>
-                    <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm Máy
+                    <span className="pr-2"><CIcon name={'cil-plus'} /></span>Thêm thiết bị
                 </CButton>
             </div>
         </CRow>

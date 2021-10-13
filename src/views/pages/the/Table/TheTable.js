@@ -2,6 +2,7 @@
 import {
     CBadge,
     CDataTable,
+    CTooltip,
 } from "@coreui/react";
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { getStatusCards, getColor_StatusCards } from "../TheData";
@@ -59,9 +60,11 @@ const TheTable = (props) => {
                 status: (item, index) => {
                     return (
                         <td>
-                            <CBadge color={getColor_StatusCards(item.status)}>
-                                {getStatusCards(item.status)}
-                            </CBadge>
+                            <CTooltip content={item.trainee_name ? item.trainee_name : 'Không có tên'}>
+                                <CBadge color={getColor_StatusCards(item.status)}>
+                                    {getStatusCards(item.status)}
+                                </CBadge>
+                            </CTooltip>
                         </td>
                     )
                 },

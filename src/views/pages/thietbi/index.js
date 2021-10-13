@@ -15,6 +15,7 @@ import { Pagination } from 'antd';
 import ThietbiFilter from "./Filter/ThietbiFilter";
 import { getTrackingDevices } from "src/services/devicesService";
 import { getBranches } from "src/services/branchsService";
+import ModalEdit from "./Modal/Edit/ModalEdit";
 
 const Index = () => {
     const [trackingDevices, setTrackingDevices] = useState([]);
@@ -23,6 +24,12 @@ const Index = () => {
     const [page, setPage] = useState(1);
     const [addRow, setAddRow] = useState({
         branch_id: 0,
+        on_off: false,
+        disable: false,
+        loading: false,
+    });
+    const [editRow, setEditRow] = useState({
+        item: undefined,
         on_off: false,
         disable: false,
         loading: false,
@@ -128,7 +135,7 @@ const Index = () => {
             <CRow>
                 <CCol>
                     <CCard className="tracking-devices-card">
-                        <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
+                        <CCardHeader><h4 className="mb-0">Danh sách thiết bị</h4></CCardHeader>
                         <CCardBody>
                             <ThietbiFilter
                                 filter={{ filter, setFilter }}
@@ -139,6 +146,7 @@ const Index = () => {
                                 trackingDevices={trackingDevices}
                                 filter={{ filter, setFilter }}
                                 toasts={{ callToast }}
+                                editRow={{ editRow, setEditRow }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
                                 page={{ page, setPage }}
                             />
@@ -149,6 +157,9 @@ const Index = () => {
             </CRow>
             <ModalAdd
                 add={{ addRow, setAddRow, filter, setTrackingDevices, setTotalpages, callToast }}
+            />
+            <ModalEdit
+                edit={{ addRow, editRow, setEditRow, filter, setTrackingDevices, setTotalpages, callToast }}
             />
             <ModalDelete
                 delete={{ deleteRow, setDeleteRow, filter, trackingDevices, setTrackingDevices, setTotalpages, callToast }}
