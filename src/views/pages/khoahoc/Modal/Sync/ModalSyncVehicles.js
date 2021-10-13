@@ -46,7 +46,6 @@ const ModalSyncVehicles = (props) => {
     const [vehicles, setVehicles] = useState([]);                       // danh sach thiet bi cua phan hieu
     const [vehicelsInCourse, setVehiclesInCourse] = useState([]);       // danh sach thiet bi cua khoa hoc mới
     const [vehicelsInCourseOld, setVehiclesInCourseOld] = useState([]); // danh sach thiet bi cua khoa hoc cũ
-    const [page, setPage] = useState(1);
     const closeModal = () => {
         props.sync.setSyncRowVehicles({
             ...props.sync.syncRowVehicles,
@@ -124,6 +123,7 @@ const ModalSyncVehicles = (props) => {
     const getApiVehiclesCourse = () => {
         let vehicles = [];
         let vehiclesInThisCourse = [];
+        let totalPage = 1
         async function processGetVehicles(page) {
             const ob = {
                 plate: '',
@@ -134,9 +134,26 @@ const ModalSyncVehicles = (props) => {
             }
             try {
                 const result = await getVehicles(ob);
-                vehicles = result.data.items;
-                setPage(result.data.total % result.data.size)
+                totalPage = parseInt(result.data.total / result.data.size)
+                result.data.items.map(item => vehicles.find(e => e.id === item.id) ?? vehicles.push(item))
+                // if (vehicles.length === 0) {
+                //     vehicles.push(...result.data.items)
+                // } else {
+                //     result.data.items.forEach(item => {
+                //         const index = vehicles.findIndex(e => e.id === item.id)
+                //         if (index === -1)
+                //             vehicles.push(item)
+                //     });
+                // }
+                if (result.data.total % result.data.size > 0) {
+                    totalPage += 1
+                }
             } catch (error) { }
+        }
+        async function getVehiclesByPageNumber() {
+            for (let index = 1; index <= totalPage; index++) {
+                await processGetVehicles(index)
+            }
         }
         async function processGetDeviceOfCourse() {
             try {
@@ -145,12 +162,8 @@ const ModalSyncVehicles = (props) => {
             } catch (error) { }
         }
         async function process() {
-            await processGetVehicles();
-            // for (let index = 1; index <= page; index++) {
-            //     const data = await processGetVehicles(index)
-            //     const newData = [...vehicles, ...data]
-            //     vehicles = newData
-            // }
+            // await processGetVehicles();
+            await getVehiclesByPageNumber();
             await processGetDeviceOfCourse();
             vehiclesInThisCourse.map((d) => {
                 const index = vehicles.findIndex((vehicle) => vehicle.id === d.vehicle.id);
@@ -165,7 +178,8 @@ const ModalSyncVehicles = (props) => {
         process();
     }
     useEffect(() => {
-        getApiVehiclesCourse()
+        if (props.sync.syncRowVehicles && props.sync.syncRowVehicles.item)
+            getApiVehiclesCourse()
     }, [props.sync.syncRowVehicles && props.sync.syncRowVehicles.item]);
     return (
         <CModal

@@ -21,16 +21,9 @@ const ModalDelete = (props) => {
             try {
                 const del = await deleteCourse(id);
                 if (del.data.success === true) {
-                    async function fetchCourses() {
-                        try {
-                            const courses = await getCourses(props.delete.filter);
-                            // console.log(courses);
-                            props.delete.setCourses(courses.data.items);
-                            props.delete.setTotalpages(courses.data.total)
-                        } catch (error) {
-                        }
-                    }
-                    fetchCourses();
+                    const oldCourses = [...props.delete.courses]
+                    const newCourses = oldCourses.filter(e => e.id !== id)
+                    props.delete.setCourses(newCourses);
                     props.delete.callToast(`Xóa thành công khóa học ${props.delete.deleteRow.item.ten_khoa_hoc}!`, 2)
                     props.delete.setDeleteRow({ ...props.delete.deleteRow, delData: del.data.success, on_off: false, loading: false })
                 }

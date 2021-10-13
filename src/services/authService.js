@@ -19,6 +19,9 @@ export const setJwt = (data) => {
   localStorage.setItem(tokenKey, data.access_token);
   http.setAuthorizationBearer(getJwt());
 };
+export const setJwtCookie = (name, value) => {
+  document.cookie = `${name}=${value}`
+};
 
 export const getSessionJwt = () => {
   return localStorage.getItem(tokenKey);

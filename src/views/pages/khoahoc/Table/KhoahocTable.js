@@ -8,11 +8,11 @@ import {
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
 import Moment from 'react-moment';
-import { listStatus, getDataFake } from "../KhoahocData";
+import { listStatus, getStatus, getDataFake } from "../KhoahocData";
 import { DeleteTwoTone } from '@ant-design/icons';
 import { Select } from 'antd';
-import { getStatus, getColor, getColorCard_status, getCard_status } from "../../../component/getBadge/GetBadge";
 import { updateCourse } from "src/services/coursesService";
+import { getColor } from "src/views/component/getBadge/GetBadge";
 const { Option } = Select;
 
 const KhoahocTable = (props) => {
@@ -47,7 +47,7 @@ const KhoahocTable = (props) => {
         const update = await updateCourse(item.id, value);
         // console.log(update);
         if (update.statusText === "OK") {
-          props.statusColor.setStatusColor(update.data.status)
+          props.setStatusColor(update.data.status)
           props.toasts.callToast(`Đã cập nhật trạng thái ${getStatus(value)} cho khóa ${item.ten_khoa_hoc}!`, update.data.status)
         }
       } catch (error) {
@@ -114,16 +114,16 @@ const KhoahocTable = (props) => {
             </td>
           )
         },
-        card_status: (item, index) => {
-          return (
-            <td className="text-center courses-card_status">
-              <CBadge color={getColorCard_status(item.card_status)}>
-                {getCard_status(item.card_status)}
-              </CBadge>
-              {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert> */}
-            </td>
-          )
-        },
+        // card_status: (item, index) => {
+        //   return (
+        //     <td className="text-center courses-card_status">
+        //       <CBadge color={getColorCard_status(item.card_status)}>
+        //         {getCard_status(item.card_status)}
+        //       </CBadge>
+        //       {/* <CAlert className="px-2 py-0 mb-0 col-10 text-center m-auto" color={getColorCard_status(item.card_status)}>{getCard_status(item.card_status)}</CAlert> */}
+        //     </td>
+        //   )
+        // },
         biometrics: (item, index) => {
           return (
             <td>

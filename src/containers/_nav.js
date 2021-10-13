@@ -26,6 +26,12 @@ const nav = [
     to: '/the',
     icon: 'cil-credit-card',
   },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Thiết bị',
+    to: '/thietbi',
+    icon: 'cil-devices',
+  },
   // {
   //   _tag: 'CSidebarNavItem',
   //   name: 'Dashboard',

@@ -1,18 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
     CButton,
     CModal,
     CModalBody,
     CModalFooter,
-    CSpinner,
-    CModalTitle,
     CModalHeader,
-    CToaster,
-    CToast,
-    CToastHeader,
-    CToastBody,
+    CModalTitle,
+    CSpinner,
 } from '@coreui/react'
-import { deleteRfcards, getRfcards } from 'src/services/rfcardsService'
+import { deleteTrackingDevices } from 'src/services/devicesService';
 
 const ModalDelete = (props) => {
     // console.log(props);
@@ -21,22 +17,22 @@ const ModalDelete = (props) => {
     }
     const onDeleteRow = (id) => {
         props.delete.setDeleteRow({ ...props.delete.deleteRow, disable: true, loading: true })
-        async function deleteRfcard() {
+        async function deleteTrackingDeviceID() {
             try {
-                const del = await deleteRfcards(id);
+                const del = await deleteTrackingDevices(id);
                 if (del.data.success === true) {
-                    const oldRfcards = [...props.delete.rfcards]
-                    const newRfcards = oldRfcards.filter(e => e.id !== id)
-                    props.delete.setRfcards(newRfcards);
-                    props.delete.callToast(`Xóa thành công thẻ ${props.delete.deleteRow.item.card_name}!`, 2)
+                    const oldTrackingDevices = [...props.delete.trackingDevices]
+                    const newTrackingDevices = oldTrackingDevices.filter(e => e.id !== id)
+                    props.delete.setTrackingDevices(newTrackingDevices);
+                    props.delete.callToast(`Xóa thành công thiết bị ${props.delete.deleteRow.item.manufacture}!`, 2)
                     props.delete.setDeleteRow({ ...props.delete.deleteRow, delData: del.data.success, on_off: false, loading: false })
                 }
             } catch (error) {
-                props.delete.callToast(`Xóa thẻ ${props.delete.deleteRow.item.card_name} không thành công!`, 3)
+                props.delete.callToast(`Thiết bị ${props.delete.deleteRow.item.manufacture} không tìm thấy!`, 3)
                 props.delete.setDeleteRow({ ...props.delete.deleteRow, disable: false, loading: false })
             }
         }
-        deleteRfcard()
+        deleteTrackingDeviceID()
     }
     return (
         <CModal
@@ -46,9 +42,9 @@ const ModalDelete = (props) => {
             closeOnBackdrop={false}
         >
             <CModalHeader closeButton>
-                <CModalTitle>Xóa thẻ</CModalTitle>
+                <CModalTitle>Xóa thiết bị</CModalTitle>
             </CModalHeader>
-            <CModalBody>Bạn có muốn xóa thẻ {props.delete.deleteRow.item && props.delete.deleteRow.item.card_name}</CModalBody>
+            <CModalBody>Bạn có muốn xóa thiết bị {props.delete.deleteRow.item && props.delete.deleteRow.item.manufacture}</CModalBody>
             <CModalFooter>
                 <CButton color="danger" onClick={() => onDeleteRow(props.delete.deleteRow.item && props.delete.deleteRow.item.id)} disabled={props.delete.deleteRow.disable}>
                     {props.delete.deleteRow.loading ? <CSpinner className="mr-2" component="span" size="sm" aria-hidden="true" style={{ marginBottom: "0.1rem" }} /> : ""}

@@ -27,7 +27,6 @@ const Index = () => {
   const [branches, setBranches] = useState([]);
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
-  const [statusColor, setStatusColor] = useState(0);
   const [deleteRow, setDeleteRow] = useState({
     item: undefined,
     on_off: false,
@@ -60,7 +59,7 @@ const Index = () => {
       item: undefined,
       value: 0,
       error: '',
-      statusColor: statusColor
+      statusColor: 0
     }
   ])
   const toasters = (() => {
@@ -169,7 +168,6 @@ const Index = () => {
                 fpRow={{ fpRow, setFPRow }}
                 info={{ infoLearnRow, setInfoLearnRow }}
                 page={{ page, setPage }}
-                statusColor={{ statusColor, setStatusColor }}
                 toasts={{ callToast }}
               />
             </CCardBody>

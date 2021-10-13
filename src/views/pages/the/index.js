@@ -166,7 +166,7 @@ const Index = () => {
         edit={{ editRow, setEditRow, filter, setRfcards, setTotalpages, callToast }}
       />
       <ModalDelete
-        delete={{ deleteRow, setDeleteRow, filter, setRfcards, setTotalpages, callToast }}
+        delete={{ deleteRow, setDeleteRow, filter, rfcards, setRfcards, setTotalpages, callToast }}
       />
       {TheToast(toasters)}
     </>

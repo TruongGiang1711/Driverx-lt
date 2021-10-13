@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './Khoahoc.scss';
+import './Thietbi.scss';
 import {
     CCard,
     CCardBody,
@@ -7,35 +7,25 @@ import {
     CCol,
     CRow,
 } from "@coreui/react";
-import KhoahocToast from "./Toasts/KhoahocToast";
-import KhoahocTable from "./Table/KhoahocTable";
-import KhoahocFilter from "./Filter/KhoahocFilter";
+import ThietbiToast from "./Toasts/ThietbiToast";
+import ThietbiTable from "./Table/ThietbiTable";
 import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
-import ModalSyncDevices from "./Modal/Sync/ModalSyncDevices";
-import ModalSyncVehicles from "./Modal/Sync/ModalSyncVehicles";
 import { Pagination } from 'antd';
-import { getCourses } from "src/services/coursesService";
+import ThietbiFilter from "./Filter/ThietbiFilter";
+import { getTrackingDevices } from "src/services/devicesService";
 import { getBranches } from "src/services/branchsService";
-import { getHangs } from "src/services/hangsService";
 
 const Index = () => {
-    const [courses, setCourses] = useState([]);
+    const [trackingDevices, setTrackingDevices] = useState([]);
     const [branches, setBranches] = useState([]);
-    const [hangs, setHangs] = useState([]);
-    const [devices, setDevices] = useState([]);
-    const [devicesCourse, setDevicesCourse] = useState([]);
-    const [statusColor, setStatusColor] = useState(0);
     const [totalpages, setTotalpages] = useState(1);
     const [page, setPage] = useState(1);
     const [addRow, setAddRow] = useState({
         branch_id: 0,
-        file: undefined,
-        nameFile: '',
         on_off: false,
         disable: false,
         loading: false,
-        hasData: '',
     });
     const [deleteRow, setDeleteRow] = useState({
         item: undefined,
@@ -43,15 +33,6 @@ const Index = () => {
         disable: false,
         loading: false,
         delData: false,
-    });
-    const [syncRowDevice, setSyncRowDevice] = useState({
-        item: undefined,
-        on_off: false,
-    });
-    const [syncRowVehicles, setSyncRowVehicles] = useState({
-        item: undefined,
-        on_off: false,
-        page: 1
     });
     const [toasts, setToasts] = useState([
         {
@@ -88,29 +69,30 @@ const Index = () => {
         ])
     }
     const [filter, setFilter] = useState({
+        name: '',
+        serial: '',
+        working_status: -1,
+        sync_status: -1,
         province_id: 0,
         customer_id: 0,
         branch_id: 0,
-        name: '',
-        hang: '',
-        status: -1,
         page: 1
     })
 
     useEffect(() => {
-        async function fetchCourses() {
+        async function fetchTrackingDevices() {
             try {
-                const courses = await getCourses(filter);
-                setCourses(courses.data.items.sort(function (a, b) {
+                const trackingDevices = await getTrackingDevices(filter);
+                setTrackingDevices(trackingDevices.data.items.sort(function (a, b) {
                     return a.id - b.id;
                 }));
-                setTotalpages(courses.data.total)
+                setTotalpages(trackingDevices.data.total)
             } catch (error) {
             }
         }
-        fetchCourses();
+        fetchTrackingDevices();
         setPage(1)
-    }, [filter, statusColor]);
+    }, [filter]);
     useEffect(() => {
         async function fetchBranches() {
             const ob = {
@@ -125,60 +107,40 @@ const Index = () => {
             }
         }
         fetchBranches();
-        async function fetchHangs() {
-            try {
-                const hangs = await getHangs();
-                setHangs(hangs.data);
-            } catch (error) {
-            }
-        }
-        fetchHangs();
     }, []);
     const changePage = (page) => {
         setPage(page)
-        async function fetchCourses() {
+        async function fetchTrackingDevices() {
             const ob = {
                 ...filter,
                 page: page
             }
             try {
-                const courses = await getCourses(ob);
-                setCourses(courses.data.items);
+                const trackingDevices = await getTrackingDevices(ob);
+                setTrackingDevices(trackingDevices.data.items);
             } catch (error) {
             }
         }
-        fetchCourses()
-    }
-    const getDataCourseDevices = (item) => {
-        setSyncRowDevice({ item: item, on_off: true })
-    }
-    const getDataCourseVehicles = (item) => {
-        setSyncRowVehicles({ item: item, on_off: true })
+        fetchTrackingDevices()
     }
     return (
         <>
             <CRow>
                 <CCol>
-                    <CCard className="courses-card">
+                    <CCard className="tracking-devices-card">
                         <CCardHeader><h4 className="mb-0">Danh sách khóa học</h4></CCardHeader>
                         <CCardBody>
-                            <KhoahocFilter
+                            <ThietbiFilter
                                 filter={{ filter, setFilter }}
-                                addRow={{ addRow, setAddRow }}
                                 branches={branches}
-                                hangs={hangs}
+                                addRow={{ addRow, setAddRow }}
                             />
-                            <KhoahocTable
-                                courses={courses}
+                            <ThietbiTable
+                                trackingDevices={trackingDevices}
                                 filter={{ filter, setFilter }}
-                                setStatusColor={setStatusColor}
                                 toasts={{ callToast }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
                                 page={{ page, setPage }}
-                                devices={{ devices, setDevices }}
-                                devicesCourse={{ devicesCourse, setDevicesCourse }}
-                                getDataCourseDevices={getDataCourseDevices}
-                                getDataCourseVehicles={getDataCourseVehicles}
                             />
                         </CCardBody>
                         <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
@@ -186,18 +148,12 @@ const Index = () => {
                 </CCol>
             </CRow>
             <ModalAdd
-                add={{ addRow, setAddRow, filter, setCourses, setTotalpages, callToast }}
+                add={{ addRow, setAddRow, filter, setTrackingDevices, setTotalpages, callToast }}
             />
             <ModalDelete
-                delete={{ deleteRow, setDeleteRow, filter, courses, setCourses, setTotalpages, callToast }}
+                delete={{ deleteRow, setDeleteRow, filter, trackingDevices, setTrackingDevices, setTotalpages, callToast }}
             />
-            <ModalSyncDevices
-                sync={{ syncRowDevice, setSyncRowDevice, devices, devicesCourse, setDevicesCourse, callToast }}
-            />
-            <ModalSyncVehicles
-                sync={{ syncRowVehicles, setSyncRowVehicles, devices, devicesCourse, setDevicesCourse, callToast }}
-            />
-            {KhoahocToast(toasters)}
+            {ThietbiToast(toasters)}
         </>
     );
 };
