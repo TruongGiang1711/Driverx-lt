@@ -200,7 +200,7 @@ const HocvienFilter = (props) => {
                 <Select
                     style={{ width: '100%' }}
                     showSearch
-                    value={props.filter.filter.course_id === 0 ? "Tất cả" : courses.find(item => item.id === props.filter.filter.course_id).ten_khoa_hoc || ''}
+                    value={props.filter.filter.course_id === 0 ? "Tất cả" : courses.find(item => item.id === props.filter.filter.course_id) && courses.find(item => item.id === props.filter.filter.course_id).ten_khoa_hoc}
                     placeholder="Khóa học"
                     showArrow={false}
                     filterOption={false}

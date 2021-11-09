@@ -1,0 +1,104 @@
+$colors: (
+    danger: #e55353,
+    success: #2eb85c,
+    warning: #f9b115,
+    secondary: #ced2d8,
+);
+
+// table
+.courses-card {
+    label {
+        color: #3399ff;
+    }
+    .courses-table {
+        th,
+        td {
+            white-space: nowrap;
+        }
+        tbody {
+            td {
+                vertical-align: middle;
+                &.courses-status {
+                    @each $colorname, $color in $colors {
+                        .#{$colorname} {
+                            &.ant-select {
+                                .ant-select-selector {
+                                    background-color: $color;
+                                }
+                            }
+                        }
+                    }
+                }
+                // &.courses-status,
+                // &.courses-card_status {
+                //     .alert,
+                //     .badge {
+                //         width: 80px;
+                //     }
+                // }
+            }
+        }
+    }
+}
+
+// modal
+label.custom-file-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 80px;
+}
+.attendance-devices {
+    .form-group {
+        align-items: center;
+        label {
+            width: 70px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+    }
+}
+.card-sm {
+    header.card-header {
+        padding: 0.3rem;
+    }
+    .list-group-sm {
+        border: 0;
+        li.list-group-item {
+            padding: 0.3rem;
+            border-right: 0;
+            border-left: 0;
+        }
+    }
+}
+.vehicles-table {
+    .table-responsive {
+        columns: 4;
+        table {
+            display: contents;
+            thead {
+                visibility: collapse;
+            }
+            tbody {
+                tr {
+                    td {
+                        width: 10%;
+                        &.col-mid {
+                            display: inline-block;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// toast
+.toast-custom {
+    @each $colorname, $color in $colors {
+        .#{$colorname} {
+            background-color: $color;
+        }
+    }
+}

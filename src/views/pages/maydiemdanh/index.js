@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './Thietbi.scss';
+import './Maydiemdanh.scss';
 import {
     CCard,
     CCardBody,
@@ -7,32 +7,30 @@ import {
     CCol,
     CRow,
 } from "@coreui/react";
-import ThietbiToast from "./Toasts/ThietbiToast";
-import ThietbiTable from "./Table/ThietbiTable";
+import MaydiemdanhToast from "./Toasts/MaydiemdanhToast";
+import MaydiemdanhTable from "./Table/MaydiemdanhTable";
+import MaydiemdanhFilter from "./Filter/MaydiemdanhFilter";
 import ModalAdd from "./Modal/Add/ModalAdd";
 import ModalDelete from "./Modal/Delete/ModalDelete";
-import { Pagination } from 'antd';
-import ThietbiFilter from "./Filter/ThietbiFilter";
-import { getTrackingDevices } from "src/services/devicesService";
-import { getBranches } from "src/services/branchsService";
 import ModalEdit from "./Modal/Edit/ModalEdit";
+import { Pagination } from 'antd';
+import { getBranches } from "src/services/branchsService";
+import { getAttendanceDevices } from "src/services/attendanceService";
 
 const Index = () => {
-    const [trackingDevices, setTrackingDevices] = useState([]);
+    const [attendanceDevices, setAttendanceDevices] = useState([]);
     const [branches, setBranches] = useState([]);
+    const [statusColor, setStatusColor] = useState(0);
     const [totalpages, setTotalpages] = useState(1);
     const [page, setPage] = useState(1);
     const [addRow, setAddRow] = useState({
         branch_id: 0,
+        file: undefined,
+        nameFile: '',
         on_off: false,
         disable: false,
         loading: false,
-    });
-    const [editRow, setEditRow] = useState({
-        item: undefined,
-        on_off: false,
-        disable: false,
-        loading: false,
+        hasData: '',
     });
     const [deleteRow, setDeleteRow] = useState({
         item: undefined,
@@ -40,6 +38,12 @@ const Index = () => {
         disable: false,
         loading: false,
         delData: false,
+    });
+    const [editRow, setEditRow] = useState({
+        item: undefined,
+        on_off: false,
+        disable: false,
+        loading: false,
     });
     const [toasts, setToasts] = useState([
         {
@@ -83,23 +87,23 @@ const Index = () => {
         province_id: 0,
         customer_id: 0,
         branch_id: 0,
-        page: 1
+        page: 1,
     })
 
     useEffect(() => {
-        async function fetchTrackingDevices() {
+        async function fetchAttendanceDevices() {
             try {
-                const trackingDevices = await getTrackingDevices(filter);
-                setTrackingDevices(trackingDevices.data.items.sort(function (a, b) {
+                const attendanceDevices = await getAttendanceDevices(filter);
+                setAttendanceDevices(attendanceDevices.data.items.sort(function (a, b) {
                     return a.id - b.id;
                 }));
-                setTotalpages(trackingDevices.data.total)
+                setTotalpages(attendanceDevices.data.total)
             } catch (error) {
             }
         }
-        fetchTrackingDevices();
+        fetchAttendanceDevices();
         setPage(1)
-    }, [filter]);
+    }, [filter, statusColor]);
     useEffect(() => {
         async function fetchBranches() {
             const ob = {
@@ -117,38 +121,38 @@ const Index = () => {
     }, []);
     const changePage = (page) => {
         setPage(page)
-        async function fetchTrackingDevices() {
+        async function fetchAttendanceDevices() {
             const ob = {
                 ...filter,
                 page: page
             }
             try {
-                const trackingDevices = await getTrackingDevices(ob);
-                setTrackingDevices(trackingDevices.data.items);
+                const attendanceDevices = await getAttendanceDevices(ob);
+                setAttendanceDevices(attendanceDevices.data.items);
             } catch (error) {
             }
         }
-        fetchTrackingDevices()
+        fetchAttendanceDevices()
     }
     return (
         <>
             <CRow>
                 <CCol>
-                    <CCard className="tracking-devices-card">
-                        <CCardHeader><h4 className="mb-0">Danh sách thiết bị</h4></CCardHeader>
+                    <CCard className="attendanceDevices-card">
+                        <CCardHeader><h4 className="mb-0">Danh sách máy điểm danh</h4></CCardHeader>
                         <CCardBody>
-                            <ThietbiFilter
+                            <MaydiemdanhFilter
                                 filter={{ filter, setFilter }}
-                                branches={branches}
                                 addRow={{ addRow, setAddRow }}
+                                branches={branches}
                             />
-                            <ThietbiTable
-                                trackingDevices={trackingDevices}
+                            <MaydiemdanhTable
+                                attendanceDevices={attendanceDevices}
                                 filter={{ filter, setFilter }}
                                 toasts={{ callToast }}
-                                editRow={{ editRow, setEditRow }}
                                 deleteRow={{ deleteRow, setDeleteRow }}
                                 page={{ page, setPage }}
+                                editRow={{ editRow, setEditRow }}
                             />
                         </CCardBody>
                         <Pagination className="core-pagination text-center pb-4" total={totalpages} pageSize={50} showSizeChanger={false} current={page} onChange={(page) => changePage(page)} />
@@ -156,15 +160,15 @@ const Index = () => {
                 </CCol>
             </CRow>
             <ModalAdd
-                add={{ addRow, setAddRow, filter, setTrackingDevices, setTotalpages, callToast }}
+                add={{ addRow, setAddRow, filter, setAttendanceDevices, setTotalpages, callToast, branches }}
             />
             <ModalEdit
-                edit={{editRow, setEditRow, filter, setTrackingDevices, setTotalpages, callToast }}
+                edit={{ editRow, setEditRow, filter, setAttendanceDevices, setTotalpages, callToast, branches }}
             />
             <ModalDelete
-                delete={{ deleteRow, setDeleteRow, filter, trackingDevices, setTrackingDevices, setTotalpages, callToast }}
+                delete={{ deleteRow, setDeleteRow, filter, attendanceDevices, setAttendanceDevices, setTotalpages, callToast }}
             />
-            {ThietbiToast(toasters)}
+            {MaydiemdanhToast(toasters)}
         </>
     );
 };

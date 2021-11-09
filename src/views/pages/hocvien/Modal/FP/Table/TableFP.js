@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import { setJwtCookie } from 'src/services/authService';
 const TableFP = (props) => {
+    // console.log(props);
     const [arrayCookies, setArrayCookies] = useState([{
         trainee: 0,
         device: 0,
@@ -37,25 +38,31 @@ const TableFP = (props) => {
         },
     ];
     const changeCheck = (item, value) => {
-        setJwtCookie(props.id, item.device.id)
+        setJwtCookie(props.item.id, item.device.id)
     };
-    const cookies = () => {
-        var cookies = document.cookie
-        cookies.split(/[;] */).reduce(function (result, pairStr) {
-            var arr = pairStr.split('=');
-            if (arr.length === 2) {
-                setArrayCookies([
-                    ...arrayCookies, {
-                        trainee: arr[0],
-                        device: arr[1],
-                    }])
-            }
-        }, []);
+    const setCheckCookie = (arr) => {
+        // arr.some(ele => console.log(ele));
+        // // console.log(arr.some(ele => (ele.trainee === props.item && props.item.id) && ele.device === 6));
+        // return arr.some(ele => (ele.trainee === props.item && props.item.id) && ele.device === 6)
     }
     useEffect(() => {
-        if (document.cookie)
-            cookies()
-    }, [document.cookie])
+        var cookies = document.cookie
+        // console.log(cookies);
+        cookies.split(/[;] */).reduce(function (result, pairStr) {
+            if (pairStr) {
+                var arr = pairStr.split('=');
+                if (arr.length === 2) {
+                    setArrayCookies([
+                        ...arrayCookies, {
+                            trainee: parseInt(arr[0]),
+                            device: parseInt(arr[1]),
+                        }])
+                }
+            }
+        }, []);
+        // console.log(arrayCookies);
+        // setCheckCookie(arrayCookies)
+    }, [props.item]);
     return (
         <CDataTable
             items={props.deviesInCourse}
@@ -109,7 +116,7 @@ const TableFP = (props) => {
                                         id={index}
                                         name={item.device.name}
                                         onChange={(value) => changeCheck(item, value)}
-                                        defaultChecked={arrayCookies.some(ele => ele.trainee === props.id && ele.device === item.device.id)}
+                                        defaultChecked={arrayCookies.some(ele => (ele.trainee === props.item.id) && ele.device === item.device.id)}
                                     />
                                 </CFormGroup>
                                 {/* <DeleteTwoTone twoToneColor="#e55353" onClick={() => setDeleteRow({ item: item, on_off: true })} /> */}
