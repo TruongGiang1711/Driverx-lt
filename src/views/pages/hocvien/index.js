@@ -27,6 +27,7 @@ const Index = () => {
   const [branches, setBranches] = useState([]);
   const [totalpages, setTotalpages] = useState(1);
   const [page, setPage] = useState(1);
+  const [inputList, setInputList] = useState([{ rfid_card: "", rfid_card_name: "" }]);
   const [deleteRow, setDeleteRow] = useState({
     item: undefined,
     on_off: false,
@@ -39,6 +40,7 @@ const Index = () => {
     on_off: false,
     disable: false,
     loading: false,
+    loadingRfCard: false,
   });
   const [fpRow, setFPRow] = useState({
     item: undefined,
@@ -179,7 +181,7 @@ const Index = () => {
         delete={{ deleteRow, setDeleteRow, filter, setTrainees, setTotalpages, callToast }}
       />
       <ModalEdit
-        edit={{ editRow, setEditRow, filter, setTrainees, setTotalpages, callToast }}
+        edit={{ editRow, setEditRow, filter, setTrainees, setTotalpages, callToast, inputList, setInputList }}
       />
       <ModalFP
         fp={{ fpRow, setFPRow, filter, setTrainees, setTotalpages, callToast }}

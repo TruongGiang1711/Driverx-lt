@@ -109,14 +109,14 @@ const ModalAdd = (props) => {
                     <CRow>
                         {fields.map(item => {
                             if (item.key === 'config') {
-                                return <CCol xs='12'>
+                                return <CCol xs='12' key={item.key}>
                                     <CLabel>{item.label}</CLabel>
-                                    <CTextarea key={item.key} onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} />
+                                    <CTextarea onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} />
                                 </CCol>
                             } else {
-                                return <CCol xs='12' md='6'>
+                                return <CCol xs='12' md='6' key={item.key}>
                                     <CLabel>{item.label}</CLabel>
-                                    <CInput key={item.key} onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} disabled={item.key === 'imei' ? true : false} />
+                                    <CInput onChange={(value) => onChange(item.key, value)} innerRef={el => resetForm.current[item.key] = el} disabled={item.key === 'imei' ? true : false} />
                                 </CCol>
                             }
                         })}

@@ -63,7 +63,7 @@ const ModalEdit = (props) => {
     const updateTrackingDevice = () => {
         props.edit.setEditRow({ ...props.edit.editRow, disable: true, loading: true })
         async function updateTrackingDevices() {
-            const ob = { ...obAdd, branch_id: props.edit.addRow.branch_id }
+            const ob = { ...obAdd, branch_id: props.edit.editRow && props.edit.editRow.item.id }
             try {
                 const update = await updateTrackingDevicesID(props.edit.editRow && props.edit.editRow.item.id, ob);
                 if (update.statusText === "OK") {
@@ -93,7 +93,7 @@ const ModalEdit = (props) => {
             async function editTrackingDevice() {
                 try {
                     const edit = await editTrackingDevicesID(props.edit.editRow && props.edit.editRow.item.id);
-                    console.log(edit.data);
+                    // console.log(edit.data);
                     setObAdd({
                         ...obAdd,
                         serial_no: edit.data.serial_no,
@@ -121,14 +121,14 @@ const ModalEdit = (props) => {
                     <CRow>
                         {fields.map(item => {
                             if (item.key === 'config') {
-                                return <CCol xs='12'>
+                                return <CCol xs='12' key={item.key} >
                                     <CLabel>{item.label}</CLabel>
-                                    <CTextarea key={item.key} onChange={(value) => onChange(item.key, value)} defaultValue={obAdd[item.key]} />
+                                    <CTextarea onChange={(value) => onChange(item.key, value)} defaultValue={obAdd[item.key]} />
                                 </CCol>
                             } else {
-                                return <CCol xs='12' md='6'>
+                                return <CCol xs='12' md='6' key={item.key}>
                                     <CLabel>{item.label}</CLabel>
-                                    <CInput key={item.key} onChange={(value) => onChange(item.key, value)} defaultValue={obAdd[item.key]} disabled={item.key === 'imei' ? true : false} />
+                                    <CInput onChange={(value) => onChange(item.key, value)} defaultValue={obAdd[item.key]} disabled={item.key === 'imei' ? true : false} />
                                 </CCol>
                             }
                         })}
@@ -144,7 +144,7 @@ const ModalEdit = (props) => {
                     Hủy
                 </CButton>
             </CModalFooter>
-        </CModal >
+        </CModal>
     )
 }
 

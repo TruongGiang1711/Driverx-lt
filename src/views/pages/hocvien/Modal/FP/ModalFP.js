@@ -29,6 +29,7 @@ const ModalFP = (props) => {
     const [fingerprint, setFingerprint] = useState([]);
     const [disabled, setDisabled] = useState(true);
     const [name, setName] = useState('Xóa');
+    const [trainee, setTrainee] = useState({});
     const closeModal = () => {
         props.fp.setFPRow({ ...props.fp.fpRow, on_off: false })
     }
@@ -134,6 +135,7 @@ const ModalFP = (props) => {
     useEffect(() => {
         getApiDevicesCourse()
         getFingerprintTrainee()
+        setTrainee(props.fp.fpRow && props.fp.fpRow.item)
     }, [props.fp.fpRow && props.fp.fpRow.item]);
     return (
         <CModal
@@ -273,7 +275,7 @@ const ModalFP = (props) => {
                     <CCol>
                         <TableFP
                             deviesInCourse={deviesInCourse}
-                            id={props.fp.fpRow.item && props.fp.fpRow.item.id}
+                            item={trainee}
                         />
                     </CCol>
                 </CRow>

@@ -22,6 +22,12 @@ const nav = [
   },
   {
     _tag: 'CSidebarNavItem',
+    name: 'Máy điểm danh',
+    to: '/maydiemdanh',
+    icon: 'cil-user',
+  },
+  {
+    _tag: 'CSidebarNavItem',
     name: 'Thẻ',
     to: '/the',
     icon: 'cil-credit-card',
